@@ -6,10 +6,11 @@
       xmlns:local="clr-namespace:oracle_database_administator.User"
       mc:Ignorable="d" 
       d:DesignHeight="800" d:DesignWidth="1200"
+      Loaded="Page_Loaded" Unloaded="Page_Unloaded"
       Title="ViewUserList">
 
-    <Grid>
-        <DataGrid x:Name="DataGrid" Margin="0,0,0,186" AutoGenerateColumns="False">
+    <Grid Background="White">
+        <DataGrid x:Name="DataGrid" Margin="0,0,0,400" AutoGenerateColumns="False">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="USERNAME" Binding="{Binding USERNAME}" Width="*">
                     <DataGridTextColumn.ElementStyle>
@@ -84,7 +85,6 @@
             </DataGrid.Columns>
 
         </DataGrid>
-        <Button x:Name="___No_Name_" Content="Insert" HorizontalAlignment="Left" Margin="691,520,0,0" VerticalAlignment="Top" Height="40" Width="81" Click="Button_Click"/>
         <TextBox x:Name="IDTextBox" HorizontalAlignment="Left" Margin="75,439,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="165" Height="30"/>
         <TextBlock HorizontalAlignment="Left" Margin="75,418,0,0" TextWrapping="Wrap" Text="ID:" VerticalAlignment="Top" Width="165"/>
         <TextBox x:Name="LastNameTextBox" HorizontalAlignment="Left" Margin="75,514,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="165" Height="30"/>
@@ -93,6 +93,5 @@
         <TextBlock HorizontalAlignment="Left" Margin="292,418,0,0" TextWrapping="Wrap" Text="First Name:" VerticalAlignment="Top" Width="165"/>
         <TextBox x:Name="EmailTextBox" HorizontalAlignment="Left" Margin="292,514,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="165" Height="30"/>
         <TextBlock HorizontalAlignment="Left" Margin="292,493,0,0" TextWrapping="Wrap" Text="Email:" VerticalAlignment="Top" Width="165"/>
-
     </Grid>
 </Page>

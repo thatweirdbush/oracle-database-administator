@@ -24,19 +24,21 @@ namespace oracle_database_administator
         public Dashboard()
         {
             InitializeComponent();
-
         }
 
-        private void SignUpButton_Click(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Chức năng đang được phát triển.");
-        }
-
-        private void SignInButton_Click(object sender, RoutedEventArgs e)
+        private void UserButton_Click(object sender, RoutedEventArgs e)
         {
             if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
             {
                 mainWindow.MainFrame.Navigate(new oracle_database_administator.User.ViewUserList());
+            }
+        }
+
+        private void RoleButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
+            {
+                mainWindow.MainFrame.Navigate(new oracle_database_administator.Role.ViewRoleList());
             }
         }
     }

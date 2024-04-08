@@ -24,7 +24,7 @@
 
             </StackPanel>
         </Border>
-        <Button x:Name="SignUpButton" Content="USER" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="24" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="69" Width="224" Click="SignUpButton_Click" Canvas.Left="350" Canvas.Top="477" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Button x:Name="UserButton" Content="USER" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="24" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="69" Width="224" Click="UserButton_Click" Canvas.Left="350" Canvas.Top="477" HorizontalAlignment="Center" VerticalAlignment="Center">
             <Button.Resources>
                 <Style TargetType="{x:Type Border}">
                     <Setter Property="CornerRadius" Value="24"/>
@@ -37,7 +37,7 @@
                 <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
             </Button.Effect>
         </Button>
-        <Button x:Name="SignInButton" Content="ROLE" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="24" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="69" Width="224" Click="SignInButton_Click" Canvas.Left="626" Canvas.Top="477" HorizontalAlignment="Left" VerticalAlignment="Center" >
+        <Button x:Name="RoleButton" Content="ROLE" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="24" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="69" Width="224" Click="RoleButton_Click" Canvas.Left="626" Canvas.Top="477" HorizontalAlignment="Left" VerticalAlignment="Center" >
             <Button.Resources>
                 <Style TargetType="{x:Type Border}">
                     <Setter Property="CornerRadius" Value="24"/>
@@ -50,6 +50,5 @@
                 <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
             </Button.Effect>
         </Button>
-
     </Canvas>
 </Page>

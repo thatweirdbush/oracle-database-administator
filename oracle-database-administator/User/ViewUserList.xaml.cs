@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,33 +24,10 @@ namespace oracle_database_administator.User
     public partial class ViewUserList : Page
     {
         OracleConnection conn;
-        string conStr = @"DATA SOURCE=localhost:1521/XE;DBA PRIVILEGE=SYSDBA;PERSIST SECURITY INFO=True;USER ID=SYS;PASSWORD=244466666";
 
         public ViewUserList()
         {
             InitializeComponent();
-            conn = new OracleConnection(conStr);
-
-            try
-            {
-                conn.Open();
-                if (conn.State == System.Data.ConnectionState.Open)
-                {
-                    MessageBox.Show("Connection opened succesfully!");
-                    UpdateGrid();
-
-                    //conn.Close();
-                    //MessageBox.Show("Connection closed.");
-                }
-                else
-                {
-                    MessageBox.Show("Close connection failed.");
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Connection error: " + ex.Message);
-            }
         }
 
         private void UpdateGrid()
@@ -73,40 +51,33 @@ namespace oracle_database_administator.User
             }
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        // Sử dụng sự kiện Unloaded để đảm bảo rằng kết nối được đóng khi chuyển khỏi Page
+        private void Page_Unloaded(object sender, RoutedEventArgs e)
         {
+            if (conn != null)
+            {
+                conn.Dispose();
+            }
+        }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            conn = Database.Instance.Connection;
             try
             {
-                int employeeID = Convert.ToInt32(IDTextBox.Text);
-                string firstName = FirstNameTextBox.Text;
-                string lastName = LastNameTextBox.Text;
-                string email = EmailTextBox.Text;
-
-                string query = "INSERT INTO SYS.TEST_EMPLOYEES (employee_id, first_name, last_name, email) VALUES (:employee_id, :first_name, :last_name, :email)";
-
-                using (OracleCommand command = new OracleCommand(query, conn))
+                if (conn.State == System.Data.ConnectionState.Open)
                 {
-                    command.Parameters.Add(new OracleParameter(":employee_id", employeeID));
-                    command.Parameters.Add(new OracleParameter(":first_name", firstName));
-                    command.Parameters.Add(new OracleParameter(":last_name", lastName));
-                    command.Parameters.Add(new OracleParameter(":email", email));
-
-                    int rowsInserted = command.ExecuteNonQuery();
-
-                    if (rowsInserted > 0)
-                    {
-                        MessageBox.Show("Inserted succesfully!");
-                        UpdateGrid();
-                    }
-                    else
-                    {
-                        MessageBox.Show("No data changes.");
-                    }
+                    Console.WriteLine("Connection opened successfully!");
+                    UpdateGrid();
+                }
+                else
+                {
+                    MessageBox.Show("Failed to open connection.");
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Insert Error: " + ex.Message);
+                MessageBox.Show("Connection error: " + ex.Message);
             }
         }
     }
