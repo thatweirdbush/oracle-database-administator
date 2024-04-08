@@ -25,6 +25,8 @@ namespace oracle_database_administator.User
     {
         OracleConnection conn;
 
+        private bool dataGridSelectionEnabled = true;
+
         public ViewUserList()
         {
             InitializeComponent();
@@ -91,29 +93,32 @@ namespace oracle_database_administator.User
         private void InsertButton_Click(object sender, RoutedEventArgs e){
             try
             {
-             string userName = txtUserName.Text;
-                string passWord = txtPassword.Text;
+                if (dataGridSelectionEnabled && !string.IsNullOrEmpty(txtUserName.Text))
+                {
+                    string userName = txtUserName.Text;
+                    string passWord = txtPassword.Text;
 
-                string query = @"BEGIN
+                    string query = @"BEGIN
                             EXECUTE IMMEDIATE 'ALTER SESSION SET ""_ORACLE_SCRIPT"" = TRUE';
                             EXECUTE IMMEDIATE 'create user " + userName + " identified by " + passWord + "';" +
-                            " END;";
+                                " END;";
 
-                using (OracleCommand command = new OracleCommand(query, conn))
-                {
-                    int rowSelected = command.ExecuteNonQuery();
 
-                    if (rowSelected == -1)
+                    using (OracleCommand command = new OracleCommand(query, conn))
                     {
-                        MessageBox.Show("Create user successfully!");
-                        UpdateUserGrid();
-                    }
-                    else
-                    {
-                        MessageBox.Show("Cannot create user!");
+                        int rowSelected = command.ExecuteNonQuery();
+
+                        if (rowSelected == -1)
+                        {
+                            MessageBox.Show("Create user successfully!");
+                            UpdateUserGrid();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Cannot create user!");
+                        }
                     }
                 }
-
             }
             catch (Exception ex)
             {
@@ -123,25 +128,146 @@ namespace oracle_database_administator.User
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
+            try
+            {
+                if (dataGridSelectionEnabled)
+                {
+                    string userName = txtUserName.Text;
+                    txtUserName.Text = string.Empty;
 
+                    if (!string.IsNullOrEmpty(userName))
+                    {
+
+                        // Kiểm tra xem username có phải là "SYS" không
+                        if (userName.IndexOf("SYS", StringComparison.OrdinalIgnoreCase) != -1)
+                        {
+                            MessageBox.Show("Không được phép xoá người dùng có tên chứa từ SYS.");
+                            return; // Không thực hiện tiếp các bước sau khi kiểm tra
+                        }
+
+
+                        try
+                        {
+                            string query = @"BEGIN
+                            EXECUTE IMMEDIATE 'ALTER SESSION SET ""_ORACLE_SCRIPT"" = TRUE';
+                            EXECUTE IMMEDIATE 'drop user " + userName + "';" +
+                                " END;";
+
+                            using (OracleCommand command = new OracleCommand(query, conn))
+                            {
+                                int rowSelected = command.ExecuteNonQuery();
+
+
+                                if (rowSelected == -1)
+                                {
+                                    MessageBox.Show("Drop user successfully!");
+                                    UpdateUserGrid();
+                                }
+                                else
+                                {
+                                    MessageBox.Show("Cannot drop user!");
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show("Error: " + ex.Message);
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("No user selected!");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Drop error: " + ex.Message);
+            }
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
-            if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
+            if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null && dataGridSelectionEnabled == true)
             {
                 mainWindow.MainFrame.Navigate(new oracle_database_administator.Dashboard());
+            }
+            else if (Application.Current.MainWindow is MainWindow mainWindow2 && mainWindow2.MainFrame != null && dataGridSelectionEnabled == false)
+            {
+                mainWindow2.MainFrame.Navigate(new oracle_database_administator.User.ViewUserList());
             }
         }
 
         private void RolesUserButton_Click(object sender, RoutedEventArgs e)
         {
+            try
+            {
+                UserDataGrid.Columns[0].Visibility = Visibility.Collapsed; // Ẩn cột USERNAME
+                UserDataGrid.Columns[1].Visibility = Visibility.Collapsed; // Ẩn cột USER_ID
 
+                UserDataGrid.Columns[2].Visibility = Visibility.Visible;
+                UserDataGrid.Columns[3].Visibility = Visibility.Visible;
+                UserDataGrid.Columns[4].Visibility = Visibility.Visible;
+                UserDataGrid.Columns[5].Visibility = Visibility.Visible;
+                UserDataGrid.Columns[6].Visibility = Visibility.Visible;
+                UserDataGrid.Columns[7].Visibility = Visibility.Visible;
+                UserDataGrid.Columns[8].Visibility = Visibility.Visible;
+
+                string query = "SELECT * FROM DBA_ROLE_PRIVS";
+                using (OracleCommand command = new OracleCommand(query, conn))
+                {
+                    using (OracleDataAdapter adapter = new OracleDataAdapter(command))
+                    {
+                        DataTable dataTable = new DataTable();
+                        adapter.Fill(dataTable);
+                        UserDataGrid.ItemsSource = dataTable.DefaultView;
+                    }
+                }
+                dataGridSelectionEnabled = false;
+            }
+
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
         }
 
         private void PriUserButton_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void UserDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                if (dataGridSelectionEnabled)
+                {
+                    if (UserDataGrid.SelectedItem != null)
+                    {
+                        DataRowView row = (DataRowView)UserDataGrid.SelectedItem;
+                        if (row != null)
+                        {
+                            txtUserName.Text = row["USERNAME"].ToString();
+                        }
+                    }
+                }
+                else
+                {
+                    if (UserDataGrid.SelectedItem != null)
+                    {
+                        DataRowView row = (DataRowView)UserDataGrid.SelectedItem;
+                        if (row != null)
+                        {
+                            txtUserName.Text = row["GRANTEE"].ToString();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
         }
     }
 }
