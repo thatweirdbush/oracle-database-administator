@@ -30,7 +30,7 @@ namespace oracle_database_administator.User
             InitializeComponent();
         }
 
-        private void UpdateGrid()
+        private void UpdateUserGrid()
         {
             try
             {
@@ -41,7 +41,7 @@ namespace oracle_database_administator.User
                     {
                         DataTable dataTable = new DataTable();
                         adapter.Fill(dataTable);
-                        DataGrid.ItemsSource = dataTable.DefaultView;
+                        UserDataGrid.ItemsSource = dataTable.DefaultView;
                     }
                 }
             }
@@ -51,9 +51,16 @@ namespace oracle_database_administator.User
             }
         }
 
-        // Sử dụng sự kiện Unloaded để đảm bảo rằng kết nối được đóng khi chuyển khỏi Page
-        private void Page_Unloaded(object sender, RoutedEventArgs e)
+        private void HomeButton_Click(object sender, RoutedEventArgs e)
         {
+            if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
+            {
+                mainWindow.MainFrame.Navigate(new oracle_database_administator.Dashboard());
+            }
+        }
+      
+        // Sử dụng sự kiện Unloaded để đảm bảo rằng kết nối được đóng khi chuyển khỏi Page
+        private void Page_Unloaded(object sender, RoutedEventArgs e)  {
             if (conn != null)
             {
                 conn.Dispose();
@@ -63,8 +70,7 @@ namespace oracle_database_administator.User
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             conn = Database.Instance.Connection;
-            try
-            {
+            try {
                 if (conn.State == System.Data.ConnectionState.Open)
                 {
                     Console.WriteLine("Connection opened successfully!");
@@ -75,10 +81,72 @@ namespace oracle_database_administator.User
                     MessageBox.Show("Failed to open connection.");
                 }
             }
+
             catch (Exception ex)
             {
                 MessageBox.Show("Connection error: " + ex.Message);
             }
+        }
+
+        private void InsertButton_Click(object sender, RoutedEventArgs e){
+            try
+            {
+             string userName = txtUserName.Text;
+                string passWord = txtPassword.Text;
+
+                string query = @"BEGIN
+                            EXECUTE IMMEDIATE 'ALTER SESSION SET ""_ORACLE_SCRIPT"" = TRUE';
+                            EXECUTE IMMEDIATE 'create user " + userName + " identified by " + passWord + "';" +
+                            " END;";
+
+
+                using (OracleCommand command = new OracleCommand(query, conn))
+                {
+                    //command.Parameters.Add(new OracleParameter(":username", OracleDbType.Varchar2)).Value = userName;
+                    //command.Parameters.Add(new OracleParameter(":password", OracleDbType.Varchar2)).Value = passWord;
+
+                    int rowSelected = command.ExecuteNonQuery();
+
+
+                    if (rowSelected == -1)
+                    {
+                        MessageBox.Show("Create user successfully!");
+                        UpdateUserGrid();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Cannot create user!");
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Create error: " + ex.Message);
+            }
+        }
+
+        private void DeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void BackButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
+            {
+                mainWindow.MainFrame.Navigate(new oracle_database_administator.Dashboard());
+            }
+        }
+
+        private void RolesUserButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void PriUserButton_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
