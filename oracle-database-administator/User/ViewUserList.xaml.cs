@@ -74,7 +74,6 @@ namespace oracle_database_administator.User
                 if (conn.State == System.Data.ConnectionState.Open)
                 {
                     Console.WriteLine("Connection opened successfully!");
-                    UpdateGrid();
                 }
                 else
                 {
