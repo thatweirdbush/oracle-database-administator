@@ -173,12 +173,17 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
-  <ItemGroup>
-    <Resource Include="images\teeth.jpg" />
-  </ItemGroup>
   <ItemGroup>
     <Resource Include="images\background.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\background3.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\background4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="User\background5.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Text.Json.6.0.1\build\System.Text.Json.targets" Condition="Exists('..\packages\System.Text.Json.6.0.1\build\System.Text.Json.targets')" />

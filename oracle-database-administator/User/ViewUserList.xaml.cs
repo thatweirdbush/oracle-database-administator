@@ -74,6 +74,7 @@ namespace oracle_database_administator.User
                 if (conn.State == System.Data.ConnectionState.Open)
                 {
                     Console.WriteLine("Connection opened successfully!");
+                    UpdateUserGrid();
                 }
                 else
                 {
@@ -98,14 +99,9 @@ namespace oracle_database_administator.User
                             EXECUTE IMMEDIATE 'create user " + userName + " identified by " + passWord + "';" +
                             " END;";
 
-
                 using (OracleCommand command = new OracleCommand(query, conn))
                 {
-                    //command.Parameters.Add(new OracleParameter(":username", OracleDbType.Varchar2)).Value = userName;
-                    //command.Parameters.Add(new OracleParameter(":password", OracleDbType.Varchar2)).Value = passWord;
-
                     int rowSelected = command.ExecuteNonQuery();
-
 
                     if (rowSelected == -1)
                     {

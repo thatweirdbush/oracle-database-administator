@@ -16,7 +16,7 @@
             <StackPanel x:Name="MainPanel" Height="601" Width="620" HorizontalAlignment="Center" VerticalAlignment="Center">
 
                 <StackPanel.Background>
-                    <SolidColorBrush Color="#FFDAEFF8" Opacity="0.8"/>
+                    <SolidColorBrush Color="#FFD4EBFF" Opacity="0.8"/>
                 </StackPanel.Background>
                 <TextBlock Text="Welcome to" Height="62" HorizontalAlignment="Center" FontSize="40" FontFamily="Segoe UI Semibold" Margin="0,80,0,0"/>
                 <TextBlock FontSize="56" FontFamily="Bookman Old Style" FontWeight="Bold" HorizontalAlignment="Center" TextWrapping="WrapWithOverflow" Height="144"><Run Text="Oracle Database"/><LineBreak/><Run Text="  Administrator"/></TextBlock>

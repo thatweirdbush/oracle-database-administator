@@ -5,10 +5,160 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:oracle_database_administator.Role"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
+      d:DesignHeight="800" d:DesignWidth="1200"
+      Loaded="Page_Loaded" Unloaded="Page_Unloaded"
       Title="ViewRoleList">
 
-    <Grid>
-        
+    <Grid ScrollViewer.HorizontalScrollBarVisibility="Auto">
+        <Grid.Background>
+            <ImageBrush ImageSource="/User/background5.jpg" Opacity="1"/>
+        </Grid.Background>
+        <Button x:Name="BackButton" Content="Trở về" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="44" Canvas.Left="129" Canvas.Top="496" Width="163" Click="BackButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="60,694,0,0" >
+            <Button.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="CornerRadius" Value="24"/>
+                </Style>
+            </Button.Resources>
+            <Button.Background>
+                <SolidColorBrush Color="#FF1EA9D3" Opacity="0.75"/>
+            </Button.Background>
+            <Button.Effect>
+                <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
+            </Button.Effect>
+        </Button>
+
+        <TextBox x:Name="RoleNameTextBox" Width="230" Height="40" FontSize="20" Canvas.Left="568" Canvas.Top="353" BorderThickness="2.5,2.5,2.5,2.5" VerticalContentAlignment="Center" Padding="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" IsReadOnly="False" Margin="722,138,0,0" >
+            <TextBox.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="CornerRadius" Value="10"/>
+                </Style>
+            </TextBox.Resources>
+            <TextBox.BorderBrush>
+                <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.AppWorkspaceColorKey}}"/>
+            </TextBox.BorderBrush>
+        </TextBox>
+
+        <DataGrid x:Name="RoleDataGrid" Margin="60,205,60,126" AutoGenerateColumns="False" FontWeight="Medium" BorderBrush="{x:Null}" >
+            <DataGrid.Background>
+                <SolidColorBrush Color="#FFE4E4E4" Opacity="0.75"/>
+            </DataGrid.Background>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Role Name" Binding="{Binding ROLE}" Width="*">
+                    <DataGridTextColumn.HeaderStyle>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="ContentTemplate">
+                                <Setter.Value>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding}" FontFamily="Segoe UI" FontSize="16" Foreground="AliceBlue" Background="#FFD6A047" Padding="5"/>
+                                    </DataTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="Background" Value="#FFD6A047"/>
+                        </Style>
+                    </DataGridTextColumn.HeaderStyle>
+
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Setter Property="TextBlock.TextWrapping" Value="Wrap"/>
+                            <Setter Property="FontFamily" Value="Segoe UI"/>
+                            <Setter Property="FontSize" Value="14"/>
+                            <Setter Property="Background" Value="#FFE4E4E4"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+
+                <DataGridTextColumn Header="Role ID" Binding="{Binding ROLE_ID}" Width="*">
+                    <DataGridTextColumn.HeaderStyle>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="ContentTemplate">
+                                <Setter.Value>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding}" FontFamily="Segoe UI" FontSize="16" Foreground="AliceBlue" Background="#FFD6A047" Padding="5"/>
+                                    </DataTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="Background" Value="#FFD6A047"/>
+                        </Style>
+                    </DataGridTextColumn.HeaderStyle>
+
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Setter Property="TextBlock.TextWrapping" Value="Wrap"/>
+                            <Setter Property="FontFamily" Value="Segoe UI"/>
+                            <Setter Property="FontSize" Value="14"/>
+                            <Setter Property="Background" Value="#FFE4E4E4"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+
+            </DataGrid.Columns>
+        </DataGrid>
+        <Label Content="Role Name:" HorizontalAlignment="Left" Margin="722,97,0,0" VerticalAlignment="Top" FontSize="18" FontFamily="Segoe UI" Foreground="#333" Background="{x:Null}" Width="230" FontWeight="Medium"/>
+        <Button x:Name="InsertUserButton" Content="Thêm" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="44" Width="114" Click="InsertButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1002,57,0,0" >
+            <Button.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="CornerRadius" Value="24"/>
+                </Style>
+            </Button.Resources>
+            <Button.Background>
+                <SolidColorBrush Color="#FF1EA9D3" Opacity="0.75"/>
+            </Button.Background>
+            <Button.Effect>
+                <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
+            </Button.Effect>
+        </Button>
+        <Button x:Name="DeleteUserButton" Content="Xoá" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="44" Width="114" Click="DeleteButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1002,134,0,0" >
+            <Button.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="CornerRadius" Value="24"/>
+                </Style>
+            </Button.Resources>
+            <Button.Background>
+                <SolidColorBrush Color="#FF1EA9D3" Opacity="0.75"/>
+            </Button.Background>
+            <Button.Effect>
+                <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
+            </Button.Effect>
+        </Button>
+        <Button x:Name="HomeButton" Content="Home Page" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="86" Width="163" Click="HomeButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="60,70,0,0" RenderTransformOrigin="-2.052,5.949" >
+            <Button.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="CornerRadius" Value="24"/>
+                </Style>
+            </Button.Resources>
+            <Button.Background>
+                <SolidColorBrush Color="#FF1EA9D3" Opacity="0.75"/>
+            </Button.Background>
+            <Button.Effect>
+                <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
+            </Button.Effect>
+        </Button>
+        <Button x:Name="RoleUserButton" Content="Roles" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="45" Width="164" Click="RolesUserButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="755,694,0,0" RenderTransformOrigin="-2.052,5.949" >
+            <Button.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="CornerRadius" Value="24"/>
+                </Style>
+            </Button.Resources>
+            <Button.Background>
+                <SolidColorBrush Color="#FF1EA9D3" Opacity="0.75"/>
+            </Button.Background>
+            <Button.Effect>
+                <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
+            </Button.Effect>
+        </Button>
+        <Button x:Name="PrivilegesUserButton" Content="Privileges" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="45" Width="163" Click="PriUserButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="953,694,0,0" RenderTransformOrigin="-2.052,5.949" >
+            <Button.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="CornerRadius" Value="24"/>
+                </Style>
+            </Button.Resources>
+            <Button.Background>
+                <SolidColorBrush Color="#FF1EA9D3" Opacity="0.75"/>
+            </Button.Background>
+            <Button.Effect>
+                <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
+            </Button.Effect>
+        </Button>
+        <Label Content="Add Role Here" HorizontalAlignment="Left" Margin="722,58,0,0" VerticalAlignment="Top" FontSize="24" FontFamily="Segoe UI" Foreground="#333" Background="{x:Null}" Width="230" FontWeight="Bold"/>
     </Grid>
 </Page>
