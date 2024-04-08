@@ -13,7 +13,7 @@
         <Grid.Background>
             <ImageBrush ImageSource="/User/background5.jpg" Opacity="1"/>
         </Grid.Background>
-        <Button x:Name="BackButton" Content="Trở về" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="44" Canvas.Left="129" Canvas.Top="496" Width="163" Click="BackButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="60,694,0,0" >
+        <Button x:Name="BackButton" Content="Back" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="44" Canvas.Left="129" Canvas.Top="496" Width="163" Click="BackButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="60,694,0,0" >
             <Button.Resources>
                 <Style TargetType="{x:Type Border}">
                     <Setter Property="CornerRadius" Value="24"/>
@@ -94,7 +94,7 @@
             </DataGrid.Columns>
         </DataGrid>
         <Label Content="Role Name:" HorizontalAlignment="Left" Margin="722,97,0,0" VerticalAlignment="Top" FontSize="18" FontFamily="Segoe UI" Foreground="#333" Background="{x:Null}" Width="230" FontWeight="Medium"/>
-        <Button x:Name="InsertUserButton" Content="Thêm" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="44" Width="114" Click="InsertButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1002,57,0,0" >
+        <Button x:Name="InsertRoleButton" Content="Add" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="44" Width="114" Click="InsertButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1002,57,0,0" >
             <Button.Resources>
                 <Style TargetType="{x:Type Border}">
                     <Setter Property="CornerRadius" Value="24"/>
@@ -107,7 +107,7 @@
                 <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
             </Button.Effect>
         </Button>
-        <Button x:Name="DeleteUserButton" Content="Xoá" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="44" Width="114" Click="DeleteButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1002,134,0,0" >
+        <Button x:Name="DeleteRoleButton" Content="Delete" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="44" Width="114" Click="DeleteButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1002,134,0,0" >
             <Button.Resources>
                 <Style TargetType="{x:Type Border}">
                     <Setter Property="CornerRadius" Value="24"/>
@@ -159,6 +159,6 @@
                 <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
             </Button.Effect>
         </Button>
-        <Label Content="Add Role Here" HorizontalAlignment="Left" Margin="722,58,0,0" VerticalAlignment="Top" FontSize="24" FontFamily="Segoe UI" Foreground="#333" Background="{x:Null}" Width="230" FontWeight="Bold"/>
+        <Label Content="Add Or Delete Role Here" HorizontalAlignment="Left" Margin="722,58,0,0" VerticalAlignment="Top" FontSize="24" FontFamily="Segoe UI" Foreground="#333" Background="{x:Null}" Width="230" FontWeight="Bold"/>
     </Grid>
 </Page>
