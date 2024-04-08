@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Configuration;
+using System.Data;
 
 namespace oracle_database_administator
 {
@@ -20,8 +21,11 @@ namespace oracle_database_administator
         {
             get
             {
-                if (_connection == null)
+                if (_connection == null || _connection.State != ConnectionState.Open)
                 {
+                    // Đóng kết nối hiện tại (nếu có)
+                    DisposeConnection();
+
                     // Đọc chuỗi kết nối từ tệp cấu hình
                     string connectionString = ConfigurationManager.ConnectionStrings["OracleDbContext"].ConnectionString;
 
@@ -42,11 +46,21 @@ namespace oracle_database_administator
             }
         }
 
+        // Đóng kết nối hiện tại
+        private void DisposeConnection()
+        {
+            if (_connection != null)
+            {
+                _connection.Dispose();
+                _connection = null;
+            }
+        }
+
         // Phương thức giải phóng tài nguyên
         public void Dispose()
         {
             Dispose(true);
-            GC.SuppressFinalize(this);
+            //GC.SuppressFinalize(this);
         }
 
         protected virtual void Dispose(bool disposing)
@@ -57,8 +71,7 @@ namespace oracle_database_administator
                 {
                     if (_connection != null)
                     {
-                        _connection.Dispose();
-                        _connection = null;
+                        DisposeConnection();
                     }
                 }
                 disposed = true;
