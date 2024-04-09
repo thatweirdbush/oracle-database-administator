@@ -17,6 +17,7 @@ namespace oracle_database_administator
         private static Database _instance = null;
         private OracleConnection _connection = null;
         private bool disposed = false;
+        private bool dataGridSelectionEnabled = true;
 
         public OracleConnection Connection
         {
@@ -89,6 +90,11 @@ namespace oracle_database_administator
                 }
                 return _instance;
             }
+        }
+
+        public bool IsSelectable
+        {
+            get { return dataGridSelectionEnabled; }
         }
     }
 }

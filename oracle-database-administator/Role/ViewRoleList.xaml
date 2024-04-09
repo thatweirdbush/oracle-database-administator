@@ -38,7 +38,7 @@
             </TextBox.BorderBrush>
         </TextBox>
 
-        <DataGrid x:Name="RoleDataGrid" Margin="60,205,60,126" AutoGenerateColumns="False" FontWeight="Medium" BorderBrush="{x:Null}" >
+        <DataGrid x:Name="RoleDataGrid" Margin="60,205,60,126" AutoGenerateColumns="False" FontWeight="Medium" BorderBrush="{x:Null}" SelectionChanged="RoleDataGrid_SelectionChanged">
             <DataGrid.Background>
                 <SolidColorBrush Color="#FFE4E4E4" Opacity="0.75"/>
             </DataGrid.Background>
