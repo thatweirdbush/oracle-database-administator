@@ -35,7 +35,7 @@
                     </Style>
                 </Button.Resources>
                 <Button.Background>
-                    <SolidColorBrush Color="#FF1DA7FF" Opacity="0.75"/>
+                    <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.MenuHighlightColorKey}}" Opacity="0.75"/>
                 </Button.Background>
                 <Button.Effect>
                     <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
@@ -117,7 +117,7 @@
                     </Style>
                 </Button.Resources>
                 <Button.Background>
-                    <SolidColorBrush Color="#FF1DA7FF" Opacity="0.75"/>
+                    <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.MenuHighlightColorKey}}" Opacity="0.75"/>
                 </Button.Background>
                 <Button.Effect>
                     <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
@@ -143,7 +143,7 @@
                     </Style>
                 </Button.Resources>
                 <Button.Background>
-                    <SolidColorBrush Color="#FF1DA7FF" Opacity="0.75"/>
+                    <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.MenuHighlightColorKey}}" Opacity="0.75"/>
                 </Button.Background>
                 <Button.Effect>
                     <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
@@ -156,7 +156,7 @@
                     </Style>
                 </Button.Resources>
                 <Button.Background>
-                    <SolidColorBrush Color="#FF1DA7FF" Opacity="0.75"/>
+                    <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.MenuHighlightColorKey}}" Opacity="0.75"/>
                 </Button.Background>
                 <Button.Effect>
                     <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
@@ -169,7 +169,7 @@
                     </Style>
                 </Button.Resources>
                 <Button.Background>
-                    <SolidColorBrush Color="#FF1DA7FF" Opacity="0.75"/>
+                    <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.MenuHighlightColorKey}}" Opacity="0.75"/>
                 </Button.Background>
                 <Button.Effect>
                     <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
