@@ -112,6 +112,10 @@
     <Compile Include="Role\ViewRoleList.xaml.cs">
       <DependentUpon>ViewRoleList.xaml</DependentUpon>
     </Compile>
+    <Compile Include="User\UserDAO.cs" />
+    <Compile Include="User\ViewPrivilegesOfUser.xaml.cs">
+      <DependentUpon>ViewPrivilegesOfUser.xaml</DependentUpon>
+    </Compile>
     <Compile Include="User\ViewUserList.xaml.cs">
       <DependentUpon>ViewUserList.xaml</DependentUpon>
     </Compile>
@@ -139,6 +143,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Role\ViewRoleList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="User\ViewPrivilegesOfUser.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

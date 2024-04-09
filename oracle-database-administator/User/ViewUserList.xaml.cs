@@ -234,7 +234,22 @@ namespace oracle_database_administator.User
 
         private void PriUserButton_Click(object sender, RoutedEventArgs e)
         {
+            if (UserDataGrid.SelectedItem != null)
+            {
+                // Lấy dữ liệu từ dòng được chọn
+                DataRowView selectedUser = (DataRowView)UserDataGrid.SelectedItem;
 
+                // Tạo một đối tượng chứa thông tin của người dùng được chọn
+                UserInfo selectedUserInfo = new UserInfo(selectedUser["USERNAME"].ToString());
+
+                // Chuyển sang trang mới và truyền thông tin về người dùng được chọn qua trang mới
+                ViewPrivilegesOfUser privilegesPage = new ViewPrivilegesOfUser(selectedUserInfo);
+                NavigationService.Navigate(privilegesPage);
+            }
+            else
+            {
+                MessageBox.Show("Vui lòng chọn một người dùng trước.");
+            }
         }
 
         private void UserDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)

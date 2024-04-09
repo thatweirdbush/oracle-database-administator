@@ -12,6 +12,7 @@ using System.Data;
 
 namespace oracle_database_administator
 {
+    
     public class Database : IDisposable
     {
         private static Database _instance = null;
