@@ -14,6 +14,79 @@
             <ImageBrush ImageSource="/User/background5.jpg" Opacity="1"/>
         </Grid.Background>
 
+        <Label Content="Cấp quyền cho " HorizontalAlignment="Left" Margin="866,30,0,0" VerticalAlignment="Top" Foreground="#333" Background="{x:Null}">
+            <Label.Style>
+                <Style TargetType="Label">
+                    <Setter Property="FontSize" Value="26"/>
+                    <Setter Property="FontFamily" Value="Segoe UI"/>
+                    <Setter Property="FontWeight" Value="Bold"/>
+                    <!-- Đặt cỡ chữ dày -->
+                    <Setter Property="FontStyle" Value="Normal"/>
+                    <!-- Đặt cỡ chữ to -->
+                </Style>
+            </Label.Style>
+        </Label>
+
+        <Label Content="{Binding selectedUserName, StringFormat='Cấp quyền cho {0}'}" HorizontalAlignment="Left" Margin="1068,34,0,0" VerticalAlignment="Top" FontSize="26" FontFamily="Roboto" Foreground="#FF1EA9D3" Background="{x:Null}"/>
+
+
+        <Button x:Name="BackButton" Content="Trở về" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="44" Canvas.Left="129" Canvas.Top="496" Width="163" Click="BackViewUserButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="60,694,0,0" >
+            <Button.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="CornerRadius" Value="24"/>
+                </Style>
+            </Button.Resources>
+            <Button.Background>
+                <SolidColorBrush Color="#FF1EA9D3" Opacity="0.75"/>
+            </Button.Background>
+            <Button.Effect>
+                <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
+            </Button.Effect>
+        </Button>
+
+        <Button x:Name="RevokePrivilegesUserButton" Content="Revoke" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="45" Width="163" Click="RevokePriUserButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="953,694,0,0" RenderTransformOrigin="-2.052,5.949" >
+            <Button.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="CornerRadius" Value="24"/>
+                </Style>
+            </Button.Resources>
+            <Button.Background>
+                <SolidColorBrush Color="#FF1EA9D3" Opacity="0.75"/>
+            </Button.Background>
+            <Button.Effect>
+                <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
+            </Button.Effect>
+        </Button>
+
+        <Button x:Name="GrantUserButton" Content="Grant" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="45" Width="164" Click="GrantUserButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="650,693,0,0" RenderTransformOrigin="-2.052,5.949" >
+            <Button.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="CornerRadius" Value="24"/>
+                </Style>
+            </Button.Resources>
+            <Button.Background>
+                <SolidColorBrush Color="#FF1EA9D3" Opacity="0.75"/>
+            </Button.Background>
+            <Button.Effect>
+                <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
+            </Button.Effect>
+        </Button>
+
+        <Button x:Name="TestPrivUserButton" Content="Test" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="45" Width="164" Click="TestPrivUserButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="327,694,0,0" RenderTransformOrigin="-2.052,5.949" >
+            <Button.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="CornerRadius" Value="24"/>
+                </Style>
+            </Button.Resources>
+            <Button.Background>
+                <SolidColorBrush Color="#FF1EA9D3" Opacity="0.75"/>
+            </Button.Background>
+            <Button.Effect>
+                <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
+            </Button.Effect>
+        </Button>
+
+
         <Button x:Name="HomeButton" Content="Home Page" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="86" Width="163" Click="HomeButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="60,70,0,0" RenderTransformOrigin="-2.052,5.949" >
             <Button.Resources>
                 <Style TargetType="{x:Type Border}">
@@ -27,6 +100,19 @@
                 <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
             </Button.Effect>
         </Button>
+
+        <ListBox Margin="500,10,500,644" Width="200">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <CheckBox Content="{Binding}" Margin="0,5,0,0"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+            <ListBoxItem>Select</ListBoxItem>
+            <ListBoxItem>Insert</ListBoxItem>
+            <ListBoxItem>Update</ListBoxItem>
+            <ListBoxItem>Delete</ListBoxItem>
+        </ListBox>
+
 
         <DataGrid x:Name="PrivUserDataGrid" Margin="60,205,60,126" AutoGenerateColumns="False" FontWeight="Medium" BorderBrush="{x:Null}" SelectionChanged="PrivUserDataGrid_SelectionChanged">
             <DataGrid.Background>
