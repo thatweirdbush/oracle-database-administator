@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -33,6 +34,7 @@ namespace oracle_database_administator.User
             InitializeComponent();
             selectedUserInfo = userInfo;
             selectedUserName = selectedUserInfo.UserName;
+            DataContext = this;
 
         }
 
@@ -68,7 +70,10 @@ namespace oracle_database_administator.User
 
         private void HomeButton_Click(object sender, RoutedEventArgs e)
         {
-
+            if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
+            {
+                mainWindow.MainFrame.Navigate(new oracle_database_administator.Dashboard());
+            }
         }
 
         private void UpdatePrivUserGrid()
@@ -95,6 +100,29 @@ namespace oracle_database_administator.User
         private void PrivUserDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             
+        }
+
+        private void BackViewUserButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
+            {
+                mainWindow.MainFrame.Navigate(new oracle_database_administator.User.ViewUserList());
+            }
+        }
+
+        private void TestPrivUserButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void GrantUserButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void RevokePriUserButton_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
