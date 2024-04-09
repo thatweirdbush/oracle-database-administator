@@ -13,42 +13,41 @@
             <ImageBrush ImageSource="/images/background.jpg"/>
         </Canvas.Background>
         <Border BorderBrush="AliceBlue" BorderThickness="2" CornerRadius="20" HorizontalAlignment="Left" Canvas.Left="290" Canvas.Top="67" VerticalAlignment="Center">
-            <StackPanel x:Name="MainPanel" Height="601" Width="620" HorizontalAlignment="Center" VerticalAlignment="Center">
-
-                <StackPanel.Background>
+            <Grid x:Name="MainPanel" Height="601" Width="620" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Grid.Background>
                     <SolidColorBrush Color="#FFD4EBFF" Opacity="0.8"/>
-                </StackPanel.Background>
-                <TextBlock Text="Welcome to" Height="62" HorizontalAlignment="Center" FontSize="40" FontFamily="Segoe UI Semibold" Margin="0,80,0,0"/>
-                <TextBlock FontSize="56" FontFamily="Bookman Old Style" FontWeight="Bold" HorizontalAlignment="Center" TextWrapping="WrapWithOverflow" Height="144"><Run Text="Oracle Database"/><LineBreak/><Run Text="  Administrator"/></TextBlock>
-                <TextBlock FontSize="22" TextWrapping="Wrap" TextAlignment="Center" Margin="0,0,0,80" Text="Your comprehensive solution for managing and optimizing Oracle databases." Width="474" FontWeight="Medium"/>
+                </Grid.Background>
+                <TextBlock Text="Welcome to" Height="62" HorizontalAlignment="Center" FontSize="40" FontFamily="Segoe UI Semibold" Margin="0,78,0,461"/>
+                <TextBlock FontSize="56" FontFamily="Bookman Old Style" FontWeight="Bold" HorizontalAlignment="Center" TextWrapping="WrapWithOverflow" Height="144" Margin="0,140,0,317"><Run Text="Oracle Database"/><LineBreak/><Run Text="  Administrator"/></TextBlock>
+                <TextBlock FontSize="22" TextWrapping="Wrap" TextAlignment="Center" Margin="73,284,73,249" Text="Your comprehensive solution for managing and optimizing Oracle databases." Width="474" FontWeight="Medium"/>
+                <Button x:Name="UserButton" Content="USER" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="24" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="69" Width="224" Click="UserButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="73,404,0,0">
+                    <Button.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius" Value="24"/>
+                        </Style>
+                    </Button.Resources>
+                    <Button.Background>
+                        <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.MenuHighlightColorKey}}" Opacity="0.6"/>
+                    </Button.Background>
+                    <Button.Effect>
+                        <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
+                    </Button.Effect>
+                </Button>
+                <Button x:Name="RoleButton" Content="ROLE" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="24" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="69" Width="224" Click="RoleButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="323,404,0,0" >
+                    <Button.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius" Value="24"/>
+                        </Style>
+                    </Button.Resources>
+                    <Button.Background>
+                        <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.MenuHighlightColorKey}}" Opacity="0.6"/>
+                    </Button.Background>
+                    <Button.Effect>
+                        <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
+                    </Button.Effect>
+                </Button>
 
-            </StackPanel>
+            </Grid>
         </Border>
-        <Button x:Name="UserButton" Content="USER" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="24" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="69" Width="224" Click="UserButton_Click" Canvas.Left="350" Canvas.Top="477" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Button.Resources>
-                <Style TargetType="{x:Type Border}">
-                    <Setter Property="CornerRadius" Value="24"/>
-                </Style>
-            </Button.Resources>
-            <Button.Background>
-                <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.MenuHighlightColorKey}}" Opacity="0.6"/>
-            </Button.Background>
-            <Button.Effect>
-                <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
-            </Button.Effect>
-        </Button>
-        <Button x:Name="RoleButton" Content="ROLE" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="24" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="69" Width="224" Click="RoleButton_Click" Canvas.Left="626" Canvas.Top="477" HorizontalAlignment="Left" VerticalAlignment="Center" >
-            <Button.Resources>
-                <Style TargetType="{x:Type Border}">
-                    <Setter Property="CornerRadius" Value="24"/>
-                </Style>
-            </Button.Resources>
-            <Button.Background>
-                <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.MenuHighlightColorKey}}" Opacity="0.6"/>
-            </Button.Background>
-            <Button.Effect>
-                <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
-            </Button.Effect>
-        </Button>
     </Canvas>
 </Page>
