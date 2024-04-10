@@ -75,6 +75,8 @@ namespace oracle_database_administator.Role
                 if (conn.State == System.Data.ConnectionState.Open)
                 {
                     Console.WriteLine("Connection opened successfully!");
+                    //InsertRoleButton.Visibility = Visibility.Collapsed;
+                    //DeleteRoleButton.Visibility = Visibility.Collapsed;
                     UpdateUserGrid();
                 }
                 else

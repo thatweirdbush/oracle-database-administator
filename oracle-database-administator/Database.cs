@@ -96,6 +96,7 @@ namespace oracle_database_administator
         public bool IsSelectable
         {
             get { return dataGridSelectionEnabled; }
+            set {  dataGridSelectionEnabled = value; }
         }
     }
 }

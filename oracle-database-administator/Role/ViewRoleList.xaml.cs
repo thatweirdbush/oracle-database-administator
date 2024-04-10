@@ -50,6 +50,27 @@ namespace oracle_database_administator.Role
             }
         }
 
+        private void UpdateUserPrivilegesGrid()
+        {
+            try
+            {
+                string query = "SELECT * FROM DBA_ROLE_PRIVS";
+                using (OracleCommand command = new OracleCommand(query, conn))
+                {
+                    using (OracleDataAdapter adapter = new OracleDataAdapter(command))
+                    {
+                        DataTable dataTable = new DataTable();
+                        adapter.Fill(dataTable);
+                        RoleDataGrid.ItemsSource = dataTable.DefaultView;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
+
         private void HomeButton_Click(object sender, RoutedEventArgs e)
         {
             if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
@@ -69,6 +90,7 @@ namespace oracle_database_administator.Role
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
+            Database.Instance.IsSelectable = true;
             conn = Database.Instance.Connection;
             try
             {
@@ -108,6 +130,7 @@ namespace oracle_database_administator.Role
                     if (rowSelected == -1)
                     {
                         MessageBox.Show("Create role successfully!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                        Database.Instance.IsSelectable = true;
                         UpdateUserGrid();
                     }
                     else
@@ -177,18 +200,121 @@ namespace oracle_database_administator.Role
         {
             if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
             {
-                mainWindow.MainFrame.Navigate(new oracle_database_administator.Dashboard());
+                if (Database.Instance.IsSelectable)
+                    mainWindow.MainFrame.Navigate(new oracle_database_administator.Dashboard());
+                else
+                    mainWindow.MainFrame.Navigate(new oracle_database_administator.Role.ViewRoleList());
             }
         }
 
         private void RolesUserButton_Click(object sender, RoutedEventArgs e)
         {
+            try
+            {
+                RoleDataGrid.Columns[0].Visibility = Visibility.Visible; // Ẩn cột Rolename
+                RoleDataGrid.Columns[1].Visibility = Visibility.Visible; // Ẩn cột Role_ID
 
+                RoleDataGrid.Columns[2].Visibility = Visibility.Visible;
+                RoleDataGrid.Columns[3].Visibility = Visibility.Visible;
+                RoleDataGrid.Columns[4].Visibility = Visibility.Visible;
+                RoleDataGrid.Columns[5].Visibility = Visibility.Visible;
+                RoleDataGrid.Columns[6].Visibility = Visibility.Visible;
+                RoleDataGrid.Columns[7].Visibility = Visibility.Visible;
+                RoleDataGrid.Columns[8].Visibility = Visibility.Visible;
+
+                InsertRoleButton.Visibility = Visibility.Collapsed;
+                DeleteRoleButton.Visibility = Visibility.Collapsed;
+
+                UserNameTextBox.Visibility = Visibility.Visible;
+                UsernameLable.Visibility = Visibility.Visible;
+                GrantRoleButton.Visibility = Visibility.Visible;
+                RevokeRoleButton.Visibility = Visibility.Visible;
+
+
+                UpdateUserPrivilegesGrid();
+                Database.Instance.IsSelectable = false;
+            }
+
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
+        }
+
+        private void GrantRoleButton_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string roleName = RoleNameTextBox.Text;
+                string userName = UserNameTextBox.Text;
+
+                string query = @"BEGIN
+                            EXECUTE IMMEDIATE 'ALTER SESSION SET ""_ORACLE_SCRIPT"" = TRUE';
+                            EXECUTE IMMEDIATE 'GRANT " + roleName + " TO " + userName + "';" +
+                            " END;";
+
+                using (OracleCommand command = new OracleCommand(query, conn))
+                {
+                    int rowSelected = command.ExecuteNonQuery();
+
+                    if (rowSelected == -1)
+                    {
+                        MessageBox.Show("Grant role successfully!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                        UpdateUserPrivilegesGrid();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Cannot grant role!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Grant error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
+
+        private void RevokeRoleButton_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string roleName = RoleNameTextBox.Text;
+                string userName = UserNameTextBox.Text;
+
+                string query = @"BEGIN
+                            EXECUTE IMMEDIATE 'ALTER SESSION SET ""_ORACLE_SCRIPT"" = TRUE';
+                            EXECUTE IMMEDIATE 'REVOKE " + roleName + " FROM " + userName + "';" +
+                            " END;";
+
+                using (OracleCommand command = new OracleCommand(query, conn))
+                {
+                    int rowSelected = command.ExecuteNonQuery();
+
+                    if (rowSelected == -1)
+                    {
+                        MessageBox.Show("Revoke role successfully!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                        UpdateUserPrivilegesGrid();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Cannot revoke role!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Revoke error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
         }
 
         private void PriUserButton_Click(object sender, RoutedEventArgs e)
         {
-
+            if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
+            {
+                mainWindow.MainFrame.Navigate(new oracle_database_administator.Role.ViewPrivilegesOfRole());
+            }
         }
 
         private void RoleDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -206,17 +332,18 @@ namespace oracle_database_administator.Role
                         }
                     }
                 }
-                //else
-                //{
-                //    if (RoleDataGrid.SelectedItem != null)
-                //    {
-                //        DataRowView row = (DataRowView)RoleDataGrid.SelectedItem;
-                //        if (row != null)
-                //        {
-                //            RoleNameTextBox.Text = row["ROLE"].ToString();
-                //        }
-                //    }
-                //}
+                else
+                {
+                    if (RoleDataGrid.SelectedItem != null)
+                    {
+                        DataRowView row = (DataRowView)RoleDataGrid.SelectedItem;
+                        if (row != null)
+                        {
+                            RoleNameTextBox.Text = row["GRANTED_ROLE"].ToString();
+                            UserNameTextBox.Text = row["GRANTEE"].ToString();
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {
