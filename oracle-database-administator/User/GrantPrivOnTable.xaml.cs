@@ -96,7 +96,21 @@ namespace oracle_database_administator.User
         {
             try
             {
-                string query = "SELECT * FROM ALL_TAB_PRIVS WHERE GRANTEE = '" + selectedUserName + "'";
+                //string query1 = "SELECT * FROM ALL_TAB_PRIVS WHERE GRANTEE = '" + selectedUserName + "'";
+
+                string query = "SELECT " +
+                    "   COALESCE(t1.table_name, c.table_name) AS table_name, " +
+                    "   c.column_name, " +
+                    "   t1.privilege, " +
+                    "   t1.GRANTABLE " +
+                    "FROM  " +
+                    "   ALL_TAB_PRIVS t1 " +
+                    "FULL OUTER JOIN dba_col_privs c " +
+                    "   ON t1.table_name = c.table_name AND t1.GRANTEE = c.GRANTEE " +
+                    "WHERE " +
+                    "   t1.GRANTEE = '" + selectedUserName +"' " +
+                    "   OR c.GRANTEE = '" + selectedUserName + "'";
+
                 using (OracleCommand command = new OracleCommand(query, conn))
                 {
                     using (OracleDataAdapter adapter = new OracleDataAdapter(command))
@@ -122,15 +136,122 @@ namespace oracle_database_administator.User
             }
         }
 
-       
-        private void TestPrivUserButton_Click(object sender, RoutedEventArgs e)
+        private String SelectItemsListBox()
         {
+            List<string> selectedItems = new List<string>();
 
+            // Duyệt qua từng mục trong ListBox
+            foreach (var item in myListBox.Items)
+            {
+                // Kiểm tra xem mục có được chọn không
+                ListBoxItem listBoxItem = (ListBoxItem)item;
+                if (listBoxItem.IsSelected)
+                {
+                    // Nếu mục được chọn, thêm nội dung của mục đó vào danh sách
+                    selectedItems.Add(listBoxItem.Content.ToString());
+                }
+            }
+
+            // Gán danh sách các mục được chọn vào chuỗi temp, phân tách bằng dấu phẩy
+            string temp = string.Join(", ", selectedItems);
+
+            return temp;
         }
 
+        public string EncloseInParentheses(string input)
+        {
+            return "(" + input + ")";
+        }
+
+        /*public bool IsOnlyContains(string input, string target)
+        {
+            return input.Trim().Equals(target) && !input.Trim().Contains(" ");
+        }*/
+
+        public bool IsOnlyContains(string originalString, string subString)
+        {
+            if (originalString != null && subString != null)
+            {
+                // Sử dụng phương thức Equals để so sánh hai chuỗi
+                return originalString.Equals(subString);
+            }
+            return false;
+        }
         private void GrantUserButton_Click(object sender, RoutedEventArgs e)
         {
+            try
+            {
+                string tableName = txtTableName.Text;
+                string colName = EncloseInParentheses(txtColumnName.Text);
+                string privileges = SelectItemsListBox();
+                string query = "";
 
+                try
+                {
+                    if (myCheckBoxGrantOption.IsChecked == true)
+                    {
+                        if (colName != null)
+                        {
+                            if (IsOnlyContains(privileges, "UPDATE") || IsOnlyContains(privileges, "SELECT, UPDATE") || IsOnlyContains(privileges, "UPDATE, SELECT"))
+                            {
+                                query = "GRANT " + privileges + colName + " ON " + tableName + " TO " + selectedUserName + " WITH GRANT OPTION";
+                            }
+                            else
+                            {
+                                MessageBox.Show("Bạn không được quyền cấp quyền " + privileges + " trên cột này");
+                                return;
+                            }
+                        }
+                        else
+                        {
+                            query = "GRANT " + privileges + " ON " + tableName + " TO " + selectedUserName + " WITH GRANT OPTION";
+                        }
+                    }
+                    else
+                    {
+                        if (colName != null)
+                        {
+                            if (IsOnlyContains(privileges, "UPDATE") || IsOnlyContains(privileges, "SELECT, UPDATE"))
+                            {
+                                query = "GRANT " + privileges + colName + " ON " + tableName + " TO " + selectedUserName + " WITH GRANT OPTION";
+                            }
+                            else
+                            {
+                                MessageBox.Show("Bạn không được quyền cấp quyền " + privileges + " trên cột này");
+                                return;
+                            }
+                        }
+                        else
+                        {
+                            query = "GRANT " + privileges + " ON " + tableName + " TO " + selectedUserName;
+                        }
+                    }
+                    using (OracleCommand command = new OracleCommand(query, conn))
+                    {
+                        int rowSelected = command.ExecuteNonQuery();
+
+
+                        if (rowSelected == -1)
+                        {
+                            MessageBox.Show("GRANT privilege successfully!");
+                            UpdatePrivUserGrid();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Cannot grant privilege of user!");
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
         }
 
         private void RevokePriUserButton_Click(object sender, RoutedEventArgs e)
