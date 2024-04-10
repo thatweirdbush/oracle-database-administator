@@ -238,18 +238,28 @@ namespace oracle_database_administator.User
             {
                 // Lấy dữ liệu từ dòng được chọn
                 DataRowView selectedUser = (DataRowView)UserDataGrid.SelectedItem;
+                if (dataGridSelectionEnabled)
+                {
+                    // Tạo một đối tượng chứa thông tin của người dùng được chọn
+                    UserInfo selectedUserInfo = new UserInfo(selectedUser["USERNAME"].ToString());
 
-                // Tạo một đối tượng chứa thông tin của người dùng được chọn
-                UserInfo selectedUserInfo = new UserInfo(selectedUser["USERNAME"].ToString());
+                    // Chuyển sang trang mới và truyền thông tin về người dùng được chọn qua trang mới
+                    ViewPrivilegesOfUser privilegesPage = new ViewPrivilegesOfUser(selectedUserInfo);
+                    NavigationService.Navigate(privilegesPage);
+                }
+                else
+                {
+                    UserInfo selectedUserInfo = new UserInfo(selectedUser["GRANTEE"].ToString());
 
-                // Chuyển sang trang mới và truyền thông tin về người dùng được chọn qua trang mới
-                ViewPrivilegesOfUser privilegesPage = new ViewPrivilegesOfUser(selectedUserInfo);
-                NavigationService.Navigate(privilegesPage);
+                    ViewPrivilegesOfUser privilegesPage = new ViewPrivilegesOfUser(selectedUserInfo);
+                    NavigationService.Navigate(privilegesPage);
+                }
             }
             else
             {
                 MessageBox.Show("Vui lòng chọn một người dùng trước.");
             }
+
         }
 
         private void UserDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)

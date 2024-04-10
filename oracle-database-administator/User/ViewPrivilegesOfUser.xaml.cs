@@ -122,7 +122,49 @@ namespace oracle_database_administator.User
 
         private void RevokePriUserButton_Click(object sender, RoutedEventArgs e)
         {
+            try
+            {
+                if (PrivUserDataGrid.SelectedItem != null)
+                {
+                    DataRowView selectedUser = (DataRowView)PrivUserDataGrid.SelectedItem;
 
+                    string tableName = selectedUser["TABLE_NAME"].ToString();
+                    string privilege = selectedUser["PRIVILEGE"].ToString();
+
+                    try
+                    {
+                        string query = "REVOKE " + privilege + " ON " + tableName + " FROM " + selectedUserName;
+
+                        using (OracleCommand command = new OracleCommand(query, conn))
+                        {
+                            int rowSelected = command.ExecuteNonQuery();
+
+
+                            if (rowSelected == -1)
+                            {
+                                MessageBox.Show("Drop user successfully!");
+                                UpdatePrivUserGrid();
+                            }
+                            else
+                            {
+                                MessageBox.Show("Cannot revoke privilege of user!");
+                            }
+                        }
+                    }
+                    catch(Exception ex)
+                    {
+                        MessageBox.Show("Error: " + ex.Message);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Vui lòng chọn một người dùng trước.");
+                }
+            }
+            catch (Exception ex) 
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
         }
     }
 }
