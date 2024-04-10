@@ -231,6 +231,7 @@ namespace oracle_database_administator.User
             try
             {
                 DeleteUserButton.Visibility = Visibility.Collapsed;
+                RoleUserButton.Visibility = Visibility.Collapsed;
 
                 ModeVisible_UserDataGrid(dataGridSelectionEnabled);
 

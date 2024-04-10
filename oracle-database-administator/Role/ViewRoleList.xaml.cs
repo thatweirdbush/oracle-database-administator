@@ -1,4 +1,5 @@
 ﻿using Oracle.ManagedDataAccess.Client;
+using oracle_database_administator.User;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -29,7 +30,7 @@ namespace oracle_database_administator.Role
             InitializeComponent();
         }
 
-        private void UpdateUserGrid()
+        private void UpdateRoleGrid()
         {
             try
             {
@@ -97,7 +98,7 @@ namespace oracle_database_administator.Role
                 if (conn.State == System.Data.ConnectionState.Open)
                 {
                     Console.WriteLine("Connection opened successfully!");
-                    UpdateUserGrid();
+                    UpdateRoleGrid();
                 }
                 else
                 {
@@ -131,7 +132,7 @@ namespace oracle_database_administator.Role
                     {
                         MessageBox.Show("Create role successfully!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                         Database.Instance.IsSelectable = true;
-                        UpdateUserGrid();
+                        UpdateRoleGrid();
                     }
                     else
                     {
@@ -171,7 +172,7 @@ namespace oracle_database_administator.Role
                                 if (rowSelected == -1)
                                 {
                                     MessageBox.Show("Drop role successfully!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-                                    UpdateUserGrid();
+                                    UpdateRoleGrid();
                                 }
                                 else
                                 {
@@ -211,26 +212,23 @@ namespace oracle_database_administator.Role
         {
             try
             {
-                RoleDataGrid.Columns[0].Visibility = Visibility.Collapsed; // Ẩn cột Rolename
-                RoleDataGrid.Columns[1].Visibility = Visibility.Collapsed; // Ẩn cột Role_ID
-
-                RoleDataGrid.Columns[2].Visibility = Visibility.Visible;
-                RoleDataGrid.Columns[3].Visibility = Visibility.Visible;
-                RoleDataGrid.Columns[4].Visibility = Visibility.Visible;
-                RoleDataGrid.Columns[5].Visibility = Visibility.Visible;
-                RoleDataGrid.Columns[6].Visibility = Visibility.Visible;
-                RoleDataGrid.Columns[7].Visibility = Visibility.Visible;
-                RoleDataGrid.Columns[8].Visibility = Visibility.Visible;
+                if (Database.Instance.IsSelectable)
+                {
+                    for (int col = 0; col < 2; col++)
+                    {
+                        RoleDataGrid.Columns[col].Visibility = Visibility.Collapsed;
+                    }
+                    for (int col = 2; col < 9; col++)
+                    {
+                        RoleDataGrid.Columns[col].Visibility = Visibility.Visible;
+                    }
+                }
 
                 InsertRoleButton.Visibility = Visibility.Collapsed;
                 DeleteRoleButton.Visibility = Visibility.Collapsed;
                 RoleUserButton.Visibility = Visibility.Collapsed;
 
-                UserNameTextBox.Visibility = Visibility.Visible;
-                UsernameLable.Visibility = Visibility.Visible;
-                GrantRoleButton.Visibility = Visibility.Visible;
-                RevokeRoleButton.Visibility = Visibility.Visible;
-
+                UsernameGrid.Visibility = Visibility.Visible;
 
                 UpdateUserPrivilegesGrid();
                 Database.Instance.IsSelectable = false;
@@ -238,7 +236,36 @@ namespace oracle_database_administator.Role
 
             catch (Exception ex)
             {
-                MessageBox.Show("Error: " + ex.Message);
+                MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
+
+        private void PriUserButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (RoleDataGrid.SelectedItem != null)
+            {
+                // Lấy dữ liệu từ dòng được chọn
+                DataRowView selectedRole = (DataRowView)RoleDataGrid.SelectedItem;
+                UserInfo selectedUserInfo;
+                if (Database.Instance.IsSelectable)
+                {
+                    // Tạo một đối tượng chứa thông tin của người dùng được chọn
+                    selectedUserInfo = new UserInfo(selectedRole["ROLE"].ToString());
+
+                }
+                else
+                {
+                    // Tạo một đối tượng chứa thông tin của người dùng được chọn
+                    selectedUserInfo = new UserInfo(selectedRole["GRANTEE"].ToString());
+                }
+
+                // Chuyển sang trang mới và truyền thông tin về người dùng được chọn qua trang mới
+                ViewPrivilegesOfUser privilegesPage = new ViewPrivilegesOfUser(selectedUserInfo);
+                NavigationService.Navigate(privilegesPage);
+            }
+            else
+            {
+                MessageBox.Show("A role is required!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
@@ -307,14 +334,6 @@ namespace oracle_database_administator.Role
             catch (Exception ex)
             {
                 MessageBox.Show("Revoke error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-        }
-
-        private void PriUserButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
-            {
-                mainWindow.MainFrame.Navigate(new oracle_database_administator.Role.ViewPrivilegesOfRole());
             }
         }
 

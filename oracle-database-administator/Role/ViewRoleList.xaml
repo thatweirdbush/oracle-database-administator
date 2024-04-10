@@ -28,6 +28,51 @@
             </Grid.Background>
             <Border></Border>
 
+            <Grid x:Name="UsernameGrid" Margin="275,0,0,471" Visibility="Collapsed">
+                <Label Content="Grant Role To" HorizontalAlignment="Left" Margin="134,58,0,0" VerticalAlignment="Top" FontSize="24" FontFamily="Segoe UI" Foreground="#333" Background="{x:Null}" Width="230" FontWeight="Bold" />
+                <Label x:Name="UsernameLable" Content="Username:" HorizontalAlignment="Left" Margin="134,99,0,0" VerticalAlignment="Top" FontSize="18" FontFamily="Segoe UI" Foreground="#333" Background="{x:Null}" Width="230" FontWeight="Medium" Visibility="Visible"/>
+
+                <TextBox x:Name="UserNameTextBox" Width="230" Height="40" FontSize="20" BorderThickness="2" VerticalContentAlignment="Center" Padding="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" IsReadOnly="False" Margin="134,138,0,0" BorderBrush="#FF173D7B" Visibility="Visible">
+                    <TextBox.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius" Value="6"/>
+                        </Style>
+                    </TextBox.Resources>
+                    <TextBox.Background>
+                        <SolidColorBrush Color="White" Opacity="0.6"/>
+                    </TextBox.Background>
+                </TextBox>
+
+                <Button x:Name="GrantRoleButton" Content="Grant" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="50" Width="114" Click="GrantRoleButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="663,56,0,0">
+                    <Button.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius" Value="24"/>
+                        </Style>
+                    </Button.Resources>
+                    <Button.Background>
+                        <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.MenuHighlightColorKey}}" Opacity="0.75"/>
+                    </Button.Background>
+                    <Button.Effect>
+                        <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
+                    </Button.Effect>
+                </Button>
+
+                <Button x:Name="RevokeRoleButton" Content="Revoke" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="50" Width="114" Click="RevokeRoleButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="663,128,0,0">
+                    <Button.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius" Value="24"/>
+                        </Style>
+                    </Button.Resources>
+                    <Button.Background>
+                        <SolidColorBrush Color="#FFFF0F30" Opacity="0.75"/>
+                    </Button.Background>
+                    <Button.Effect>
+                        <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
+                    </Button.Effect>
+                </Button>
+
+            </Grid>
+
             <Button x:Name="BackButton" Content="Back" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="50" Canvas.Left="129" Canvas.Top="496" Width="164" Click="BackButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="59,586,0,0" >
                 <Button.Resources>
                     <Style TargetType="{x:Type Border}">
@@ -284,35 +329,7 @@
                 </Button.Effect>
             </Button>
 
-            <Button x:Name="GrantRoleButton" Content="Grant" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="50" Width="114" Click="GrantRoleButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="938,56,0,0" Visibility="Collapsed">
-                <Button.Resources>
-                    <Style TargetType="{x:Type Border}">
-                        <Setter Property="CornerRadius" Value="24"/>
-                    </Style>
-                </Button.Resources>
-                <Button.Background>
-                    <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.MenuHighlightColorKey}}" Opacity="0.75"/>
-                </Button.Background>
-                <Button.Effect>
-                    <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
-                </Button.Effect>
-            </Button>
-
             <Button x:Name="DeleteRoleButton" Content="Delete" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="50" Width="114" Click="DeleteButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="938,128,0,0" >
-                <Button.Resources>
-                    <Style TargetType="{x:Type Border}">
-                        <Setter Property="CornerRadius" Value="24"/>
-                    </Style>
-                </Button.Resources>
-                <Button.Background>
-                    <SolidColorBrush Color="#FFFF0F30" Opacity="0.75"/>
-                </Button.Background>
-                <Button.Effect>
-                    <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
-                </Button.Effect>
-            </Button>
-
-            <Button x:Name="RevokeRoleButton" Content="Revoke" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="50" Width="114" Click="RevokeRoleButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="938,128,0,0"  Visibility="Collapsed">
                 <Button.Resources>
                     <Style TargetType="{x:Type Border}">
                         <Setter Property="CornerRadius" Value="24"/>
@@ -366,17 +383,6 @@
                 </Button.Effect>
             </Button>
             <Label Content="Edit Role Here" HorizontalAlignment="Left" Margin="669,58,0,0" VerticalAlignment="Top" FontSize="24" FontFamily="Segoe UI" Foreground="#333" Background="{x:Null}" Width="230" FontWeight="Bold" />
-            <TextBox x:Name="UserNameTextBox" Width="230" Height="40" FontSize="20" BorderThickness="2" VerticalContentAlignment="Center" Padding="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" IsReadOnly="False" Margin="408,138,0,0" BorderBrush="#FF173D7B" Visibility="Collapsed">
-                <TextBox.Resources>
-                    <Style TargetType="{x:Type Border}">
-                        <Setter Property="CornerRadius" Value="6"/>
-                    </Style>
-                </TextBox.Resources>
-                <TextBox.Background>
-                    <SolidColorBrush Color="White" Opacity="0.6"/>
-                </TextBox.Background>
-            </TextBox>
-            <Label x:Name="UsernameLable" Content="Username:" HorizontalAlignment="Left" Margin="408,97,0,0" VerticalAlignment="Top" FontSize="18" FontFamily="Segoe UI" Foreground="#333" Background="{x:Null}" Width="230" FontWeight="Medium" Visibility="Collapsed"/>
         </Grid>
     </Grid>
 </Page>

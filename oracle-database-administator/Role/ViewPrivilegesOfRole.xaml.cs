@@ -1,4 +1,5 @@
 ﻿using Oracle.ManagedDataAccess.Client;
+using oracle_database_administator.User;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -24,38 +25,15 @@ namespace oracle_database_administator.Role
     {
         OracleConnection conn;
 
-        public ViewPrivilegesOfRole()
+        private UserInfo selectedUserInfo;
+        public string selectedUserName { get; set; }
+
+        public ViewPrivilegesOfRole(UserInfo userInfo)
         {
             InitializeComponent();
-        }
-
-        private void UpdateUserGrid()
-        {
-            try
-            {
-                string query = "SELECT ROLE, ROLE_ID FROM SYS.DBA_ROLES";
-                using (OracleCommand command = new OracleCommand(query, conn))
-                {
-                    using (OracleDataAdapter adapter = new OracleDataAdapter(command))
-                    {
-                        DataTable dataTable = new DataTable();
-                        adapter.Fill(dataTable);
-                        RoleDataGrid.ItemsSource = dataTable.DefaultView;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-        }
-
-        private void HomeButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
-            {
-                mainWindow.MainFrame.Navigate(new oracle_database_administator.Dashboard());
-            }
+            selectedUserInfo = userInfo;
+            selectedUserName = selectedUserInfo.UserName;
+            DataContext = this;
         }
 
         // Sử dụng sự kiện Unloaded để đảm bảo rằng kết nối được đóng khi chuyển khỏi Page
@@ -75,9 +53,7 @@ namespace oracle_database_administator.Role
                 if (conn.State == System.Data.ConnectionState.Open)
                 {
                     Console.WriteLine("Connection opened successfully!");
-                    //InsertRoleButton.Visibility = Visibility.Collapsed;
-                    //DeleteRoleButton.Visibility = Visibility.Collapsed;
-                    UpdateUserGrid();
+                    UpdatePrivUserGrid();
                 }
                 else
                 {
@@ -91,91 +67,28 @@ namespace oracle_database_administator.Role
             }
         }
 
-        private void InsertButton_Click(object sender, RoutedEventArgs e)
+        private void UpdatePrivUserGrid()
         {
             try
             {
-                string roleName = RoleNameTextBox.Text;
-
-                string query = @"BEGIN
-                            EXECUTE IMMEDIATE 'ALTER SESSION SET ""_ORACLE_SCRIPT"" = TRUE';
-                            EXECUTE IMMEDIATE 'CREATE ROLE " + roleName + "';" +
-                            " END;";
-
-
+                string query = "SELECT * FROM ALL_TAB_PRIVS WHERE GRANTEE = '" + selectedUserName + "'";
                 using (OracleCommand command = new OracleCommand(query, conn))
                 {
-                    int rowSelected = command.ExecuteNonQuery();
-
-                    if (rowSelected == -1)
+                    using (OracleDataAdapter adapter = new OracleDataAdapter(command))
                     {
-                        MessageBox.Show("Create role successfully!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-                        UpdateUserGrid();
-                    }
-                    else
-                    {
-                        MessageBox.Show("Cannot create role!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-                    }
-                }
-
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Create error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-        }
-
-        private void DeleteButton_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                if (Database.Instance.IsSelectable)
-                {
-                    string roleName = RoleNameTextBox.Text;
-                    RoleNameTextBox.Text = string.Empty;
-
-                    if (!string.IsNullOrEmpty(roleName))
-                    {
-                        try
-                        {
-                            string query = @"BEGIN
-                            EXECUTE IMMEDIATE 'ALTER SESSION SET ""_ORACLE_SCRIPT"" = TRUE';
-                            EXECUTE IMMEDIATE 'DROP ROLE " + roleName + "';" +
-                                " END;";
-
-                            using (OracleCommand command = new OracleCommand(query, conn))
-                            {
-                                int rowSelected = command.ExecuteNonQuery();
-
-                                if (rowSelected == -1)
-                                {
-                                    MessageBox.Show("Drop role successfully!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-                                    UpdateUserGrid();
-                                }
-                                else
-                                {
-                                    MessageBox.Show("Cannot drop role!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-                                }
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-                        }
-                    }
-                    else
-                    {
-                        MessageBox.Show("No role selected!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                        DataTable dataTable = new DataTable();
+                        adapter.Fill(dataTable);
+                        PrivUserDataGrid.ItemsSource = dataTable.DefaultView;
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Drop error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
-        private void BackButton_Click(object sender, RoutedEventArgs e)
+        private void HomeButton_Click(object sender, RoutedEventArgs e)
         {
             if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
             {
@@ -183,42 +96,70 @@ namespace oracle_database_administator.Role
             }
         }
 
-        private void RolesUserButton_Click(object sender, RoutedEventArgs e)
+        private void PrivUserDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
         }
 
-        private void PriUserButton_Click(object sender, RoutedEventArgs e)
+        private void BackViewUserButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
+            {
+                mainWindow.MainFrame.Navigate(new oracle_database_administator.Role.ViewRoleList());
+            }
+        }
+
+        private void TestPrivUserButton_Click(object sender, RoutedEventArgs e)
         {
 
         }
 
-        private void RoleDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void EditPrivButton_Click(object sender, RoutedEventArgs e)
+        {
+            GrantPrivOnTable grantPrivOnTabPage = new GrantPrivOnTable(selectedUserInfo);
+            NavigationService.Navigate(grantPrivOnTabPage);
+        }
+
+        private void RevokePriUserButton_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                if (Database.Instance.IsSelectable)
+                if (PrivUserDataGrid.SelectedItem != null)
                 {
-                    if (RoleDataGrid.SelectedItem != null)
+                    DataRowView selectedUser = (DataRowView)PrivUserDataGrid.SelectedItem;
+
+                    string tableName = selectedUser["TABLE_NAME"].ToString();
+                    string privilege = selectedUser["PRIVILEGE"].ToString();
+
+                    try
                     {
-                        DataRowView row = (DataRowView)RoleDataGrid.SelectedItem;
-                        if (row != null)
+                        string query = "REVOKE " + privilege + " ON " + tableName + " FROM " + selectedUserName;
+
+                        using (OracleCommand command = new OracleCommand(query, conn))
                         {
-                            RoleNameTextBox.Text = row["ROLE"].ToString();
+                            int rowSelected = command.ExecuteNonQuery();
+
+
+                            if (rowSelected == -1)
+                            {
+                                MessageBox.Show("Drop user successfully!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                                UpdatePrivUserGrid();
+                            }
+                            else
+                            {
+                                MessageBox.Show("Cannot revoke privilege of user!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                            }
                         }
                     }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
                 }
-                //else
-                //{
-                //    if (RoleDataGrid.SelectedItem != null)
-                //    {
-                //        DataRowView row = (DataRowView)RoleDataGrid.SelectedItem;
-                //        if (row != null)
-                //        {
-                //            RoleNameTextBox.Text = row["ROLE"].ToString();
-                //        }
-                //    }
-                //}
+                else
+                {
+                    MessageBox.Show("A role is required!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
             }
             catch (Exception ex)
             {
