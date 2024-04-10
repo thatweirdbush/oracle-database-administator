@@ -23,6 +23,7 @@ namespace oracle_database_administator.Role
     public partial class ViewPrivilegesOfRole : Page
     {
         OracleConnection conn;
+
         public ViewPrivilegesOfRole()
         {
             InitializeComponent();
@@ -45,7 +46,7 @@ namespace oracle_database_administator.Role
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error: " + ex.Message);
+                MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
@@ -78,13 +79,13 @@ namespace oracle_database_administator.Role
                 }
                 else
                 {
-                    MessageBox.Show("Failed to open connection.");
+                    MessageBox.Show("Failed to open connection.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
 
             catch (Exception ex)
             {
-                MessageBox.Show("Connection error: " + ex.Message);
+                MessageBox.Show("Connection error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
@@ -106,25 +107,70 @@ namespace oracle_database_administator.Role
 
                     if (rowSelected == -1)
                     {
-                        MessageBox.Show("Create role successfully!");
+                        MessageBox.Show("Create role successfully!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                         UpdateUserGrid();
                     }
                     else
                     {
-                        MessageBox.Show("Cannot create role!");
+                        MessageBox.Show("Cannot create role!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                 }
 
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Create error: " + ex.Message);
+                MessageBox.Show("Create error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
+            try
+            {
+                if (Database.Instance.IsSelectable)
+                {
+                    string roleName = RoleNameTextBox.Text;
+                    RoleNameTextBox.Text = string.Empty;
 
+                    if (!string.IsNullOrEmpty(roleName))
+                    {
+                        try
+                        {
+                            string query = @"BEGIN
+                            EXECUTE IMMEDIATE 'ALTER SESSION SET ""_ORACLE_SCRIPT"" = TRUE';
+                            EXECUTE IMMEDIATE 'DROP ROLE " + roleName + "';" +
+                                " END;";
+
+                            using (OracleCommand command = new OracleCommand(query, conn))
+                            {
+                                int rowSelected = command.ExecuteNonQuery();
+
+                                if (rowSelected == -1)
+                                {
+                                    MessageBox.Show("Drop role successfully!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                                    UpdateUserGrid();
+                                }
+                                else
+                                {
+                                    MessageBox.Show("Cannot drop role!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("No role selected!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Drop error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
@@ -143,6 +189,39 @@ namespace oracle_database_administator.Role
         private void PriUserButton_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void RoleDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                if (Database.Instance.IsSelectable)
+                {
+                    if (RoleDataGrid.SelectedItem != null)
+                    {
+                        DataRowView row = (DataRowView)RoleDataGrid.SelectedItem;
+                        if (row != null)
+                        {
+                            RoleNameTextBox.Text = row["ROLE"].ToString();
+                        }
+                    }
+                }
+                //else
+                //{
+                //    if (RoleDataGrid.SelectedItem != null)
+                //    {
+                //        DataRowView row = (DataRowView)RoleDataGrid.SelectedItem;
+                //        if (row != null)
+                //        {
+                //            RoleNameTextBox.Text = row["ROLE"].ToString();
+                //        }
+                //    }
+                //}
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
         }
     }
 }

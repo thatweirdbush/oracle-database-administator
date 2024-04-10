@@ -202,9 +202,6 @@
     <Resource Include="images\background5.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Role\background5.jpg" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="User\background5.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
