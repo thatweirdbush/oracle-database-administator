@@ -211,8 +211,8 @@ namespace oracle_database_administator.Role
         {
             try
             {
-                RoleDataGrid.Columns[0].Visibility = Visibility.Visible; // Ẩn cột Rolename
-                RoleDataGrid.Columns[1].Visibility = Visibility.Visible; // Ẩn cột Role_ID
+                RoleDataGrid.Columns[0].Visibility = Visibility.Collapsed; // Ẩn cột Rolename
+                RoleDataGrid.Columns[1].Visibility = Visibility.Collapsed; // Ẩn cột Role_ID
 
                 RoleDataGrid.Columns[2].Visibility = Visibility.Visible;
                 RoleDataGrid.Columns[3].Visibility = Visibility.Visible;
@@ -224,6 +224,7 @@ namespace oracle_database_administator.Role
 
                 InsertRoleButton.Visibility = Visibility.Collapsed;
                 DeleteRoleButton.Visibility = Visibility.Collapsed;
+                RoleUserButton.Visibility = Visibility.Collapsed;
 
                 UserNameTextBox.Visibility = Visibility.Visible;
                 UsernameLable.Visibility = Visibility.Visible;
