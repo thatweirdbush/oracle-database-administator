@@ -32,6 +32,31 @@ namespace oracle_database_administator.User
             InitializeComponent();
         }
 
+        private void ModeVisible_UserDataGrid(bool dataGridSelectionEnabled)
+        {
+            if (dataGridSelectionEnabled)
+            {
+                for (int col = 0; col < 2; col++)
+                {
+                    UserDataGrid.Columns[col].Visibility = Visibility.Collapsed; 
+                }
+                for (int col = 2; col < 9; col++) { 
+                    UserDataGrid.Columns[col].Visibility = Visibility.Visible;
+                }
+            }
+            else
+            {
+                for (int col = 0; col < 2; col++)
+                {
+                    UserDataGrid.Columns[col].Visibility = Visibility.Visible;
+                }
+                for (int col = 2; col < 9; col++)
+                {
+                    UserDataGrid.Columns[col].Visibility = Visibility.Collapsed;
+                }
+            }
+        }
+
         private void UpdateUserGrid()
         {
             try
@@ -93,8 +118,10 @@ namespace oracle_database_administator.User
         private void InsertButton_Click(object sender, RoutedEventArgs e){
             try
             {
-                if (dataGridSelectionEnabled && !string.IsNullOrEmpty(txtUserName.Text))
+                if (!string.IsNullOrEmpty(txtUserName.Text))
                 {
+                    ModeVisible_UserDataGrid(false);
+
                     string userName = txtUserName.Text;
                     string passWord = txtPassword.Text;
 
@@ -111,6 +138,7 @@ namespace oracle_database_administator.User
                         if (rowSelected == -1)
                         {
                             MessageBox.Show("Create user successfully!");
+                            dataGridSelectionEnabled = true;
                             UpdateUserGrid();
                         }
                         else
@@ -202,16 +230,9 @@ namespace oracle_database_administator.User
         {
             try
             {
-                UserDataGrid.Columns[0].Visibility = Visibility.Collapsed; // Ẩn cột USERNAME
-                UserDataGrid.Columns[1].Visibility = Visibility.Collapsed; // Ẩn cột USER_ID
+                DeleteUserButton.Visibility = Visibility.Collapsed;
 
-                UserDataGrid.Columns[2].Visibility = Visibility.Visible;
-                UserDataGrid.Columns[3].Visibility = Visibility.Visible;
-                UserDataGrid.Columns[4].Visibility = Visibility.Visible;
-                UserDataGrid.Columns[5].Visibility = Visibility.Visible;
-                UserDataGrid.Columns[6].Visibility = Visibility.Visible;
-                UserDataGrid.Columns[7].Visibility = Visibility.Visible;
-                UserDataGrid.Columns[8].Visibility = Visibility.Visible;
+                ModeVisible_UserDataGrid(dataGridSelectionEnabled);
 
                 string query = "SELECT * FROM DBA_ROLE_PRIVS";
                 using (OracleCommand command = new OracleCommand(query, conn))
