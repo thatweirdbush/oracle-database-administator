@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Oracle.ManagedDataAccess.Client;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -14,28 +14,30 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Oracle.ManagedDataAccess.Client;
 
 namespace oracle_database_administator.User
 {
     /// <summary>
-    /// Interaction logic for ViewPrivilegesOfUser.xaml
+    /// Interaction logic for GrantPrivOnTable.xaml
     /// </summary>
-    public partial class ViewPrivilegesOfUser : Page
+    /// 
+
+
+    public partial class GrantPrivOnTable : Page
     {
+
         OracleConnection conn;
 
         private UserInfo selectedUserInfo;
 
         public string selectedUserName { get; set; }
 
-        public ViewPrivilegesOfUser(UserInfo userInfo)
+        public GrantPrivOnTable(UserInfo userInfo)
         {
             InitializeComponent();
             selectedUserInfo = userInfo;
             selectedUserName = selectedUserInfo.UserName;
             DataContext = this;
-
         }
 
         private void Page_Unloaded(object sender, RoutedEventArgs e)
@@ -54,6 +56,7 @@ namespace oracle_database_administator.User
                 if (conn.State == System.Data.ConnectionState.Open)
                 {
                     Console.WriteLine("Connection opened successfully!");
+                    UpdateTablerGrid();
                     UpdatePrivUserGrid();
                 }
                 else
@@ -68,11 +71,24 @@ namespace oracle_database_administator.User
             }
         }
 
-        private void HomeButton_Click(object sender, RoutedEventArgs e)
+        private void UpdateTablerGrid()
         {
-            if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
+            try
             {
-                mainWindow.MainFrame.Navigate(new oracle_database_administator.Dashboard());
+                string query = "SELECT TABLE_NAME FROM DBA_TABLES WHERE OWNER = \'C##ADMIN\'";
+                using (OracleCommand command = new OracleCommand(query, conn))
+                {
+                    using (OracleDataAdapter adapter = new OracleDataAdapter(command))
+                    {
+                        DataTable dataTable = new DataTable();
+                        adapter.Fill(dataTable);
+                        TableDataGrid.ItemsSource = dataTable.DefaultView;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
             }
         }
 
@@ -97,28 +113,24 @@ namespace oracle_database_administator.User
             }
         }
 
-        private void PrivUserDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            
-        }
 
-        private void BackViewUserButton_Click(object sender, RoutedEventArgs e)
+        private void HomeButton_Click(object sender, RoutedEventArgs e)
         {
             if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
             {
-                mainWindow.MainFrame.Navigate(new oracle_database_administator.User.ViewUserList());
+                mainWindow.MainFrame.Navigate(new oracle_database_administator.Dashboard());
             }
         }
 
+       
         private void TestPrivUserButton_Click(object sender, RoutedEventArgs e)
         {
 
         }
 
-        private void EditPrivButton_Click(object sender, RoutedEventArgs e)
+        private void GrantUserButton_Click(object sender, RoutedEventArgs e)
         {
-            GrantPrivOnTable grantPrivOnTabPage = new GrantPrivOnTable(selectedUserInfo);
-            NavigationService.Navigate(grantPrivOnTabPage);
+
         }
 
         private void RevokePriUserButton_Click(object sender, RoutedEventArgs e)
@@ -143,7 +155,7 @@ namespace oracle_database_administator.User
 
                             if (rowSelected == -1)
                             {
-                                MessageBox.Show("Drop user successfully!");
+                                MessageBox.Show("Revoke privilege successfully!");
                                 UpdatePrivUserGrid();
                             }
                             else
@@ -152,7 +164,7 @@ namespace oracle_database_administator.User
                             }
                         }
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         MessageBox.Show("Error: " + ex.Message);
                     }
@@ -162,10 +174,68 @@ namespace oracle_database_administator.User
                     MessageBox.Show("Vui lòng chọn một người dùng trước.");
                 }
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 MessageBox.Show("Error: " + ex.Message);
             }
+        }
+
+        private void TableDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                DataRowView row = (DataRowView)TableDataGrid.SelectedItem;
+                if (row != null)
+                {
+                    txtTableName.Text = row["TABLE_NAME"].ToString();
+
+                    string query = "Select column_name from user_tab_columns WHERE TABLE_NAME = '" + row["TABLE_NAME"].ToString() + "'";
+                    using (OracleCommand command = new OracleCommand(query, conn))
+                    {
+                        using (OracleDataAdapter adapter = new OracleDataAdapter(command))
+                        {
+                            DataTable dataTable = new DataTable();
+                            adapter.Fill(dataTable);
+                            ColumnTableDataGrid.ItemsSource = dataTable.DefaultView;
+                        }
+                    }
+
+                }
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
+        }
+
+        private void BackViewPrivUserButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
+            {
+                mainWindow.MainFrame.Navigate(new oracle_database_administator.User.ViewPrivilegesOfUser(selectedUserInfo));
+            }
+        }
+
+        private void ColumnTableDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                DataRowView row = (DataRowView)ColumnTableDataGrid.SelectedItem;
+                if (row != null)
+                {
+                    txtColumnName.Text = row["COLUMN_NAME"].ToString();
+
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
+        }
+
+        private void PrivUserDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
         }
     }
 }
