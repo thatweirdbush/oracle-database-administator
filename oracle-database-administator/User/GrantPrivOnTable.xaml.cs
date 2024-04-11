@@ -101,8 +101,8 @@ namespace oracle_database_administator.User
                 string query = "SELECT " +
                     "   COALESCE(t1.table_name, c.table_name) AS table_name, " +
                     "   c.column_name, " +
-                    "   t1.privilege, " +
-                    "   t1.GRANTABLE " +
+                    "   COALESCE(t1.privilege, c.privilege) AS privilege, " +
+                    "   COALESCE(t1.GRANTABLE, c.GRANTABLE) AS GRANTABLE " +
                     "FROM  " +
                     "   ALL_TAB_PRIVS t1 " +
                     "FULL OUTER JOIN dba_col_privs c " +
@@ -225,6 +225,7 @@ namespace oracle_database_administator.User
                         MessageBox.Show("Failed to grant this privilege!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                 }
+                myListBox.SelectedItems.Clear();
             }
             catch (Exception ex)
             {
