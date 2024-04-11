@@ -61,13 +61,13 @@ namespace oracle_database_administator.User
                 }
                 else
                 {
-                    MessageBox.Show("Failed to open connection.");
+                    MessageBox.Show("Failed to open connection.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
 
             catch (Exception ex)
             {
-                MessageBox.Show("Connection error: " + ex.Message);
+                MessageBox.Show("Connection error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
@@ -88,7 +88,7 @@ namespace oracle_database_administator.User
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error: " + ex.Message);
+                MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
@@ -123,16 +123,7 @@ namespace oracle_database_administator.User
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error: " + ex.Message);
-            }
-        }
-
-
-        private void HomeButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
-            {
-                mainWindow.MainFrame.Navigate(new oracle_database_administator.Dashboard());
+                MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
@@ -163,11 +154,6 @@ namespace oracle_database_administator.User
             return "(" + input + ")";
         }
 
-        /*public bool IsOnlyContains(string input, string target)
-        {
-            return input.Trim().Equals(target) && !input.Trim().Contains(" ");
-        }*/
-
         public bool IsOnlyContains(string originalString, string subString)
         {
             if (originalString != null && subString != null)
@@ -177,6 +163,15 @@ namespace oracle_database_administator.User
             }
             return false;
         }
+
+        private void HomeButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
+            {
+                mainWindow.MainFrame.Navigate(new oracle_database_administator.Dashboard());
+            }
+        }
+
         private void GrantUserButton_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -184,73 +179,56 @@ namespace oracle_database_administator.User
                 string tableName = txtTableName.Text;
                 string colName = EncloseInParentheses(txtColumnName.Text);
                 string privileges = SelectItemsListBox();
+                string withGrantOptionString = (myCheckBoxGrantOption.IsChecked == true) ? " WITH GRANT OPTION" : "";
+                string columnNameString = (colName != "()") ? colName : "";
                 string query = "";
 
-                try
+                // Check null privilege & table name selection
+                if (privileges == "")
                 {
-                    if (myCheckBoxGrantOption.IsChecked == true)
+                    MessageBox.Show("Select a privilege.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                    return;
+                }
+                if (tableName == "")
+                {
+                    MessageBox.Show("Select a table.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                    return;
+                }
+ 
+                // Check if there is no column selected
+                if(columnNameString == "")
+                {
+                    query = "GRANT " + privileges + " ON " + tableName + " TO " + selectedUserName + withGrantOptionString;
+                }
+                // Check if required privileges are contained
+                else if ((IsOnlyContains(privileges, "UPDATE") || IsOnlyContains(privileges, "SELECT, UPDATE") || IsOnlyContains(privileges, "UPDATE, SELECT")))
+                {
+                    query = "GRANT " + privileges + columnNameString + " ON " + tableName + " TO " + selectedUserName + withGrantOptionString;
+                }
+                else
+                {
+                    MessageBox.Show("No permission to grant " + privileges + " on column " + colName + ".\nPlease select other privileges.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                    return;
+                }
+
+                using (OracleCommand command = new OracleCommand(query, conn))
+                {
+                    int rowSelected = command.ExecuteNonQuery();
+
+                    if (rowSelected == -1)
                     {
-                        if (colName != null)
-                        {
-                            if (IsOnlyContains(privileges, "UPDATE") || IsOnlyContains(privileges, "SELECT, UPDATE") || IsOnlyContains(privileges, "UPDATE, SELECT"))
-                            {
-                                query = "GRANT " + privileges + colName + " ON " + tableName + " TO " + selectedUserName + " WITH GRANT OPTION";
-                            }
-                            else
-                            {
-                                MessageBox.Show("Bạn không được quyền cấp quyền " + privileges + " trên cột này");
-                                return;
-                            }
-                        }
-                        else
-                        {
-                            query = "GRANT " + privileges + " ON " + tableName + " TO " + selectedUserName + " WITH GRANT OPTION";
-                        }
+                        MessageBox.Show("Grant privilege successfully!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                        UpdatePrivUserGrid();
                     }
                     else
                     {
-                        if (colName != null)
-                        {
-                            if (IsOnlyContains(privileges, "UPDATE") || IsOnlyContains(privileges, "SELECT, UPDATE"))
-                            {
-                                query = "GRANT " + privileges + colName + " ON " + tableName + " TO " + selectedUserName + " WITH GRANT OPTION";
-                            }
-                            else
-                            {
-                                MessageBox.Show("Bạn không được quyền cấp quyền " + privileges + " trên cột này");
-                                return;
-                            }
-                        }
-                        else
-                        {
-                            query = "GRANT " + privileges + " ON " + tableName + " TO " + selectedUserName;
-                        }
-                    }
-                    using (OracleCommand command = new OracleCommand(query, conn))
-                    {
-                        int rowSelected = command.ExecuteNonQuery();
-
-
-                        if (rowSelected == -1)
-                        {
-                            MessageBox.Show("GRANT privilege successfully!");
-                            UpdatePrivUserGrid();
-                        }
-                        else
-                        {
-                            MessageBox.Show("Cannot grant privilege of user!");
-                        }
+                        MessageBox.Show("Failed to grant this privilege!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Error: " + ex.Message);
-                }
-
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error: " + ex.Message);
+                MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
@@ -265,39 +243,43 @@ namespace oracle_database_administator.User
                     string tableName = selectedUser["TABLE_NAME"].ToString();
                     string privilege = selectedUser["PRIVILEGE"].ToString();
 
-                    try
+                    if (privilege == "")
                     {
-                        string query = "REVOKE " + privilege + " ON " + tableName + " FROM " + selectedUserName;
-
-                        using (OracleCommand command = new OracleCommand(query, conn))
-                        {
-                            int rowSelected = command.ExecuteNonQuery();
-
-
-                            if (rowSelected == -1)
-                            {
-                                MessageBox.Show("Revoke privilege successfully!");
-                                UpdatePrivUserGrid();
-                            }
-                            else
-                            {
-                                MessageBox.Show("Cannot revoke privilege of user!");
-                            }
-                        }
+                        privilege = "UPDATE";
                     }
-                    catch (Exception ex)
+                    string query = "REVOKE " + privilege + " ON " + tableName + " FROM " + selectedUserName;
+
+                    using (OracleCommand command = new OracleCommand(query, conn))
                     {
-                        MessageBox.Show("Error: " + ex.Message);
+                        int rowSelected = command.ExecuteNonQuery();
+
+                        if (rowSelected == -1)
+                        {
+                            MessageBox.Show("Revoke privilege successfully!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                            UpdatePrivUserGrid();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Failed to revoke this privilege!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                        }
                     }
                 }
                 else
                 {
-                    MessageBox.Show("Vui lòng chọn một người dùng trước.");
+                    MessageBox.Show("Select a privilege.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error: " + ex.Message);
+                MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
+
+        private void BackViewPrivUserButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
+            {
+                mainWindow.MainFrame.Navigate(new oracle_database_administator.User.ViewPrivilegesOfUser(selectedUserInfo));
             }
         }
 
@@ -309,6 +291,7 @@ namespace oracle_database_administator.User
                 if (row != null)
                 {
                     txtTableName.Text = row["TABLE_NAME"].ToString();
+                    txtColumnName.Text = null;
 
                     string query = "Select column_name from user_tab_columns WHERE TABLE_NAME = '" + row["TABLE_NAME"].ToString() + "'";
                     using (OracleCommand command = new OracleCommand(query, conn))
@@ -325,15 +308,7 @@ namespace oracle_database_administator.User
             }
             catch(Exception ex)
             {
-                MessageBox.Show("Error: " + ex.Message);
-            }
-        }
-
-        private void BackViewPrivUserButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
-            {
-                mainWindow.MainFrame.Navigate(new oracle_database_administator.User.ViewPrivilegesOfUser(selectedUserInfo));
+                MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
@@ -345,12 +320,11 @@ namespace oracle_database_administator.User
                 if (row != null)
                 {
                     txtColumnName.Text = row["COLUMN_NAME"].ToString();
-
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error: " + ex.Message);
+                MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 

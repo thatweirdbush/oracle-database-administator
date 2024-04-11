@@ -29,7 +29,7 @@
                 <!--<TextBlock TextWrapping="Wrap" Text="TextBlock"/>-->
             </Border>
 
-            <Label Content="Cấp quyền cho " HorizontalAlignment="Left" Margin="773,36,0,0" VerticalAlignment="Top" Foreground="#333" Background="{x:Null}">
+            <Label Content="Edit privilege for " HorizontalAlignment="Left" Margin="773,36,0,0" VerticalAlignment="Top" Foreground="#333" Background="{x:Null}">
                 <Label.Style>
                     <Style TargetType="Label">
                         <Setter Property="FontSize" Value="26"/>
@@ -102,7 +102,7 @@
                 </Button.Effect>
             </Button>
 
-            <Grid x:Name="PrivPanel" Height="120" Width="113" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="634,412,0,0">
+            <Grid x:Name="PrivPanel" Height="118" Width="113" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="634,440,0,0">
                 <Grid.Resources>
                     <Style TargetType="{x:Type Border}">
                         <Setter Property="CornerRadius" Value="10"/>
@@ -121,10 +121,10 @@
                     </Style>
                 </Grid.Resources>
                 <Grid.Background>
-                    <SolidColorBrush Color="#FFD4EBFF" Opacity="0.9"/>
+                    <SolidColorBrush Color="#FFD4EBFF" Opacity="0.6"/>
                 </Grid.Background>
 
-                <Border BorderBrush="Black" BorderThickness="2" CornerRadius="10">
+                <Border BorderBrush="Black" BorderThickness="1.5" CornerRadius="6">
                     <ListBox x:Name="myListBox" Margin="5" Background="{x:Null}" SelectionMode="Multiple" BorderBrush="{x:Null}">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
@@ -144,7 +144,7 @@
                 </Border>
             </Grid>
 
-            <CheckBox x:Name="myCheckBoxGrantOption" Content="With grant option" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="634,550,0,0" FontWeight="Bold">
+            <CheckBox x:Name="myCheckBoxGrantOption" Content="With grant option" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="630,570,0,0" FontWeight="Bold" Background="White">
                 <CheckBox.Resources>
                     <Style TargetType="CheckBox">
                         <Setter Property="FontSize" Value="16" />
@@ -245,7 +245,7 @@
                 </DataGrid.RowBackground>
 
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="TABLE_NAME" Binding="{Binding TABLE_NAME}" Width="*">
+                    <DataGridTextColumn Header="TABLE" Binding="{Binding TABLE_NAME}" Width="*">
                         <DataGridTextColumn.HeaderStyle>
                             <Style TargetType="{x:Type DataGridColumnHeader}">
                                 <Setter Property="ContentTemplate">
@@ -268,7 +268,7 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <DataGridTextColumn Header="COLUMN_NAME" Binding="{Binding COLUMN_NAME}" Width="*">
+                    <DataGridTextColumn Header="COLUMN" Binding="{Binding COLUMN_NAME}" Width="*">
                         <DataGridTextColumn.HeaderStyle>
                             <Style TargetType="{x:Type DataGridColumnHeader}">
                                 <Setter Property="ContentTemplate">
@@ -350,6 +350,7 @@
                 </TextBox.Background>
             </TextBox>
             <Label Content="Column Name:" HorizontalAlignment="Left" Margin="822,485,0,0" VerticalAlignment="Top" FontSize="18" FontFamily="Segoe UI" Foreground="#333" Background="{x:Null}" Width="230" FontWeight="Medium"/>
+            <Label Content="Privilege:" HorizontalAlignment="Left" Margin="634,407,0,0" VerticalAlignment="Top" FontSize="18" FontFamily="Segoe UI" Foreground="#333" Background="{x:Null}" Width="230" FontWeight="Medium"/>
         </Grid>
     </Grid>
 </Page>

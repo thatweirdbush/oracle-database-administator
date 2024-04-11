@@ -106,6 +106,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Database.cs" />
+    <Compile Include="Role\TestPrivileges.xaml.cs">
+      <DependentUpon>TestPrivileges.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Role\ViewPrivilegesOfRole.xaml.cs">
       <DependentUpon>ViewPrivilegesOfRole.xaml</DependentUpon>
     </Compile>
@@ -141,6 +144,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Role\TestPrivileges.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Role\ViewPrivilegesOfRole.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
