@@ -245,8 +245,17 @@ namespace oracle_database_administator.User
 
                             using (OracleCommand command = new OracleCommand(insert_query, NewConnection))
                             {
-                                MessageBox.Show("Executed \'Insert\' successfully!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                                int rowSelected = command.ExecuteNonQuery();
 
+                                if (rowSelected == 1)
+                                {
+                                    MessageBox.Show("Executed \'Insert\' successfully!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                                }
+                                else
+                                {
+                                    MessageBox.Show("Failed to execute \'Insert\'!");
+                                }
                             }
 
                             query = " SELECT * FROM SYS.UV_" + table_name;
@@ -266,13 +275,15 @@ namespace oracle_database_administator.User
                             {
                                 using (OracleCommand command = new OracleCommand(update_query, NewConnection))
                                 {
-                                    MessageBox.Show("Executed \'Update\' successfully!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                                    int rowSelected = command.ExecuteNonQuery();
 
-                                    using (OracleDataAdapter adapter = new OracleDataAdapter(command))
+                                    if (rowSelected == 1)
                                     {
-                                        DataTable dataTable = new DataTable();
-                                        adapter.Fill(dataTable);
-                                        ResultViewDataGrid.ItemsSource = dataTable.DefaultView;
+                                        MessageBox.Show("Executed \'Update\' successfully!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                                    }
+                                    else
+                                    {
+                                        MessageBox.Show("Failed to execute \'Update\'!");
                                     }
                                 }
                             }
@@ -294,14 +305,17 @@ namespace oracle_database_administator.User
                             {
                                 using (OracleCommand command = new OracleCommand(delete_query, NewConnection))
                                 {
-                                    MessageBox.Show("Executed \'Delete\' successfully!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                                    int rowSelected = command.ExecuteNonQuery();
 
-                                    using (OracleDataAdapter adapter = new OracleDataAdapter(command))
+                                    if (rowSelected == 1)
                                     {
-                                        DataTable dataTable = new DataTable();
-                                        adapter.Fill(dataTable);
-                                        ResultViewDataGrid.ItemsSource = dataTable.DefaultView;
+                                        MessageBox.Show("Executed \'Delete\' successfully!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+
                                     }
+                                    else
+                                    {
+                                        MessageBox.Show("Failed to execute \'Delete\'!");
+                                    } 
                                 }
                             }
 
