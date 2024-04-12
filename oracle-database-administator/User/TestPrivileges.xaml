@@ -29,7 +29,7 @@
                 <!--<TextBlock TextWrapping="Wrap" Text="TextBlock"/>-->
             </Border>
 
-            <DataGrid x:Name="ResultViewDataGrid" Margin="574,205,60,110"  ItemsSource="{Binding YourData}" AutoGenerateColumns="True" FontWeight="Medium" BorderBrush="{x:Null}"  Background="{x:Null}" VerticalScrollBarVisibility="Hidden" GridLinesVisibility="None" SelectionChanged="ResultViewDataGrid_SelectionChanged">
+            <DataGrid x:Name="ResultViewDataGrid" Margin="574,205,60,110"  ItemsSource="{Binding YourData}" AutoGenerateColumns="True" FontWeight="Medium" BorderBrush="{x:Null}"  Background="{x:Null}" VerticalScrollBarVisibility="Hidden" GridLinesVisibility="None" SelectionChanged="ResultViewDataGrid_SelectionChanged" CellEditEnding="ResultViewDataGrid_CellEditEnding">
                 <DataGrid.RowBackground>
                     <SolidColorBrush Color="#FFA3BDD2" Opacity="0.6"/>
                 </DataGrid.RowBackground>

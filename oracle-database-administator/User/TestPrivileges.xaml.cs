@@ -31,6 +31,9 @@ namespace oracle_database_administator.User
 
         public string currentUserID { get; set; }
 
+        private DataGridColumn editedColumn;
+        private string newValue;
+
         public TestPrivileges(UserInfo userInfo)
         {
             InitializeComponent();
@@ -75,7 +78,16 @@ namespace oracle_database_administator.User
                 MessageBox.Show("Connection error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
-        
+
+        private void ResultViewDataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
+        {
+            // Lấy cột được chỉnh sửa
+            editedColumn = e.Column;
+
+            // Lấy giá trị mới
+            newValue = (e.EditingElement as TextBox)?.Text; // Sử dụng ?. để tránh lỗi nếu không phải TextBox
+        }
+
         // Hàm thay đổi connection theo selected User_name => trả về string
         private String AlternateConnectionString(String user)
         {
@@ -161,13 +173,17 @@ namespace oracle_database_administator.User
         {
             try
             {
-                DataRowView row = (DataRowView)PrivUserDataGrid.SelectedItem;
-                if (row != null)
+                DataRowView row_priv = (DataRowView)PrivUserDataGrid.SelectedItem;
+                DataRowView row_col = (DataRowView)PrivUserDataGrid.SelectedItem;
+
+
+                if (row_priv != null)
                 {
-                    string table_name = row["TABLE_NAME"].ToString();
-                    string column_str = row["COLUMN_NAME"].ToString();
-                    string priv = row["PRIVILEGE"].ToString();
+                    string table_name = row_priv["TABLE_NAME"].ToString();
+                    string column_str = row_priv["COLUMN_NAME"].ToString();
+                    string priv = row_priv["PRIVILEGE"].ToString();
                     string query = "";
+
 
 
                     if (priv == "SELECT")
@@ -218,7 +234,25 @@ namespace oracle_database_administator.User
 
         private void PrivUserDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            DataRowView row = (DataRowView)PrivUserDataGrid.SelectedItem;
 
+            string priv = row["PRIVILEGE"].ToString();
+            string table_name = row["TABLE_NAME"].ToString();
+
+            string query = "SELECT * FROM SYS." + table_name;
+
+            if (priv != "SELECT" && priv != "INSERT")
+            {
+                using (OracleCommand command = new OracleCommand(query, NewConnection))
+                {
+                    using (OracleDataAdapter adapter = new OracleDataAdapter(command))
+                    {
+                        DataTable dataTable = new DataTable();
+                        adapter.Fill(dataTable);
+                        ResultViewDataGrid.ItemsSource = dataTable.DefaultView;
+                    }
+                }
+            }
         }
     }
 }
