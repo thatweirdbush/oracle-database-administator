@@ -105,7 +105,7 @@ namespace oracle_database_administator.User
                     "    PRIVILEGE," +
                     "    GRANTABLE " +
                     "FROM ALL_TAB_PRIVS " +
-                    "WHERE GRANTEE = 'KH1' " +
+                    "WHERE GRANTEE = '" + selectedUserName + "'" +
                     "UNION ALL " +
                     "SELECT" +
                     "   GRANTEE," +
