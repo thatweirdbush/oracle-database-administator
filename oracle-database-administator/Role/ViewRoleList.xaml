@@ -198,7 +198,7 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <DataGridTextColumn Header="ADMIN OPTION" Binding="{Binding ADMIN_OPTION}" Width="*" Visibility="Collapsed">
+                    <DataGridTextColumn Header="ADMIN OPTION" Binding="{Binding ADMIN_OPTION}" Width="150" Visibility="Collapsed">
                         <DataGridTextColumn.HeaderStyle>
                             <Style TargetType="DataGridColumnHeader">
                                 <Setter Property="ContentTemplate">
@@ -221,7 +221,7 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <DataGridTextColumn Header="DELEGATE OPTION" Binding="{Binding DELEGATE_OPTION}" Width="*" Visibility="Collapsed">
+                    <DataGridTextColumn Header="DELEGATE OPTION" Binding="{Binding DELEGATE_OPTION}" Width="150" Visibility="Collapsed">
                         <DataGridTextColumn.HeaderStyle>
                             <Style TargetType="DataGridColumnHeader">
                                 <Setter Property="ContentTemplate">
@@ -244,7 +244,7 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <DataGridTextColumn Header="DEFAULT_ROLE" Binding="{Binding DEFAULT_ROLE}" Width="*" Visibility="Collapsed">
+                    <DataGridTextColumn Header="DEFAULT_ROLE" Binding="{Binding DEFAULT_ROLE}" Width="150" Visibility="Collapsed">
                         <DataGridTextColumn.HeaderStyle>
                             <Style TargetType="DataGridColumnHeader">
                                 <Setter Property="ContentTemplate">
@@ -267,7 +267,7 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <DataGridTextColumn Header="COMMON" Binding="{Binding COMMON}" Width="*" Visibility="Collapsed">
+                    <DataGridTextColumn Header="COM" Binding="{Binding COMMON}" Width="50" Visibility="Collapsed">
                         <DataGridTextColumn.HeaderStyle>
                             <Style TargetType="DataGridColumnHeader">
                                 <Setter Property="ContentTemplate">
@@ -290,7 +290,7 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <DataGridTextColumn Header="INHERITED" Binding="{Binding INHERITED}" Width="*" Visibility="Collapsed">
+                    <DataGridTextColumn Header="INH" Binding="{Binding INHERITED}" Width="50" Visibility="Collapsed">
                         <DataGridTextColumn.HeaderStyle>
                             <Style TargetType="DataGridColumnHeader">
                                 <Setter Property="ContentTemplate">
@@ -382,7 +382,7 @@
                     <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
                 </Button.Effect>
             </Button>
-            <Label Content="Edit Role Here" HorizontalAlignment="Left" Margin="669,58,0,0" VerticalAlignment="Top" FontSize="24" FontFamily="Segoe UI" Foreground="#333" Background="{x:Null}" Width="230" FontWeight="Bold" />
+            <Label x:Name="EditRoleLabel" Content="Edit Role Here" HorizontalAlignment="Left" Margin="669,58,0,0" VerticalAlignment="Top" FontSize="24" FontFamily="Segoe UI" Foreground="#333" Background="{x:Null}" Width="230" FontWeight="Bold" />
         </Grid>
     </Grid>
 </Page>

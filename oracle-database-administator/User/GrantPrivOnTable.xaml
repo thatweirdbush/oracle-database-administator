@@ -239,7 +239,7 @@
                     </DataGridTextColumn>
                 </DataGrid.Columns>
             </DataGrid>
-            <DataGrid x:Name="PrivUserDataGrid" Margin="59,205,557,110" AutoGenerateColumns="False" FontWeight="Medium" BorderBrush="{x:Null}" SelectionChanged="PrivUserDataGrid_SelectionChanged" Background="{x:Null}" VerticalScrollBarVisibility="Hidden" GridLinesVisibility="None">
+            <DataGrid x:Name="PrivUserDataGrid" Margin="60,205,557,110" AutoGenerateColumns="False" FontWeight="Medium" BorderBrush="{x:Null}" SelectionChanged="PrivUserDataGrid_SelectionChanged" Background="{x:Null}" VerticalScrollBarVisibility="Hidden" GridLinesVisibility="None">
                 <DataGrid.RowBackground>
                     <SolidColorBrush Color="#FFA3BDD2" Opacity="0.6"/>
                 </DataGrid.RowBackground>

@@ -141,7 +141,10 @@ namespace oracle_database_administator.User
 
         private void TestPrivUserButton_Click(object sender, RoutedEventArgs e)
         {
-
+            if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
+            {
+                mainWindow.MainFrame.Navigate(new oracle_database_administator.User.TestPrivileges(selectedUserInfo));
+            }
         }
 
         private void EditPrivButton_Click(object sender, RoutedEventArgs e)

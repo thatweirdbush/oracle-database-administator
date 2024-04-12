@@ -78,6 +78,33 @@ namespace oracle_database_administator.User
             }
         }
 
+
+
+        private void USER()
+        {
+            try
+            {
+                string query = "SELECT USER FROM dual";
+                using (OracleCommand command = new OracleCommand(query, conn))
+                {
+                    object result = command.ExecuteScalar();
+                    if (result != null)
+                    {
+                        // Hiển thị kết quả trong MessageBox
+                        MessageBox.Show("Current User: " + result.ToString());
+                    }
+                    else
+                    {
+                        MessageBox.Show("No user found.");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
+        }
+
         private void HomeButton_Click(object sender, RoutedEventArgs e)
         {
             if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
@@ -102,6 +129,7 @@ namespace oracle_database_administator.User
                 {
                     Console.WriteLine("Connection opened successfully!");
                     UpdateUserGrid();
+                    //USER();
                 }
                 else
                 {
