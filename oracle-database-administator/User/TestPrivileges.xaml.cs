@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -34,6 +35,10 @@ namespace oracle_database_administator.User
         private DataGridColumn editedColumn;
         private string newValue;
 
+        string table_name = "";
+        string delete_query = "";
+
+
         public TestPrivileges(UserInfo userInfo)
         {
             InitializeComponent();
@@ -54,7 +59,11 @@ namespace oracle_database_administator.User
 
         private void Page_Unloaded(object sender, RoutedEventArgs e)
         {
-          
+            if (NewConnection != null)
+            {
+                NewConnection.Dispose();
+                NewConnection = null;
+            }
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
@@ -174,12 +183,10 @@ namespace oracle_database_administator.User
             try
             {
                 DataRowView row_priv = (DataRowView)PrivUserDataGrid.SelectedItem;
-                DataRowView row_col = (DataRowView)PrivUserDataGrid.SelectedItem;
-
-
+                DataRowView row_col = (DataRowView)ResultViewDataGrid.SelectedItem;
                 if (row_priv != null)
                 {
-                    string table_name = row_priv["TABLE_NAME"].ToString();
+                    table_name = row_priv["TABLE_NAME"].ToString();
                     string column_str = row_priv["COLUMN_NAME"].ToString();
                     string priv = row_priv["PRIVILEGE"].ToString();
                     string query = "";
@@ -190,6 +197,16 @@ namespace oracle_database_administator.User
                     {
                         MessageBox.Show(priv);
                         query += " SELECT * FROM SYS." + table_name;
+
+                        using (OracleCommand command = new OracleCommand(query, NewConnection))
+                        {
+                            using (OracleDataAdapter adapter = new OracleDataAdapter(command))
+                            {
+                                DataTable dataTable = new DataTable();
+                                adapter.Fill(dataTable);
+                                ResultViewDataGrid.ItemsSource = dataTable.DefaultView;
+                            }
+                        }
                     } 
                     else if (priv == "INSERT")
                     {
@@ -201,20 +218,33 @@ namespace oracle_database_administator.User
                     }
                     else if (priv == "DELETE")
                     {
-
-                    }
-
-                    using (OracleCommand command = new OracleCommand(query, NewConnection))
-                    {
-                        using (OracleDataAdapter adapter = new OracleDataAdapter(command))
+                        if (delete_query != "")
                         {
-                            DataTable dataTable = new DataTable();
-                            adapter.Fill(dataTable);
-                            ResultViewDataGrid.ItemsSource = dataTable.DefaultView;
+                            using (OracleCommand command = new OracleCommand(delete_query, NewConnection))
+                            {
+                                MessageBox.Show("Executed \'Delete\' successfully!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                                using (OracleDataAdapter adapter = new OracleDataAdapter(command))
+                                {
+                                    DataTable dataTable = new DataTable();
+                                    adapter.Fill(dataTable);
+                                    ResultViewDataGrid.ItemsSource = dataTable.DefaultView;
+                                }
+                            }
+                        }
+
+                        query = " SELECT * FROM SYS." + table_name;
+                        using (OracleCommand command = new OracleCommand(query, NewConnection))
+                        {
+                            using (OracleDataAdapter adapter = new OracleDataAdapter(command))
+                            {
+                                DataTable dataTable = new DataTable();
+                                adapter.Fill(dataTable);
+                                ResultViewDataGrid.ItemsSource = dataTable.DefaultView;
+                            }
                         }
                     }
                 }
-
             }
             catch (Exception ex)
             {
@@ -229,29 +259,97 @@ namespace oracle_database_administator.User
 
         private void ResultViewDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            DataRowView selectedRow = (DataRowView)ResultViewDataGrid.SelectedItem;
+            if (selectedRow != null)
+            {
+                string condition = "";
 
+                // Lấy danh sách các cột trong DataGrid
+                foreach (DataGridColumn column in ResultViewDataGrid.Columns)
+                {
+                    // Lấy tên của cột
+                    string columnName = column.Header.ToString();
+
+                    if (columnName == "NGSINH")
+                    {
+                        continue;
+                    }
+
+                    // Lấy dữ liệu từ cột được chọn
+                    object cellValue = ((DataRowView)ResultViewDataGrid.SelectedItem)[columnName];
+
+                    // Kiểm tra giá trị của cột có null không trước khi thêm vào điều kiện
+                    if (cellValue != null)
+                    {
+                        // Nối chuỗi vào điều kiện
+                        if (!string.IsNullOrEmpty(condition))
+                        {
+                            condition += " AND ";
+                        }
+                        condition += $"{columnName} = '{cellValue}'";
+                    }
+                }
+
+                delete_query = string.Format("DELETE FROM SYS.{0} WHERE {1}", table_name, condition);
+                //MessageBox.Show(delete_query, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+            }           
         }
 
         private void PrivUserDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            DataRowView row = (DataRowView)PrivUserDataGrid.SelectedItem;
-
-            string priv = row["PRIVILEGE"].ToString();
-            string table_name = row["TABLE_NAME"].ToString();
-
-            string query = "SELECT * FROM SYS." + table_name;
-
-            if (priv != "SELECT" && priv != "INSERT")
+            try
             {
-                using (OracleCommand command = new OracleCommand(query, NewConnection))
+                DataRowView row_priv = (DataRowView)PrivUserDataGrid.SelectedItem;
+                //DataRowView row_col = (DataRowView)ResultViewDataGrid.SelectedItem;
+                if (row_priv != null)
                 {
-                    using (OracleDataAdapter adapter = new OracleDataAdapter(command))
+                    table_name = row_priv["TABLE_NAME"].ToString();
+                    string column_str = row_priv["COLUMN_NAME"].ToString();
+                    string priv = row_priv["PRIVILEGE"].ToString();
+                    string query = "";
+
+
+                    if (priv == "SELECT")
                     {
-                        DataTable dataTable = new DataTable();
-                        adapter.Fill(dataTable);
-                        ResultViewDataGrid.ItemsSource = dataTable.DefaultView;
+                        query += " SELECT * FROM SYS." + table_name;
+
+                        using (OracleCommand command = new OracleCommand(query, NewConnection))
+                        {
+                            using (OracleDataAdapter adapter = new OracleDataAdapter(command))
+                            {
+                                DataTable dataTable = new DataTable();
+                                adapter.Fill(dataTable);
+                                ResultViewDataGrid.ItemsSource = dataTable.DefaultView;
+                            }
+                        }
+                    }
+                    else if (priv == "INSERT")
+                    {
+
+                    }
+                    else if (priv == "UPDATE")
+                    {
+
+                    }
+                    else if (priv == "DELETE")
+                    {
+                        query += "SELECT * FROM SYS." + table_name;
+                        using (OracleCommand command = new OracleCommand(query, NewConnection))
+                        {
+                            using (OracleDataAdapter adapter = new OracleDataAdapter(command))
+                            {
+                                DataTable dataTable = new DataTable();
+                                adapter.Fill(dataTable);
+                                ResultViewDataGrid.ItemsSource = dataTable.DefaultView;
+                            }
+                        }
+
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
     }
