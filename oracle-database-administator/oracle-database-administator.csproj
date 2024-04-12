@@ -106,9 +106,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Database.cs" />
-    <Compile Include="Role\TestPrivileges.xaml.cs">
-      <DependentUpon>TestPrivileges.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Role\ViewPrivilegesOfRole.xaml.cs">
       <DependentUpon>ViewPrivilegesOfRole.xaml</DependentUpon>
     </Compile>
@@ -117,6 +114,9 @@
     </Compile>
     <Compile Include="User\GrantPrivOnTable.xaml.cs">
       <DependentUpon>GrantPrivOnTable.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="User\TestPrivileges.xaml.cs">
+      <DependentUpon>TestPrivileges.xaml</DependentUpon>
     </Compile>
     <Compile Include="User\UserDAO.cs" />
     <Compile Include="User\ViewPrivilegesOfUser.xaml.cs">
@@ -144,10 +144,6 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Role\TestPrivileges.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Role\ViewPrivilegesOfRole.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -157,6 +153,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="User\GrantPrivOnTable.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="User\TestPrivileges.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

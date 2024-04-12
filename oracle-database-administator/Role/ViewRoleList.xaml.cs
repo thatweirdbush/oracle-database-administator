@@ -227,7 +227,7 @@ namespace oracle_database_administator.Role
                 InsertRoleButton.Visibility = Visibility.Collapsed;
                 DeleteRoleButton.Visibility = Visibility.Collapsed;
                 RoleUserButton.Visibility = Visibility.Collapsed;
-
+                EditRoleLabel.Visibility = Visibility.Collapsed;
                 UsernameGrid.Visibility = Visibility.Visible;
 
                 UpdateUserPrivilegesGrid();

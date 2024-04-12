@@ -98,5 +98,34 @@ namespace oracle_database_administator
             get { return dataGridSelectionEnabled; }
             set {  dataGridSelectionEnabled = value; }
         }
+
+        public OracleConnection AlternateConnection
+        {
+            get
+            {
+                if (_connection == null || _connection.State != ConnectionState.Open)
+                {
+                    // Đóng kết nối hiện tại (nếu có)
+                    DisposeConnection();
+
+                    // Đọc chuỗi kết nối từ tệp cấu hình
+                    string connectionString = ConfigurationManager.ConnectionStrings["OracleDbContext"].ConnectionString;
+
+                    _connection = new OracleConnection(connectionString);
+                    try
+                    {
+                        _connection.Open();
+                    }
+                    catch (OracleException ex)
+                    {
+                        // Xử lý khi kết nối thất bại
+                        Console.WriteLine("Không thể mở kết nối: " + ex.Message);
+                        _connection.Dispose();
+                        _connection = null;
+                    }
+                }
+                return _connection;
+            }
+        }
     }
 }
