@@ -289,38 +289,43 @@ namespace oracle_database_administator.User
 
         private void ResultViewDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            DataRowView selectedRow = (DataRowView)ResultViewDataGrid.SelectedItem;
-            if (selectedRow != null)
-            {
-                // Lấy danh sách các cột trong DataGrid
-                foreach (DataGridColumn column in ResultViewDataGrid.Columns)
+            try {
+                DataRowView selectedRow = (DataRowView)ResultViewDataGrid.SelectedItem;
+                if (selectedRow != null)
                 {
-                    // Lấy tên của cột
-                    string columnName = column.Header.ToString();
-
-                    if (columnName == "NGSINH")
+                    // Lấy danh sách các cột trong DataGrid
+                    foreach (DataGridColumn column in ResultViewDataGrid.Columns)
                     {
-                        continue;
-                    }
+                        // Lấy tên của cột
+                        string columnName = column.Header.ToString();
 
-                    // Lấy dữ liệu từ cột được chọn
-                    object cellValue = ((DataRowView)ResultViewDataGrid.SelectedItem)[columnName];
-
-                    // Kiểm tra giá trị của cột có null không trước khi thêm vào điều kiện
-                    if (cellValue != null)
-                    {
-                        // Nối chuỗi vào điều kiện
-                        if (!string.IsNullOrEmpty(condition))
+                        if (columnName == "NGSINH")
                         {
-                            condition += " AND ";
+                            continue;
                         }
-                        condition += $"{columnName} = '{cellValue}'";
-                    }
-                }
 
-                delete_query = string.Format("DELETE FROM SYS.{0} WHERE {1}", table_name, condition);
-                //MessageBox.Show(delete_query, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-            }           
+                        // Lấy dữ liệu từ cột được chọn
+                        object cellValue = ((DataRowView)ResultViewDataGrid.SelectedItem)[columnName];
+
+                        // Kiểm tra giá trị của cột có null không trước khi thêm vào điều kiện
+                        if (cellValue != null)
+                        {
+                            // Nối chuỗi vào điều kiện
+                            if (!string.IsNullOrEmpty(condition))
+                            {
+                                condition += " AND ";
+                            }
+                            condition += $"{columnName} = '{cellValue}'";
+                        }
+                    }
+
+                    delete_query = string.Format("DELETE FROM SYS.{0} WHERE {1}", table_name, condition);
+                    
+                }
+            } catch (Exception ex) {
+                MessageBox.Show("Error: " + ex.Message,"Message" , MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+
         }
 
         private void PrivUserDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -337,9 +342,24 @@ namespace oracle_database_administator.User
                     string query = "";
 
 
-                    if (priv != "SELECT")
+                    if (priv != "SELECT" && priv != "INSERT")
                     {
                         query += " SELECT * FROM SYS." + table_name;
+
+                        using (OracleCommand command = new OracleCommand(query, NewConnection))
+                        {
+                            using (OracleDataAdapter adapter = new OracleDataAdapter(command))
+                            {
+                                DataTable dataTable = new DataTable();
+                                adapter.Fill(dataTable);
+                                ResultViewDataGrid.ItemsSource = dataTable.DefaultView;
+                            }
+                        }
+                    }
+
+                    if (priv == "INSERT")
+                    {
+                        query += " SELECT * FROM SYS." + table_name + " WHERE 1=0";
 
                         using (OracleCommand command = new OracleCommand(query, NewConnection))
                         {
