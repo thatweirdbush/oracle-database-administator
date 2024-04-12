@@ -56,6 +56,7 @@ namespace oracle_database_administator
             {
                 _connection.Dispose();
                 _connection = null;
+
             }
         }
 

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,37 +24,45 @@ namespace oracle_database_administator.User
     public partial class TestPrivileges : Page
     {
 
-        OracleConnection conn;
+        OracleConnection NewConnection ;
 
         private UserInfo selectedUserInfo;
         public string selectedUserName { get; set; }
+
+        public string currentUserID { get; set; }
 
         public TestPrivileges(UserInfo userInfo)
         {
             InitializeComponent();
             selectedUserInfo = userInfo;
             selectedUserName = selectedUserInfo.UserName;
-            DataContext = this;
+
+            string NewConnStr = AlternateConnectionString(selectedUserName);
+
+            NewConnection = new OracleConnection(NewConnStr);
+
+            NewConnection.Open();
+
+            currentUserID = USER(NewConnection);
+
+            SelectedUserTextBlock.DataContext = this;
+            CurrentUserTextBlock.DataContext = this;
         }
 
         private void Page_Unloaded(object sender, RoutedEventArgs e)
         {
-            if (conn != null)
-            {
-                conn.Dispose();
-            }
+          
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            conn = Database.Instance.Connection;
             try
             {
-                if (conn.State == System.Data.ConnectionState.Open)
+                if (NewConnection.State == System.Data.ConnectionState.Open)
                 {
                     Console.WriteLine("Connection opened successfully!");
-                    //UpdateTablerGrid();
                     UpdatePrivUserGrid();
+                    
                 }
                 else
                 {
@@ -65,6 +74,37 @@ namespace oracle_database_administator.User
             {
                 MessageBox.Show("Connection error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
             }
+        }
+        
+        // Hàm thay đổi connection theo selected User_name => trả về string
+        private String AlternateConnectionString(String user)
+        {
+            String connectionString = "DATA SOURCE=localhost:1521/XE;PERSIST SECURITY INFO=True;USER ID="+user+" ;PASSWORD=" + user;
+
+            return connectionString;
+        }
+
+        private String USER(OracleConnection connection)
+        {
+            String user = "";
+            try
+            {
+                string query = "SELECT USER FROM dual";
+                using (OracleCommand command = new OracleCommand(query, connection))
+                {
+                    object result = command.ExecuteScalar();
+                    if (result != null)
+                    {
+                        user = result.ToString();
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
+            return user;
         }
 
         private void UpdatePrivUserGrid()
@@ -85,7 +125,7 @@ namespace oracle_database_administator.User
                     "FROM SYS.all_col_privs " +
                     "WHERE GRANTEE = '" + selectedUserName + "'";
 
-                using (OracleCommand command = new OracleCommand(query, conn))
+                using (OracleCommand command = new OracleCommand(query, NewConnection))
                 {
                     using (OracleDataAdapter adapter = new OracleDataAdapter(command))
                     {
@@ -129,6 +169,7 @@ namespace oracle_database_administator.User
                     string priv = row["PRIVILEGE"].ToString();
                     string query = "";
 
+
                     if (priv == "SELECT")
                     {
                         MessageBox.Show(priv);
@@ -147,8 +188,7 @@ namespace oracle_database_administator.User
 
                     }
 
-
-                    using (OracleCommand command = new OracleCommand(query, conn))
+                    using (OracleCommand command = new OracleCommand(query, NewConnection))
                     {
                         using (OracleDataAdapter adapter = new OracleDataAdapter(command))
                         {
@@ -158,6 +198,7 @@ namespace oracle_database_administator.User
                         }
                     }
                 }
+
             }
             catch (Exception ex)
             {

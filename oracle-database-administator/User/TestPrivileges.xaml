@@ -45,12 +45,12 @@
                         <Setter Property="Background" Value="#FF173D7B"/>
                     </Style>
                 </DataGrid.ColumnHeaderStyle>
-                
-                
-                
+
+
+
             </DataGrid>
 
-                    <Label Content="Test privilege for " HorizontalAlignment="Left" Margin="773,36,0,0" VerticalAlignment="Top" Foreground="#333" Background="{x:Null}">
+            <Label Content="Test privilege for " HorizontalAlignment="Left" Margin="773,36,0,0" VerticalAlignment="Top" Foreground="#333" Background="{x:Null}">
                 <Label.Style>
                     <Style TargetType="Label">
                         <Setter Property="FontSize" Value="26"/>
@@ -64,7 +64,7 @@
 
             </Label>
 
-            <TextBlock Text="{Binding selectedUserName}" HorizontalAlignment="Left" Margin="773,81,0,0" VerticalAlignment="Top" FontSize="38" FontFamily="Roboto" Foreground="#FF1EA9D3" Background="{x:Null}" Height="102" Width="279" TextWrapping="Wrap"/>
+            <TextBlock x:Name="SelectedUserTextBlock" Text="{Binding selectedUserName}" HorizontalAlignment="Left" Margin="773,81,0,0" VerticalAlignment="Top" FontSize="38" FontFamily="Roboto" Foreground="#FF1EA9D3" Background="{x:Null}" Height="102" Width="279" TextWrapping="Wrap"/>
 
 
             <Button x:Name="BackButton" Content="Back" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="50" Canvas.Left="129" Canvas.Top="496" Width="164" Click="BackViewPrivUserButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="59,586,0,0" >
@@ -184,6 +184,20 @@
                     </DataGridTextColumn>
                 </DataGrid.Columns>
             </DataGrid>
+            <Label Content="Current User ID " HorizontalAlignment="Left" Margin="272,36,0,0" VerticalAlignment="Top" Foreground="#333" Background="{x:Null}">
+                <Label.Style>
+                    <Style TargetType="{x:Type Label}">
+                        <Setter Property="FontSize" Value="26"/>
+                        <Setter Property="FontFamily" Value="Segoe UI"/>
+                        <Setter Property="FontWeight" Value="Bold"/>
+                        <!-- Đặt cỡ chữ to -->
+                        <!-- Đặt cỡ chữ dày -->
+                        <Setter Property="FontStyle" Value="Normal"/>
+                    </Style>
+                </Label.Style>
+
+            </Label>
+            <TextBlock x:Name="CurrentUserTextBlock" Text="{Binding currentUserID}" HorizontalAlignment="Left" Margin="277,81,0,0" VerticalAlignment="Top" FontSize="38" FontFamily="Roboto" Foreground="#FF1EA9D3" Background="{x:Null}" Height="102" Width="279" TextWrapping="Wrap"/>
         </Grid>
     </Grid>
 </Page>

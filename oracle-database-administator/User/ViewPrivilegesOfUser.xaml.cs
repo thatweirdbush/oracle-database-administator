@@ -27,6 +27,8 @@ namespace oracle_database_administator.User
 
         private UserInfo selectedUserInfo;
 
+        public string currentUserID { get; set; }
+
         public string selectedUserName { get; set; }
 
         public ViewPrivilegesOfUser(UserInfo userInfo)
@@ -34,26 +36,14 @@ namespace oracle_database_administator.User
             InitializeComponent();
             selectedUserInfo = userInfo;
             selectedUserName = selectedUserInfo.UserName;
-            DataContext = this;
-
-        }
-
-        private void Page_Unloaded(object sender, RoutedEventArgs e)
-        {
-            if (conn != null)
-            {
-                conn.Dispose();
-            }
-        }
-
-        private void Page_Loaded(object sender, RoutedEventArgs e)
-        {
             conn = Database.Instance.Connection;
             try
             {
                 if (conn.State == System.Data.ConnectionState.Open)
                 {
                     Console.WriteLine("Connection opened successfully!");
+
+
                     UpdatePrivUserGrid();
                 }
                 else
@@ -66,6 +56,42 @@ namespace oracle_database_administator.User
             {
                 MessageBox.Show("Connection error: " + ex.Message);
             }
+            currentUserID = USER(conn);
+            DataContext = this;
+
+        }
+
+        private void Page_Unloaded(object sender, RoutedEventArgs e)
+        {
+            
+        }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+           
+        }
+
+        private String USER(OracleConnection connection)
+        {
+            String user = "";
+            try
+            {
+                string query = "SELECT USER FROM dual";
+                using (OracleCommand command = new OracleCommand(query, connection))
+                {
+                    object result = command.ExecuteScalar();
+                    if (result != null)
+                    {
+                        user = result.ToString();
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
+            return user;
         }
 
         private void HomeButton_Click(object sender, RoutedEventArgs e)
