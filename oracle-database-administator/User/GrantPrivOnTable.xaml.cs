@@ -98,18 +98,23 @@ namespace oracle_database_administator.User
             {
                 //string query1 = "SELECT * FROM ALL_TAB_PRIVS WHERE GRANTEE = '" + selectedUserName + "'";
 
-                string query = "SELECT " +
-                    "   COALESCE(t1.table_name, c.table_name) AS table_name, " +
-                    "   c.column_name, " +
-                    "   COALESCE(t1.privilege, c.privilege) AS privilege, " +
-                    "   COALESCE(t1.GRANTABLE, c.GRANTABLE) AS GRANTABLE " +
-                    "FROM  " +
-                    "   ALL_TAB_PRIVS t1 " +
-                    "FULL OUTER JOIN dba_col_privs c " +
-                    "   ON t1.table_name = c.table_name AND t1.GRANTEE = c.GRANTEE " +
-                    "WHERE " +
-                    "   t1.GRANTEE = '" + selectedUserName +"' " +
-                    "   OR c.GRANTEE = '" + selectedUserName + "'";
+                string query = "SELECT" +
+                    "    GRANTEE," +
+                    "    TABLE_NAME," +
+                    "    NULL AS COLUMN_NAME," +
+                    "    PRIVILEGE," +
+                    "    GRANTABLE " +
+                    "FROM ALL_TAB_PRIVS " +
+                    "WHERE GRANTEE = 'KH1' " +
+                    "UNION ALL " +
+                    "SELECT" +
+                    "   GRANTEE," +
+                    "   TABLE_NAME," +
+                    "   COLUMN_NAME," +
+                    "   PRIVILEGE," +
+                    "   GRANTABLE " +
+                    "FROM dba_col_privs " +
+                    "WHERE GRANTEE = '" + selectedUserName + "'";
 
                 using (OracleCommand command = new OracleCommand(query, conn))
                 {

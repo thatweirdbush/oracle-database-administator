@@ -80,7 +80,36 @@ namespace oracle_database_administator.User
         {
             try
             {
-                string query = "SELECT * FROM ALL_TAB_PRIVS WHERE GRANTEE = '" + selectedUserName + "'";
+                string query = "SELECT" +
+                    "    GRANTOR," +
+                    "    GRANTEE," +
+                    "    TABLE_SCHEMA," +
+                    "    TABLE_NAME," +
+                    "    NULL AS COLUMN_NAME," +
+                    "    PRIVILEGE," +
+                    "    GRANTABLE," +
+                    "    HIERARCHY," +
+                    "    COMMON," +
+                    "    TYPE," +
+                    "    INHERITED " +
+                    "FROM ALL_TAB_PRIVS " +
+                    "WHERE GRANTEE = '" + selectedUserName + "' " +
+                    "UNION ALL " +
+                    "SELECT" +
+                    "    GRANTOR," +
+                    "    GRANTEE," +
+                    "    TABLE_SCHEMA," +
+                    "    TABLE_NAME," +
+                    "    COLUMN_NAME," +
+                    "    PRIVILEGE," +
+                    "    GRANTABLE," +
+                    "    NULL AS HIERARCHY," +
+                    "    COMMON," +
+                    "    NULL AS TYPE," +
+                    "    INHERITED " +
+                    "FROM all_col_privs " +
+                    "WHERE GRANTEE = '" + selectedUserName + "'";
+
                 using (OracleCommand command = new OracleCommand(query, conn))
                 {
                     using (OracleDataAdapter adapter = new OracleDataAdapter(command))

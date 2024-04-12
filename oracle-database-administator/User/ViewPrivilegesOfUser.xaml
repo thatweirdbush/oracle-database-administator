@@ -155,7 +155,7 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <DataGridTextColumn Header="TABLE SCHEMA" Binding="{Binding TABLE_SCHEMA}" Width="*">
+                    <DataGridTextColumn Header="SCHEMA" Binding="{Binding TABLE_SCHEMA}" Width="*">
                         <DataGridTextColumn.HeaderStyle>
                             <Style TargetType="DataGridColumnHeader">
                                 <Setter Property="ContentTemplate">
@@ -178,7 +178,30 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <DataGridTextColumn Header="TABLE NAME" Binding="{Binding TABLE_NAME}" Width="*">
+                    <DataGridTextColumn Header="TABLE" Binding="{Binding TABLE_NAME}" Width="150">
+                        <DataGridTextColumn.HeaderStyle>
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="ContentTemplate">
+                                    <Setter.Value>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding}" FontFamily="Segoe UI" FontSize="16" Foreground="AliceBlue" Background="#FF173D7B" Padding="5"/>
+                                        </DataTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="Background" Value="#FF173D7B"/>
+                            </Style>
+                        </DataGridTextColumn.HeaderStyle>
+
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="TextBlock.TextWrapping" Value="Wrap"/>
+                                <Setter Property="FontFamily" Value="Segoe UI"/>
+                                <Setter Property="FontSize" Value="14"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                    <DataGridTextColumn Header="COLUMN" Binding="{Binding COLUMN_NAME}" Width="*">
                         <DataGridTextColumn.HeaderStyle>
                             <Style TargetType="DataGridColumnHeader">
                                 <Setter Property="ContentTemplate">
@@ -224,7 +247,7 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <DataGridTextColumn Header="GRANTABLE" Binding="{Binding GRANTABLE}" Width="*">
+                    <DataGridTextColumn Header="TYPE" Binding="{Binding TYPE}" Width="80">
                         <DataGridTextColumn.HeaderStyle>
                             <Style TargetType="DataGridColumnHeader">
                                 <Setter Property="ContentTemplate">
@@ -247,7 +270,7 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <DataGridTextColumn Header="HIERARCHY" Binding="{Binding HIERARCHY}" Width="*">
+                    <DataGridTextColumn Header="GRA" Binding="{Binding GRANTABLE}" Width="50">
                         <DataGridTextColumn.HeaderStyle>
                             <Style TargetType="DataGridColumnHeader">
                                 <Setter Property="ContentTemplate">
@@ -270,7 +293,7 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <DataGridTextColumn Header="COMMON" Binding="{Binding COMMON}" Width="*">
+                    <DataGridTextColumn Header="HIE" Binding="{Binding HIERARCHY}" Width="50">
                         <DataGridTextColumn.HeaderStyle>
                             <Style TargetType="DataGridColumnHeader">
                                 <Setter Property="ContentTemplate">
@@ -293,7 +316,7 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <DataGridTextColumn Header="TYPE" Binding="{Binding TYPE}" Width="*">
+                    <DataGridTextColumn Header="COM" Binding="{Binding COMMON}" Width="50">
                         <DataGridTextColumn.HeaderStyle>
                             <Style TargetType="DataGridColumnHeader">
                                 <Setter Property="ContentTemplate">
@@ -316,7 +339,9 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    <DataGridTextColumn Header="INHERITED" Binding="{Binding INHERITED}" Width="*">
+                    
+
+                    <DataGridTextColumn Header="INH" Binding="{Binding INHERITED}" Width="50">
                         <DataGridTextColumn.HeaderStyle>
                             <Style TargetType="DataGridColumnHeader">
                                 <Setter Property="ContentTemplate">
