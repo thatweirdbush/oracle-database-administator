@@ -42,22 +42,30 @@ namespace oracle_database_administator.User
         string condition = "";
 
 
-        public TestPrivileges(UserInfo userInfo)
+        public TestPrivileges(UserInfo userInfo, string password)
         {
             InitializeComponent();
             selectedUserInfo = userInfo;
             selectedUserName = selectedUserInfo.UserName;
+            selectedPassWord = password;
+            string NewConnStr = AlternateConnectionString(selectedUserName, selectedPassWord);
 
-            string NewConnStr = AlternateConnectionString(selectedUserName);
+            try
+            {
+                NewConnection = new OracleConnection(NewConnStr);
+                NewConnection.Open();
+                currentUserID = USER(NewConnection);
 
-            NewConnection = new OracleConnection(NewConnStr);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Failed to open NEW connection.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
 
-            NewConnection.Open();
 
-            currentUserID = USER(NewConnection);
+                return;
+            }
 
-            SelectedUserTextBlock.DataContext = this;
-            CurrentUserLabel.DataContext = this;
+            DataContext = this;
         }
 
         private void Page_Unloaded(object sender, RoutedEventArgs e)
@@ -81,7 +89,11 @@ namespace oracle_database_administator.User
                 }
                 else
                 {
-                    MessageBox.Show("Failed to open connection.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                    //MessageBox.Show("Failed to open connection.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                    if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
+                    {
+                        mainWindow.MainFrame.Navigate(new oracle_database_administator.User.ViewPrivilegesOfUser(selectedUserInfo));
+                    }
                 }
             }
 
