@@ -24,7 +24,7 @@ namespace oracle_database_administator
         {
             get
             {
-                if (_connection == null || _connection.State != ConnectionState.Open)
+                if (_connection == null)
                 {
                     // Đóng kết nối hiện tại (nếu có)
                     DisposeConnection();
