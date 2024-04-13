@@ -99,7 +99,7 @@ namespace oracle_database_administator.User
         {
             try
             {
-                string query = "SELECT TABLE_NAME FROM DBA_TABLES WHERE OWNER = \'C##ADMIN\'";
+                string query = "SELECT TABLE_NAME FROM DBA_TABLES WHERE TABLE_NAME LIKE \'%N09_%\'";
                 using (OracleCommand command = new OracleCommand(query, conn))
                 {
                     using (OracleDataAdapter adapter = new OracleDataAdapter(command))
