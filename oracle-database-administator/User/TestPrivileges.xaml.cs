@@ -25,8 +25,8 @@ namespace oracle_database_administator.User
     public partial class TestPrivileges : Page
     {
 
-        OracleConnection NewConnection ;
-
+        //OracleConnection NewConnection ;
+        OracleConnection alternate_user_connection = Database.Instance.Connection;
         private UserInfo selectedUserInfo;
         public string selectedUserName { get; set; }
         public string selectedPassWord { get; set; }
@@ -48,32 +48,26 @@ namespace oracle_database_administator.User
             selectedUserInfo = userInfo;
             selectedUserName = selectedUserInfo.UserName;
             selectedPassWord = password;
-            string NewConnStr = AlternateConnectionString(selectedUserName, selectedPassWord);
 
             try
             {
-                NewConnection = new OracleConnection(NewConnStr);
-                NewConnection.Open();
-                currentUserID = USER(NewConnection);
-
+                alternate_user_connection = Database.Instance.AlternateConnection(selectedUserName, selectedPassWord);
+                currentUserID = Database.Instance.CurrentUser;
             }
             catch (Exception)
             {
-                MessageBox.Show("Failed to open NEW connection.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-
-
+                MessageBox.Show("Failed to open this user's connection.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
-
             DataContext = this;
         }
 
         private void Page_Unloaded(object sender, RoutedEventArgs e)
         {
-            if (NewConnection != null)
+            if (alternate_user_connection != null)
             {
-                NewConnection.Dispose();
-                NewConnection = null;
+                alternate_user_connection.Dispose();
+                alternate_user_connection = null;
             }
         }
 
@@ -81,22 +75,19 @@ namespace oracle_database_administator.User
         {
             try
             {
-                if (NewConnection.State == System.Data.ConnectionState.Open)
+                if (alternate_user_connection.State == System.Data.ConnectionState.Open)
                 {
                     Console.WriteLine("Connection opened successfully!");
                     UpdatePrivUserGrid();
-                    
                 }
                 else
                 {
-                    //MessageBox.Show("Failed to open connection.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                     if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
                     {
                         mainWindow.MainFrame.Navigate(new oracle_database_administator.User.ViewPrivilegesOfUser(selectedUserInfo));
                     }
                 }
             }
-
             catch (Exception ex)
             {
                 MessageBox.Show("Connection error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -134,7 +125,7 @@ namespace oracle_database_administator.User
                             MessageBox.Show("Bạn không được quyền update trên cột này", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                             String query = " SELECT * FROM SYS." + table_name;
 
-                            using (OracleCommand command = new OracleCommand(query, NewConnection))
+                            using (OracleCommand command = new OracleCommand(query, alternate_user_connection))
                             {
                                 using (OracleDataAdapter adapter = new OracleDataAdapter(command))
                                 {
@@ -157,37 +148,6 @@ namespace oracle_database_administator.User
             }
         }
 
-        // Hàm thay đổi connection theo selected User_name => trả về string
-        private String AlternateConnectionString(String user, String pass)
-        {
-            String connectionString = "DATA SOURCE=localhost:1521/XE;PERSIST SECURITY INFO=True;USER ID="+user+" ;PASSWORD=" + pass;
-
-            return connectionString;
-        }
-
-        private String USER(OracleConnection connection)
-        {
-            String user = "";
-            try
-            {
-                string query = "SELECT USER FROM dual";
-                using (OracleCommand command = new OracleCommand(query, connection))
-                {
-                    object result = command.ExecuteScalar();
-                    if (result != null)
-                    {
-                        user = result.ToString();
-                    }
-
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error: " + ex.Message);
-            }
-            return user;
-        }
-
         private void UpdatePrivUserGrid()
         {
             try
@@ -206,7 +166,7 @@ namespace oracle_database_administator.User
                     "FROM SYS.all_col_privs " +
                     "WHERE GRANTEE = '" + selectedUserName + "'";
 
-                using (OracleCommand command = new OracleCommand(query, NewConnection))
+                using (OracleCommand command = new OracleCommand(query, alternate_user_connection))
                 {
                     using (OracleDataAdapter adapter = new OracleDataAdapter(command))
                     {
@@ -258,7 +218,7 @@ namespace oracle_database_administator.User
                     {
                         query += " SELECT * FROM SYS." + table_name;
 
-                        using (OracleCommand command = new OracleCommand(query, NewConnection))
+                        using (OracleCommand command = new OracleCommand(query, alternate_user_connection))
                         {
                             using (OracleDataAdapter adapter = new OracleDataAdapter(command))
                             {
@@ -272,32 +232,27 @@ namespace oracle_database_administator.User
                     {
                         if (insert_query != "")
                         {
-
                             // Loại bỏ dấu phẩy cuối cùng
                             insert_query = insert_query.Remove(insert_query.Length - 1);
 
                             // Đóng câu truy vấn
                             insert_query += ")";
 
-                            MessageBox.Show(insert_query);
-
-                            using (OracleCommand command = new OracleCommand(insert_query, NewConnection))
+                            using (OracleCommand command = new OracleCommand(insert_query, alternate_user_connection))
                             {
                                 int rowSelected = command.ExecuteNonQuery();
 
                                 if (rowSelected == 1)
                                 {
                                     MessageBox.Show("Executed \'Insert\' successfully!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-
                                 }
                                 else
                                 {
-                                    MessageBox.Show("Failed to execute \'Insert\'!");
+                                    MessageBox.Show("Failed to execute \'Insert\'!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                                 }
                             }
-
                             query = " SELECT * FROM SYS.UV_" + table_name;
-                            using (OracleCommand command = new OracleCommand(query, NewConnection))
+                            using (OracleCommand command = new OracleCommand(query, alternate_user_connection))
                             {
                                 using (OracleDataAdapter adapter = new OracleDataAdapter(command))
                                 {
@@ -310,11 +265,9 @@ namespace oracle_database_administator.User
                     }
                     else if (priv == "UPDATE")
                     {
-
                         if (update_query != "")
                         {
-
-                            using (OracleCommand command = new OracleCommand(update_query, NewConnection))
+                            using (OracleCommand command = new OracleCommand(update_query, alternate_user_connection))
                             {
                                 int rowSelected = command.ExecuteNonQuery();
 
@@ -324,13 +277,13 @@ namespace oracle_database_administator.User
                                 }
                                 else
                                 {
-                                    MessageBox.Show("Failed to execute \'Update\'!");
+                                    MessageBox.Show("Failed to execute \'Update\'!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                                 }
                             }
                         }
 
                         query = " SELECT * FROM SYS." + table_name;
-                        using (OracleCommand command = new OracleCommand(query, NewConnection))
+                        using (OracleCommand command = new OracleCommand(query, alternate_user_connection))
                         {
                             using (OracleDataAdapter adapter = new OracleDataAdapter(command))
                             {
@@ -344,24 +297,23 @@ namespace oracle_database_administator.User
                     {
                         if (delete_query != "")
                         {
-                            using (OracleCommand command = new OracleCommand(delete_query, NewConnection))
+                            using (OracleCommand command = new OracleCommand(delete_query, alternate_user_connection))
                             {
                                 int rowSelected = command.ExecuteNonQuery();
 
                                 if (rowSelected == 1)
                                 {
                                     MessageBox.Show("Executed \'Delete\' successfully!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-
                                 }
                                 else
                                 {
-                                    MessageBox.Show("Failed to execute \'Delete\'!");
+                                    MessageBox.Show("Failed to execute \'Delete\'!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                                 }
                             }
                         }
 
                         query = " SELECT * FROM SYS." + table_name;
-                        using (OracleCommand command = new OracleCommand(query, NewConnection))
+                        using (OracleCommand command = new OracleCommand(query, alternate_user_connection))
                         {
                             using (OracleDataAdapter adapter = new OracleDataAdapter(command))
                             {
@@ -393,9 +345,6 @@ namespace oracle_database_administator.User
                         condition = "";
                         DataRowView selectedRow = (DataRowView)ResultViewDataGrid.SelectedItem;
 
-                        //var rorow_temp = ResultViewDataGrid.SelectedItem;
-                        //DataRowView selectedRow = (DataRowView)rorow_temp;
-
                         if (selectedRow != null)
                         {
                             // Lấy danh sách các cột trong DataGrid
@@ -404,7 +353,7 @@ namespace oracle_database_administator.User
                                 // Lấy tên của cột
                                 string columnName = column.Header.ToString();
 
-                                if (columnName == "NGSINH")
+                                if (columnName == "NGAYSINH" || columnName == "NGAYLAP")
                                 {
                                     continue;
                                 }
@@ -425,7 +374,6 @@ namespace oracle_database_administator.User
                             }
 
                             delete_query = string.Format("DELETE FROM SYS.{0} WHERE {1}", table_name, condition);
-                            //MessageBox.Show(delete_query, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                         }
                     }
                 }
@@ -443,7 +391,6 @@ namespace oracle_database_administator.User
             try
             {
                 DataRowView row_priv = (DataRowView)PrivUserDataGrid.SelectedItem;
-                //DataRowView row_col = (DataRowView)ResultViewDataGrid.SelectedItem;
                 if (row_priv != null)
                 {
                     table_name = row_priv["TABLE_NAME"].ToString();
@@ -451,12 +398,11 @@ namespace oracle_database_administator.User
                     string priv = row_priv["PRIVILEGE"].ToString();
                     string query = "";
 
-
                     if (priv != "SELECT" && priv != "INSERT")
                     {
                         query += " SELECT * FROM SYS." + table_name;
 
-                        using (OracleCommand command = new OracleCommand(query, NewConnection))
+                        using (OracleCommand command = new OracleCommand(query, alternate_user_connection))
                         {
                             using (OracleDataAdapter adapter = new OracleDataAdapter(command))
                             {
@@ -470,9 +416,8 @@ namespace oracle_database_administator.User
                     if (priv == "INSERT")
                     {
                         query += " SELECT * FROM SYS.UV_" + table_name + " WHERE 1=0";
-                        
 
-                        using (OracleCommand command = new OracleCommand(query, NewConnection))
+                        using (OracleCommand command = new OracleCommand(query, alternate_user_connection))
                         {
                             using (OracleDataAdapter adapter = new OracleDataAdapter(command))
                             {
@@ -481,8 +426,6 @@ namespace oracle_database_administator.User
                                 ResultViewDataGrid.ItemsSource = dataTable.DefaultView;
                             }
                         }
-
-
                         insert_query = "INSERT INTO SYS." + table_name + " (";
 
                         // Lặp qua tất cả các cột trong DataGrid
@@ -490,22 +433,18 @@ namespace oracle_database_administator.User
                         {
                             // Lấy tên cột
                             string columnName = column.Header.ToString();
-                            if(columnName == "NGSINH")
+                            if (columnName == "NGAYSINH" || columnName == "NGAYLAP")
                             {
                                 continue;
                             }
-
                             // Thêm tên cột vào câu truy vấn INSERT
                             insert_query += columnName + ",";
                         }
-
-
                         // Loại bỏ dấu phẩy cuối cùng
                         insert_query = insert_query.Remove(insert_query.Length - 1);
 
                         // Thêm phần VALUES vào câu truy vấn
                         insert_query += ") VALUES (";
-
                     }
                 }
             }

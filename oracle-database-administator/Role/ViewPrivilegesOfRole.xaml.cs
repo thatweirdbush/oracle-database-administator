@@ -110,9 +110,23 @@ namespace oracle_database_administator.Role
 
         private void TestPrivUserButton_Click(object sender, RoutedEventArgs e)
         {
-            if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
+            // Tạo một instance của cửa sổ nhập mật khẩu
+            PasswordWindow passwordWindow = new PasswordWindow();
+
+            // Hiển thị cửa sổ nhập mật khẩu và chờ cho đến khi nó được đóng
+            bool? result = passwordWindow.ShowDialog();
+
+            // Kiểm tra xem cửa sổ nhập mật khẩu đã đóng hay không
+            if (result == true)
             {
-                mainWindow.MainFrame.Navigate(new oracle_database_administator.Role.TestPrivileges(selectedUserInfo));
+                // Lấy mật khẩu từ cửa sổ nhập mật khẩu
+                string password = passwordWindow.Password;
+
+                // Truyền mật khẩu sang trang hoặc lớp khác
+                if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
+                {
+                    mainWindow.MainFrame.Navigate(new oracle_database_administator.User.TestPrivileges(selectedUserInfo, password));
+                }
             }
         }
 

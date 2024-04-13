@@ -20,8 +20,6 @@ namespace oracle_database_administator.User
     /// <summary>
     /// Interaction logic for GrantPrivOnTable.xaml
     /// </summary>
-    /// 
-
 
     public partial class GrantPrivOnTable : Page
     {
@@ -58,31 +56,8 @@ namespace oracle_database_administator.User
             {
                 MessageBox.Show("Connection error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
             }
-            currentUserID = USER(conn);
+            currentUserID = Database.Instance.CurrentUser;
             DataContext = this;
-        }
-
-        private String USER(OracleConnection connection)
-        {
-            String user = "";
-            try
-            {
-                string query = "SELECT USER FROM dual";
-                using (OracleCommand command = new OracleCommand(query, connection))
-                {
-                    object result = command.ExecuteScalar();
-                    if (result != null)
-                    {
-                        user = result.ToString();
-                    }
-
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error: " + ex.Message);
-            }
-            return user;
         }
 
         private void Page_Unloaded(object sender, RoutedEventArgs e)
@@ -120,8 +95,6 @@ namespace oracle_database_administator.User
         {
             try
             {
-                //string query1 = "SELECT * FROM ALL_TAB_PRIVS WHERE GRANTEE = '" + selectedUserName + "'";
-
                 string query = "SELECT" +
                     "    GRANTEE," +
                     "    TABLE_NAME," +
@@ -225,7 +198,7 @@ namespace oracle_database_administator.User
                 }
  
                 // Check if there is no column selected
-                if(columnNameString == "")
+                if (columnNameString == "")
                 {
                     query = "GRANT " + privileges + " ON " + tableName + " TO " + selectedUserName + withGrantOptionString;
                 }

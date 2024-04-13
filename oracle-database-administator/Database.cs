@@ -100,33 +100,29 @@ namespace oracle_database_administator
             set {  dataGridSelectionEnabled = value; }
         }
 
-        public OracleConnection AlternateConnection
+        public OracleConnection AlternateConnection(string username, string password)
         {
-            get
+            if (_connection != null)
             {
-                if (_connection == null || _connection.State != ConnectionState.Open)
+                // Đóng kết nối hiện tại (nếu có)
+                DisposeConnection();
+
+                string connectionString = "DATA SOURCE=localhost:1521/XE;PERSIST SECURITY INFO=True;USER ID=" + username + ";PASSWORD=" + password;
+
+                _connection = new OracleConnection(connectionString);
+                try
                 {
-                    // Đóng kết nối hiện tại (nếu có)
-                    DisposeConnection();
-
-                    // Đọc chuỗi kết nối từ tệp cấu hình
-                    string connectionString = ConfigurationManager.ConnectionStrings["OracleDbContext"].ConnectionString;
-
-                    _connection = new OracleConnection(connectionString);
-                    try
-                    {
-                        _connection.Open();
-                    }
-                    catch (OracleException ex)
-                    {
-                        // Xử lý khi kết nối thất bại
-                        Console.WriteLine("Không thể mở kết nối: " + ex.Message);
-                        _connection.Dispose();
-                        _connection = null;
-                    }
+                    _connection.Open();
                 }
-                return _connection;
+                catch (OracleException ex)
+                {
+                    // Xử lý khi kết nối thất bại
+                    MessageBox.Show("Không thể mở kết nối: " + ex.Message);
+                    _connection.Dispose();
+                    _connection = null;
+                }
             }
+            return _connection;
         }
 
         public string CurrentUser
