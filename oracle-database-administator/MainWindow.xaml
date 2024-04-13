@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:oracle_database_administator"
         mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
         Title="Oracle Database Administator" Height="800" Width="1200" Loaded="MainWindow_Load">
     <Grid>
         <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden"/>
