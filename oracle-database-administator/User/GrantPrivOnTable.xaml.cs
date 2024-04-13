@@ -240,6 +240,25 @@ namespace oracle_database_administator.User
                     return;
                 }
 
+                if (privileges.Contains("INSERT"))
+                {
+                    String grantView = "GRANT SELECT ON UV_" + tableName + " TO " + selectedUserName;
+
+                    using (OracleCommand command = new OracleCommand(grantView, conn))
+                    {
+                        int rowSelected = command.ExecuteNonQuery();
+
+                        if (rowSelected == -1)
+                        {
+                            MessageBox.Show("Grant Select view successfully!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                        }
+                        else
+                        {
+                            MessageBox.Show("Failed to grant this privilege!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                        }
+                    }
+                }
+
                 using (OracleCommand command = new OracleCommand(query, conn))
                 {
                     int rowSelected = command.ExecuteNonQuery();
