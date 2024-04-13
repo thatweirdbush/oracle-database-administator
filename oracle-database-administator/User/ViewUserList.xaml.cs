@@ -24,7 +24,7 @@ namespace oracle_database_administator.User
     /// </summary>
     public partial class ViewUserList : Page
     {
-        OracleConnection conn;
+        OracleConnection conn = Database.Instance.Connection;
 
         private bool dataGridSelectionEnabled = true;
 
@@ -33,51 +33,8 @@ namespace oracle_database_administator.User
         public ViewUserList()
         {
             InitializeComponent();
-            conn = Database.Instance.Connection;
-            try
-            {
-                if (conn.State == System.Data.ConnectionState.Open)
-                {
-                    Console.WriteLine("Connection opened successfully!");
-                    UpdateUserGrid();
-                }
-                else
-                {
-                    MessageBox.Show("Failed to open connection.");
-                }
-            }
-
-            catch (Exception ex)
-            {
-                MessageBox.Show("Connection error: " + ex.Message);
-            }
-
-            currentUserID = USER(conn);
-
+            currentUserID = Database.Instance.CurrentUser;
             DataContext = this;
-        }
-
-        private String USER(OracleConnection connection)
-        {
-            String user = "";
-            try
-            {
-                string query = "SELECT USER FROM dual";
-                using (OracleCommand command = new OracleCommand(query, connection))
-                {
-                    object result = command.ExecuteScalar();
-                    if (result != null)
-                    {
-                        user = result.ToString();
-                    }
-
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error: " + ex.Message);
-            }
-            return user;
         }
 
         private void ModeVisible_UserDataGrid(bool dataGridSelectionEnabled)
@@ -122,7 +79,7 @@ namespace oracle_database_administator.User
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error: " + ex.Message);
+                MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
@@ -141,7 +98,23 @@ namespace oracle_database_administator.User
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            
+            try
+            {
+                if (conn.State == System.Data.ConnectionState.Open)
+                {
+                    Console.WriteLine("Connection opened successfully!");
+                    UpdateUserGrid();
+                }
+                else
+                {
+                    MessageBox.Show("Failed to open connection.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
+
+            catch (Exception ex)
+            {
+                MessageBox.Show("Connection error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
         }
 
         private void InsertButton_Click(object sender, RoutedEventArgs e){
@@ -167,20 +140,20 @@ namespace oracle_database_administator.User
 
                         if (rowSelected == -1)
                         {
-                            MessageBox.Show("Create user successfully!");
+                            MessageBox.Show("Create user successfully!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                             dataGridSelectionEnabled = true;
                             UpdateUserGrid();
                         }
                         else
                         {
-                            MessageBox.Show("Cannot create user!");
+                            MessageBox.Show("Cannot create user!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Create error: " + ex.Message);
+                MessageBox.Show("Create error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
@@ -199,10 +172,9 @@ namespace oracle_database_administator.User
                         // Kiểm tra xem username có phải là "SYS" không
                         if (userName.IndexOf("SYS", StringComparison.OrdinalIgnoreCase) != -1)
                         {
-                            MessageBox.Show("Không được phép xoá người dùng có tên chứa từ SYS.");
+                            MessageBox.Show("No permission to delete this user.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                             return; // Không thực hiện tiếp các bước sau khi kiểm tra
                         }
-
 
                         try
                         {
@@ -218,29 +190,29 @@ namespace oracle_database_administator.User
 
                                 if (rowSelected == -1)
                                 {
-                                    MessageBox.Show("Drop user successfully!");
+                                    MessageBox.Show("Drop user successfully!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                                     UpdateUserGrid();
                                 }
                                 else
                                 {
-                                    MessageBox.Show("Cannot drop user!");
+                                    MessageBox.Show("Cannot drop user!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                                 }
                             }
                         }
                         catch (Exception ex)
                         {
-                            MessageBox.Show("Error: " + ex.Message);
+                            MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                         }
                     }
                     else
                     {
-                        MessageBox.Show("No user selected!");
+                        MessageBox.Show("No user selected!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Drop error: " + ex.Message);
+                MessageBox.Show("Drop error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
@@ -280,7 +252,7 @@ namespace oracle_database_administator.User
 
             catch (Exception ex)
             {
-                MessageBox.Show("Error: " + ex.Message);
+                MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
@@ -309,9 +281,8 @@ namespace oracle_database_administator.User
             }
             else
             {
-                MessageBox.Show("Vui lòng chọn một người dùng trước.");
+                MessageBox.Show("Please select a user.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
             }
-
         }
 
         private void UserDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -343,7 +314,7 @@ namespace oracle_database_administator.User
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error: " + ex.Message);
+                MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
     }

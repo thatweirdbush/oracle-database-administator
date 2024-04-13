@@ -40,30 +40,7 @@ namespace oracle_database_administator.Role
             currentUserID = Database.Instance.CurrentUser;
             DataContext = this;
         }
-
-        private String USER(OracleConnection connection)
-        {
-            String user = "";
-            try
-            {
-                string query = "SELECT USER FROM dual";
-                using (OracleCommand command = new OracleCommand(query, connection))
-                {
-                    object result = command.ExecuteScalar();
-                    if (result != null)
-                    {
-                        user = result.ToString();
-                    }
-
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error: " + ex.Message);
-            }
-            return user;
-        }
-
+    
         private void Page_Unloaded(object sender, RoutedEventArgs e)
         {
 

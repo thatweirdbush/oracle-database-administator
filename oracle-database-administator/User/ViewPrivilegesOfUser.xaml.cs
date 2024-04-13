@@ -23,7 +23,7 @@ namespace oracle_database_administator.User
     /// </summary>
     public partial class ViewPrivilegesOfUser : Page
     {
-        OracleConnection conn;
+        OracleConnection conn = Database.Instance.Connection;
 
         private UserInfo selectedUserInfo;
 
@@ -36,7 +36,17 @@ namespace oracle_database_administator.User
             InitializeComponent();
             selectedUserInfo = userInfo;
             selectedUserName = selectedUserInfo.UserName;
-            conn = Database.Instance.Connection;
+            currentUserID = Database.Instance.CurrentUser;
+            DataContext = this;
+        }
+
+        private void Page_Unloaded(object sender, RoutedEventArgs e)
+        {
+            
+        }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
             try
             {
                 if (conn.State == System.Data.ConnectionState.Open)
@@ -56,42 +66,6 @@ namespace oracle_database_administator.User
             {
                 MessageBox.Show("Connection error: " + ex.Message);
             }
-            currentUserID = USER(conn);
-            DataContext = this;
-
-        }
-
-        private void Page_Unloaded(object sender, RoutedEventArgs e)
-        {
-            
-        }
-
-        private void Page_Loaded(object sender, RoutedEventArgs e)
-        {
-           
-        }
-
-        private String USER(OracleConnection connection)
-        {
-            String user = "";
-            try
-            {
-                string query = "SELECT USER FROM dual";
-                using (OracleCommand command = new OracleCommand(query, connection))
-                {
-                    object result = command.ExecuteScalar();
-                    if (result != null)
-                    {
-                        user = result.ToString();
-                    }
-
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error: " + ex.Message);
-            }
-            return user;
         }
 
         private void HomeButton_Click(object sender, RoutedEventArgs e)
@@ -179,10 +153,10 @@ namespace oracle_database_administator.User
                 // Lấy mật khẩu từ cửa sổ nhập mật khẩu
                 string password = passwordWindow.Password;
 
-                // Truyền mật khẩu sang trang hoặc lớp khác
-                if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
+                TestPrivileges testPrivileges = new oracle_database_administator.User.TestPrivileges(selectedUserInfo, password);
+                if (!testPrivileges.currentUserID.Equals(""))
                 {
-                    mainWindow.MainFrame.Navigate(new oracle_database_administator.User.TestPrivileges(selectedUserInfo, password));
+                    NavigationService.Navigate(testPrivileges);
                 }
             }
         }

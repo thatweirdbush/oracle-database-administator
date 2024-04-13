@@ -24,7 +24,7 @@ namespace oracle_database_administator.User
     public partial class GrantPrivOnTable : Page
     {
 
-        OracleConnection conn;
+        OracleConnection conn = Database.Instance.Connection;
 
         private UserInfo selectedUserInfo;
 
@@ -37,7 +37,17 @@ namespace oracle_database_administator.User
             InitializeComponent();
             selectedUserInfo = userInfo;
             selectedUserName = selectedUserInfo.UserName;
-            conn = Database.Instance.Connection;
+            currentUserID = Database.Instance.CurrentUser;
+            DataContext = this;
+        }
+
+        private void Page_Unloaded(object sender, RoutedEventArgs e)
+        {
+            
+        }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
             try
             {
                 if (conn.State == System.Data.ConnectionState.Open)
@@ -56,18 +66,6 @@ namespace oracle_database_administator.User
             {
                 MessageBox.Show("Connection error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
             }
-            currentUserID = Database.Instance.CurrentUser;
-            DataContext = this;
-        }
-
-        private void Page_Unloaded(object sender, RoutedEventArgs e)
-        {
-            
-        }
-
-        private void Page_Loaded(object sender, RoutedEventArgs e)
-        {
-            
         }
 
         private void UpdateTablerGrid()
@@ -221,14 +219,14 @@ namespace oracle_database_administator.User
                     {
                         int rowSelected = command.ExecuteNonQuery();
 
-                        if (rowSelected == -1)
-                        {
-                            MessageBox.Show("Grant Select view successfully!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-                        }
-                        else
-                        {
-                            MessageBox.Show("Failed to grant this privilege!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-                        }
+                        //if (rowSelected == -1)
+                        //{
+                        //    MessageBox.Show("Grant Select view successfully!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                        //}
+                        //else
+                        //{
+                        //    MessageBox.Show("Failed to grant this privilege!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                        //}
                     }
                 }
 

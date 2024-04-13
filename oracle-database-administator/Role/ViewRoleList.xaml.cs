@@ -35,29 +35,6 @@ namespace oracle_database_administator.Role
             DataContext = this;
         }
 
-        private String USER(OracleConnection connection)
-        {
-            String user = "";
-            try
-            {
-                string query = "SELECT USER FROM dual";
-                using (OracleCommand command = new OracleCommand(query, connection))
-                {
-                    object result = command.ExecuteScalar();
-                    if (result != null)
-                    {
-                        user = result.ToString();
-                    }
-
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error: " + ex.Message);
-            }
-            return user;
-        }
-
         private void UpdateRoleGrid()
         {
             try
@@ -108,7 +85,6 @@ namespace oracle_database_administator.Role
             }
         }
 
-        // Sử dụng sự kiện Unloaded để đảm bảo rằng kết nối được đóng khi chuyển khỏi Page
         private void Page_Unloaded(object sender, RoutedEventArgs e)
         {
 
@@ -146,7 +122,6 @@ namespace oracle_database_administator.Role
                             EXECUTE IMMEDIATE 'CREATE ROLE " + roleName + "';" +
                             " END;";
 
-
                 using (OracleCommand command = new OracleCommand(query, conn))
                 {
                     int rowSelected = command.ExecuteNonQuery();
@@ -162,7 +137,6 @@ namespace oracle_database_administator.Role
                         MessageBox.Show("Cannot create role!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                 }
-
             }
             catch (Exception ex)
             {
@@ -256,7 +230,6 @@ namespace oracle_database_administator.Role
                 UpdateUserPrivilegesGrid();
                 Database.Instance.IsSelectable = false;
             }
-
             catch (Exception ex)
             {
                 MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -274,7 +247,6 @@ namespace oracle_database_administator.Role
                 {
                     // Tạo một đối tượng chứa thông tin của người dùng được chọn
                     selectedUserInfo = new UserInfo(selectedRole["ROLE"].ToString());
-
                 }
                 else
                 {
@@ -318,7 +290,6 @@ namespace oracle_database_administator.Role
                         MessageBox.Show("Cannot grant role!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                 }
-
             }
             catch (Exception ex)
             {
@@ -352,7 +323,6 @@ namespace oracle_database_administator.Role
                         MessageBox.Show("Cannot revoke role!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                 }
-
             }
             catch (Exception ex)
             {

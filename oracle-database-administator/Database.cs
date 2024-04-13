@@ -40,7 +40,7 @@ namespace oracle_database_administator
                     catch (OracleException ex)
                     {
                         // Xử lý khi kết nối thất bại
-                        Console.WriteLine("Không thể mở kết nối: " + ex.Message);
+                        MessageBox.Show("Failed to create connection: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                         _connection.Dispose();
                         _connection = null;
                     }
@@ -117,7 +117,7 @@ namespace oracle_database_administator
                 catch (OracleException ex)
                 {
                     // Xử lý khi kết nối thất bại
-                    MessageBox.Show("Không thể mở kết nối: " + ex.Message);
+                    MessageBox.Show("Failed to create connection: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                     _connection.Dispose();
                     _connection = null;
                 }
@@ -142,9 +142,9 @@ namespace oracle_database_administator
                         }
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    MessageBox.Show("`Get current user` Error: " + ex.Message);
+                    //MessageBox.Show("`Get current user` Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 return user;
             }

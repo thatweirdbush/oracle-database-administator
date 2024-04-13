@@ -49,16 +49,8 @@ namespace oracle_database_administator.User
             selectedUserName = selectedUserInfo.UserName;
             selectedPassWord = password;
 
-            try
-            {
-                alternate_user_connection = Database.Instance.AlternateConnection(selectedUserName, selectedPassWord);
-                currentUserID = Database.Instance.CurrentUser;
-            }
-            catch (Exception)
-            {
-                MessageBox.Show("Failed to open this user's connection.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-                return;
-            }
+            alternate_user_connection = Database.Instance.AlternateConnection(selectedUserName, selectedPassWord);            
+            currentUserID = Database.Instance.CurrentUser;
             DataContext = this;
         }
 
@@ -122,23 +114,11 @@ namespace oracle_database_administator.User
                         }
                         else
                         {
-                            MessageBox.Show("Bạn không được quyền update trên cột này", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-                            String query = " SELECT * FROM SYS." + table_name;
-
-                            using (OracleCommand command = new OracleCommand(query, alternate_user_connection))
-                            {
-                                using (OracleDataAdapter adapter = new OracleDataAdapter(command))
-                                {
-                                    DataTable dataTable = new DataTable();
-                                    adapter.Fill(dataTable);
-                                    ResultViewDataGrid.ItemsSource = dataTable.DefaultView;
-                                }
-                            }
+                            MessageBox.Show($"\'Update\' permission DENIED on {editedColumn} column.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                         }
                     }
                     else if (priv == "INSERT")
                     {
-                        // Thêm dữ liệu vào câu truy vấn
                         insert_query += $"'{newValue}',";
                     }
                 }
@@ -378,7 +358,7 @@ namespace oracle_database_administator.User
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 //MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
             }
