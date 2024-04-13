@@ -1,9 +1,8 @@
 ﻿using Oracle.ManagedDataAccess.Client;
+using oracle_database_administator.User;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
-using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,24 +16,22 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace oracle_database_administator.User
+namespace oracle_database_administator.Role
 {
     /// <summary>
     /// Interaction logic for TestPrivileges.xaml
     /// </summary>
     public partial class TestPrivileges : Page
     {
-
-        OracleConnection NewConnection ;
+        OracleConnection NewConnection;
 
         private UserInfo selectedUserInfo;
         public string selectedUserName { get; set; }
-        public string selectedPassWord { get; set; }
 
         public string currentUserID { get; set; }
 
-        private string editedColumn = ""; 
-        
+        private string editedColumn = "";
+
         string table_name = "";
         string delete_query = "";
         string update_query = "";
@@ -77,7 +74,7 @@ namespace oracle_database_administator.User
                 {
                     Console.WriteLine("Connection opened successfully!");
                     UpdatePrivUserGrid();
-                    
+
                 }
                 else
                 {
@@ -140,15 +137,16 @@ namespace oracle_database_administator.User
                     }
                 }
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 MessageBox.Show("Error: " + ex.Message);
             }
         }
 
         // Hàm thay đổi connection theo selected User_name => trả về string
-        private String AlternateConnectionString(String user, String pass)
+        private String AlternateConnectionString(String user)
         {
-            String connectionString = "DATA SOURCE=localhost:1521/XE;PERSIST SECURITY INFO=True;USER ID="+user+" ;PASSWORD=" + pass;
+            String connectionString = "DATA SOURCE=localhost:1521/XE;PERSIST SECURITY INFO=True;USER ID=" + user + " ;PASSWORD=" + user;
 
             return connectionString;
         }
@@ -222,7 +220,7 @@ namespace oracle_database_administator.User
         {
             if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
             {
-                mainWindow.MainFrame.Navigate(new oracle_database_administator.User.ViewPrivilegesOfUser(selectedUserInfo));
+                mainWindow.MainFrame.Navigate(new oracle_database_administator.Role.ViewPrivilegesOfRole(selectedUserInfo));
             }
         }
 
@@ -424,7 +422,7 @@ namespace oracle_database_administator.User
             }
         }
 
-        
+
 
         private void PrivUserDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -458,7 +456,7 @@ namespace oracle_database_administator.User
                     if (priv == "INSERT")
                     {
                         query += " SELECT * FROM SYS.UV_" + table_name + " WHERE 1=0";
-                        
+
 
                         using (OracleCommand command = new OracleCommand(query, NewConnection))
                         {
@@ -478,7 +476,7 @@ namespace oracle_database_administator.User
                         {
                             // Lấy tên cột
                             string columnName = column.Header.ToString();
-                            if(columnName == "NGSINH")
+                            if (columnName == "NGSINH")
                             {
                                 continue;
                             }
@@ -502,5 +500,6 @@ namespace oracle_database_administator.User
                 MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
+
     }
 }

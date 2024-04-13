@@ -298,7 +298,7 @@
                     <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
                 </Button.Effect>
             </Button>
-            <Button x:Name="HomeButton" Content="Home Page" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="22" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="95" Width="163" Click="HomeButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="60,58,0,0" RenderTransformOrigin="-2.052,5.949" >
+            <Button x:Name="HomeButton" Content="Home Page" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="22" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="95" Width="163" Click="HomeButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="60,32,0,0" RenderTransformOrigin="-2.052,5.949" >
                 <Button.Resources>
                     <Style TargetType="{x:Type Border}">
                         <Setter Property="CornerRadius" Value="24"/>
@@ -311,6 +311,27 @@
                     <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
                 </Button.Effect>
             </Button>
+            <Label Content="Current User:" HorizontalAlignment="Left" Margin="59,145,0,0" VerticalAlignment="Top" Foreground="#333" Background="{x:Null}">
+                <Label.Style>
+                    <Style TargetType="{x:Type Label}">
+                        <Setter Property="FontSize" Value="26"/>
+                        <Setter Property="FontFamily" Value="Segoe UI"/>
+                        <Setter Property="FontWeight" Value="Bold"/>
+                        <Setter Property="FontStyle" Value="Normal"/>
+                    </Style>
+                </Label.Style>
+
+            </Label>
+            <Label x:Name="CurrentUserLabel" Content="{Binding currentUserID}" HorizontalAlignment="Left" Margin="231,145,0,0" VerticalAlignment="Top" Foreground="#FF1EA9D3" Background="{x:Null}" Width="188" FontWeight="SemiBold" Height="45">
+                <Label.Style>
+                    <Style TargetType="{x:Type Label}">
+                        <Setter Property="FontSize" Value="26"/>
+                        <Setter Property="FontFamily" Value="Segoe UI"/>
+                        <Setter Property="FontWeight" Value="Bold"/>
+                        <Setter Property="FontStyle" Value="Normal"/>
+                    </Style>
+                </Label.Style>
+            </Label>
             <Button x:Name="RoleUserButton" Content="Roles" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="50" Width="164" Click="RolesUserButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="702,585,0,0" RenderTransformOrigin="-2.052,5.949" >
                 <Button.Resources>
                     <Style TargetType="{x:Type Border}">
@@ -349,21 +370,6 @@
                 </TextBox.Background>
             </TextBox>
             <Label Content="Username:" HorizontalAlignment="Left" Margin="498,97,0,0" VerticalAlignment="Top" FontSize="18" FontFamily="Segoe UI" Foreground="#333" Background="{x:Null}" Width="180" FontWeight="Medium"/>
-
-            <Label Content="Current User ID " HorizontalAlignment="Left" Margin="272,36,0,0" VerticalAlignment="Top" Foreground="#333" Background="{x:Null}">
-                <Label.Style>
-                    <Style TargetType="{x:Type Label}">
-                        <Setter Property="FontSize" Value="26"/>
-                        <Setter Property="FontFamily" Value="Segoe UI"/>
-                        <Setter Property="FontWeight" Value="Bold"/>
-                        <!-- Đặt cỡ chữ to -->
-                        <!-- Đặt cỡ chữ dày -->
-                        <Setter Property="FontStyle" Value="Normal"/>
-                    </Style>
-                </Label.Style>
-
-            </Label>
-            <TextBlock x:Name="CurrentUserTextBlock" Text="{Binding currentUserID}" HorizontalAlignment="Left" Margin="277,81,0,0" VerticalAlignment="Top" FontSize="38" FontFamily="Roboto" Foreground="#FF1EA9D3" Background="{x:Null}" Height="102" Width="216" TextWrapping="Wrap"/>
 
         </Grid>
     </Grid>

@@ -23,36 +23,35 @@ namespace oracle_database_administator.Role
     /// </summary>
     public partial class ViewPrivilegesOfRole : Page
     {
-        OracleConnection conn;
+        OracleConnection conn = Database.Instance.Connection;
 
         private UserInfo selectedUserInfo;
         public string selectedUserName { get; set; }
+        public string currentUserID { get; set; }
 
         public ViewPrivilegesOfRole(UserInfo userInfo)
         {
             InitializeComponent();
             selectedUserInfo = userInfo;
             selectedUserName = selectedUserInfo.UserName;
+            currentUserID = Database.Instance.CurrentUser;
             DataContext = this;
-        }
+        }     
 
         // Sử dụng sự kiện Unloaded để đảm bảo rằng kết nối được đóng khi chuyển khỏi Page
         private void Page_Unloaded(object sender, RoutedEventArgs e)
         {
-            if (conn != null)
-            {
-                conn.Dispose();
-            }
+
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            conn = Database.Instance.Connection;
             try
             {
                 if (conn.State == System.Data.ConnectionState.Open)
                 {
                     Console.WriteLine("Connection opened successfully!");
+
                     UpdatePrivUserGrid();
                 }
                 else
@@ -111,7 +110,10 @@ namespace oracle_database_administator.Role
 
         private void TestPrivUserButton_Click(object sender, RoutedEventArgs e)
         {
-
+            if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
+            {
+                mainWindow.MainFrame.Navigate(new oracle_database_administator.Role.TestPrivileges(selectedUserInfo));
+            }
         }
 
         private void EditPrivButton_Click(object sender, RoutedEventArgs e)
