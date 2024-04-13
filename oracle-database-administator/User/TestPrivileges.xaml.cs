@@ -38,7 +38,9 @@ namespace oracle_database_administator.User
         string table_name = "";
         string delete_query = "";
         string update_query = "";
+        string insert_query = "";
         string condition = "";
+
 
         public TestPrivileges(UserInfo userInfo)
         {
@@ -91,16 +93,30 @@ namespace oracle_database_administator.User
 
         private void ResultViewDataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
-            // Lấy cột được chỉnh sửa
-            editedColumn = e.Column.Header.ToString();
+            //// Lấy cột được chỉnh sửa
+            //editedColumn = e.Column.Header.ToString();
 
-            // Lấy giá trị mới
-            newValue = (e.EditingElement as TextBox)?.Text; // Sử dụng ?. để tránh lỗi nếu không phải TextBox
+            //// Lấy giá trị mới
+            //newValue = (e.EditingElement as TextBox)?.Text; // Sử dụng ?. để tránh lỗi nếu không phải TextBox
 
-            update_query = editedColumn + " = '" + newValue + "'";
+            //update_query = editedColumn + " = '" + newValue + "'";
 
-            update_query = string.Format("UPDATE SYS.{0} SET {1} WHERE {2}", table_name, update_query, condition);
-            MessageBox.Show(update_query, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+            //update_query = string.Format("UPDATE SYS.{0} SET {1} WHERE {2}", table_name, update_query, condition);
+            ////MessageBox.Show(update_query, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+
+
+
+
+
+
+
+
+
+            // Lấy dữ liệu từ ô chỉnh sửa
+            string newValue = (e.EditingElement as TextBox)?.Text; // Sử dụng ?. để tránh lỗi nếu không phải TextBox
+
+            // Thêm dữ liệu vào câu truy vấn
+            insert_query += $"'{newValue}',";
 
         }
 
@@ -202,7 +218,6 @@ namespace oracle_database_administator.User
 
                     if (priv == "SELECT")
                     {
-                        MessageBox.Show(priv);
                         query += " SELECT * FROM SYS." + table_name;
 
                         using (OracleCommand command = new OracleCommand(query, NewConnection))
@@ -214,19 +229,38 @@ namespace oracle_database_administator.User
                                 ResultViewDataGrid.ItemsSource = dataTable.DefaultView;
                             }
                         }
-                    } 
+                    }
                     else if (priv == "INSERT")
                     {
-
-                    }
-                    else if (priv == "UPDATE")
-                    {
-                        if (update_query != "")
+                        if (insert_query != "")
                         {
-                            using (OracleCommand command = new OracleCommand(update_query, NewConnection))
-                            {
-                                MessageBox.Show("Executed \'Update\' successfully!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
 
+                            // Loại bỏ dấu phẩy cuối cùng
+                            insert_query = insert_query.Remove(insert_query.Length - 1);
+
+                            // Đóng câu truy vấn
+                            insert_query += ")";
+
+                            MessageBox.Show(insert_query);
+
+                            using (OracleCommand command = new OracleCommand(insert_query, NewConnection))
+                            {
+                                int rowSelected = command.ExecuteNonQuery();
+
+                                if (rowSelected == 1)
+                                {
+                                    MessageBox.Show("Executed \'Insert\' successfully!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                                }
+                                else
+                                {
+                                    MessageBox.Show("Failed to execute \'Insert\'!");
+                                }
+                            }
+
+                            query = " SELECT * FROM SYS.UV_" + table_name;
+                            using (OracleCommand command = new OracleCommand(query, NewConnection))
+                            {
                                 using (OracleDataAdapter adapter = new OracleDataAdapter(command))
                                 {
                                     DataTable dataTable = new DataTable();
@@ -235,30 +269,28 @@ namespace oracle_database_administator.User
                                 }
                             }
                         }
-
-                        query = " SELECT * FROM SYS." + table_name;
-                        using (OracleCommand command = new OracleCommand(query, NewConnection))
+                        else if (priv == "UPDATE")
                         {
-                            using (OracleDataAdapter adapter = new OracleDataAdapter(command))
+                            if (update_query != "")
                             {
-                                DataTable dataTable = new DataTable();
-                                adapter.Fill(dataTable);
-                                ResultViewDataGrid.ItemsSource = dataTable.DefaultView;
+                                using (OracleCommand command = new OracleCommand(update_query, NewConnection))
+                                {
+                                    int rowSelected = command.ExecuteNonQuery();
+
+                                    if (rowSelected == 1)
+                                    {
+                                        MessageBox.Show("Executed \'Update\' successfully!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                                    }
+                                    else
+                                    {
+                                        MessageBox.Show("Failed to execute \'Update\'!");
+                                    }
+                                }
                             }
-                        }
 
-
-
-
-                    }
-                    else if (priv == "DELETE")
-                    {
-                        if (delete_query != "")
-                        {
-                            using (OracleCommand command = new OracleCommand(delete_query, NewConnection))
+                            query = " SELECT * FROM SYS." + table_name;
+                            using (OracleCommand command = new OracleCommand(query, NewConnection))
                             {
-                                MessageBox.Show("Executed \'Delete\' successfully!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-
                                 using (OracleDataAdapter adapter = new OracleDataAdapter(command))
                                 {
                                     DataTable dataTable = new DataTable();
@@ -267,15 +299,35 @@ namespace oracle_database_administator.User
                                 }
                             }
                         }
-
-                        query = " SELECT * FROM SYS." + table_name;
-                        using (OracleCommand command = new OracleCommand(query, NewConnection))
+                        else if (priv == "DELETE")
                         {
-                            using (OracleDataAdapter adapter = new OracleDataAdapter(command))
+                            if (delete_query != "")
                             {
-                                DataTable dataTable = new DataTable();
-                                adapter.Fill(dataTable);
-                                ResultViewDataGrid.ItemsSource = dataTable.DefaultView;
+                                using (OracleCommand command = new OracleCommand(delete_query, NewConnection))
+                                {
+                                    int rowSelected = command.ExecuteNonQuery();
+
+                                    if (rowSelected == 1)
+                                    {
+                                        MessageBox.Show("Executed \'Delete\' successfully!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                                    }
+                                    else
+                                    {
+                                        MessageBox.Show("Failed to execute \'Delete\'!");
+                                    } 
+                                }
+                            }
+
+                            query = " SELECT * FROM SYS." + table_name;
+                            using (OracleCommand command = new OracleCommand(query, NewConnection))
+                            {
+                                using (OracleDataAdapter adapter = new OracleDataAdapter(command))
+                                {
+                                    DataTable dataTable = new DataTable();
+                                    adapter.Fill(dataTable);
+                                    ResultViewDataGrid.ItemsSource = dataTable.DefaultView;
+                                }
                             }
                         }
                     }
@@ -289,44 +341,57 @@ namespace oracle_database_administator.User
 
         private void ResultViewDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            try {
-                DataRowView selectedRow = (DataRowView)ResultViewDataGrid.SelectedItem;
-                if (selectedRow != null)
+            DataRowView row_priv = (DataRowView)PrivUserDataGrid.SelectedItem;
+            if (row_priv != null)
+            {
+                string priv = row_priv["PRIVILEGE"].ToString();
+
+                if (priv != "INSERT")
                 {
-                    // Lấy danh sách các cột trong DataGrid
-                    foreach (DataGridColumn column in ResultViewDataGrid.Columns)
+                    condition = "";
+                    DataRowView selectedRow = (DataRowView)ResultViewDataGrid.SelectedItem;
+
+                    //var rorow_temp = ResultViewDataGrid.SelectedItem;
+                    //DataRowView selectedRow = (DataRowView)rorow_temp;
+
+                    if (selectedRow != null)
                     {
-                        // Lấy tên của cột
-                        string columnName = column.Header.ToString();
-
-                        if (columnName == "NGSINH")
+                        // Lấy danh sách các cột trong DataGrid
+                        foreach (DataGridColumn column in ResultViewDataGrid.Columns)
                         {
-                            continue;
-                        }
+                            // Lấy tên của cột
+                            string columnName = column.Header.ToString();
 
-                        // Lấy dữ liệu từ cột được chọn
-                        object cellValue = ((DataRowView)ResultViewDataGrid.SelectedItem)[columnName];
-
-                        // Kiểm tra giá trị của cột có null không trước khi thêm vào điều kiện
-                        if (cellValue != null)
-                        {
-                            // Nối chuỗi vào điều kiện
-                            if (!string.IsNullOrEmpty(condition))
+                            if (columnName == "NGSINH")
                             {
-                                condition += " AND ";
+                                continue;
                             }
-                            condition += $"{columnName} = '{cellValue}'";
+
+                            // Lấy dữ liệu từ cột được chọn
+                            object cellValue = ((DataRowView)ResultViewDataGrid.SelectedItem)[columnName];
+
+                            // Kiểm tra giá trị của cột có null không trước khi thêm vào điều kiện
+                            if (cellValue != null)
+                            {
+                                // Nối chuỗi vào điều kiện
+                                if (!string.IsNullOrEmpty(condition))
+                                {
+                                    condition += " AND ";
+                                }
+                                condition += $"{columnName} = '{cellValue}'";
+                            }
                         }
+
+                        delete_query = string.Format("DELETE FROM SYS.{0} WHERE {1}", table_name, condition);
+                        //MessageBox.Show(delete_query, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
 
-                    delete_query = string.Format("DELETE FROM SYS.{0} WHERE {1}", table_name, condition);
-                    
-                }
-            } catch (Exception ex) {
-                MessageBox.Show("Error: " + ex.Message,"Message" , MessageBoxButton.OK, MessageBoxImage.Information);
-            }
 
+                }
+            }
         }
+
+        
 
         private void PrivUserDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -359,7 +424,8 @@ namespace oracle_database_administator.User
 
                     if (priv == "INSERT")
                     {
-                        query += " SELECT * FROM SYS." + table_name + " WHERE 1=0";
+                        query += " SELECT * FROM SYS.UV_" + table_name + " WHERE 1=0";
+                        
 
                         using (OracleCommand command = new OracleCommand(query, NewConnection))
                         {
@@ -370,6 +436,31 @@ namespace oracle_database_administator.User
                                 ResultViewDataGrid.ItemsSource = dataTable.DefaultView;
                             }
                         }
+
+
+                        insert_query = "INSERT INTO SYS." + table_name + " (";
+
+                        // Lặp qua tất cả các cột trong DataGrid
+                        foreach (DataGridColumn column in ResultViewDataGrid.Columns)
+                        {
+                            // Lấy tên cột
+                            string columnName = column.Header.ToString();
+                            if(columnName == "NGSINH")
+                            {
+                                continue;
+                            }
+
+                            // Thêm tên cột vào câu truy vấn INSERT
+                            insert_query += columnName + ",";
+                        }
+
+
+                        // Loại bỏ dấu phẩy cuối cùng
+                        insert_query = insert_query.Remove(insert_query.Length - 1);
+
+                        // Thêm phần VALUES vào câu truy vấn
+                        insert_query += ") VALUES (";
+
                     }
                 }
             }
