@@ -42,8 +42,6 @@ namespace oracle_database_administator.User
                 if (conn.State == System.Data.ConnectionState.Open)
                 {
                     Console.WriteLine("Connection opened successfully!");
-
-
                     UpdatePrivUserGrid();
                 }
                 else
@@ -179,10 +177,11 @@ namespace oracle_database_administator.User
                 // Lấy mật khẩu từ cửa sổ nhập mật khẩu
                 string password = passwordWindow.Password;
 
+
                 // Truyền mật khẩu sang trang hoặc lớp khác
-                if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
-                {
-                    mainWindow.MainFrame.Navigate(new oracle_database_administator.User.TestPrivileges(selectedUserInfo, password));
+                TestPrivileges testPrivileges = new TestPrivileges(selectedUserInfo, password);
+                if (!testPrivileges.currentUserID.Equals("")) { 
+                    NavigationService.Navigate(testPrivileges);
                 }
             }
         }
