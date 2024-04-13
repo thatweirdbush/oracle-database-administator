@@ -27,9 +27,56 @@ namespace oracle_database_administator.User
 
         private bool dataGridSelectionEnabled = true;
 
+        public string currentUserID { get; set; }
+
         public ViewUserList()
         {
             InitializeComponent();
+            conn = Database.Instance.Connection;
+            try
+            {
+                if (conn.State == System.Data.ConnectionState.Open)
+                {
+                    Console.WriteLine("Connection opened successfully!");
+                    UpdateUserGrid();
+                }
+                else
+                {
+                    MessageBox.Show("Failed to open connection.");
+                }
+            }
+
+            catch (Exception ex)
+            {
+                MessageBox.Show("Connection error: " + ex.Message);
+            }
+
+            currentUserID = USER(conn);
+
+            DataContext = this;
+        }
+
+        private String USER(OracleConnection connection)
+        {
+            String user = "";
+            try
+            {
+                string query = "SELECT USER FROM dual";
+                using (OracleCommand command = new OracleCommand(query, connection))
+                {
+                    object result = command.ExecuteScalar();
+                    if (result != null)
+                    {
+                        user = result.ToString();
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
+            return user;
         }
 
         private void ModeVisible_UserDataGrid(bool dataGridSelectionEnabled)
@@ -93,24 +140,7 @@ namespace oracle_database_administator.User
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            conn = Database.Instance.Connection;
-            try {
-                if (conn.State == System.Data.ConnectionState.Open)
-                {
-                    Console.WriteLine("Connection opened successfully!");
-                    UpdateUserGrid();
-                    //USER();
-                }
-                else
-                {
-                    MessageBox.Show("Failed to open connection.");
-                }
-            }
-
-            catch (Exception ex)
-            {
-                MessageBox.Show("Connection error: " + ex.Message);
-            }
+            
         }
 
         private void InsertButton_Click(object sender, RoutedEventArgs e){

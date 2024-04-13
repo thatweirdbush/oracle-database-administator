@@ -25,9 +25,56 @@ namespace oracle_database_administator.Role
     {
         OracleConnection conn;
 
+        public string currentUserID { get; set; }
+
         public ViewRoleList()
         {
             InitializeComponent();
+            Database.Instance.IsSelectable = true;
+            conn = Database.Instance.Connection;
+            try
+            {
+                if (conn.State == System.Data.ConnectionState.Open)
+                {
+                    Console.WriteLine("Connection opened successfully!");
+                    UpdateRoleGrid();
+                }
+                else
+                {
+                    MessageBox.Show("Failed to open connection.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
+
+            catch (Exception ex)
+            {
+                MessageBox.Show("Connection error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            currentUserID = USER(conn);
+
+            DataContext = this;
+        }
+
+        private String USER(OracleConnection connection)
+        {
+            String user = "";
+            try
+            {
+                string query = "SELECT USER FROM dual";
+                using (OracleCommand command = new OracleCommand(query, connection))
+                {
+                    object result = command.ExecuteScalar();
+                    if (result != null)
+                    {
+                        user = result.ToString();
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
+            return user;
         }
 
         private void UpdateRoleGrid()
@@ -91,25 +138,7 @@ namespace oracle_database_administator.Role
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            Database.Instance.IsSelectable = true;
-            conn = Database.Instance.Connection;
-            try
-            {
-                if (conn.State == System.Data.ConnectionState.Open)
-                {
-                    Console.WriteLine("Connection opened successfully!");
-                    UpdateRoleGrid();
-                }
-                else
-                {
-                    MessageBox.Show("Failed to open connection.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-                }
-            }
-
-            catch (Exception ex)
-            {
-                MessageBox.Show("Connection error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
+            
         }
 
         private void InsertButton_Click(object sender, RoutedEventArgs e)

@@ -198,6 +198,7 @@
 
             </Label>
             <TextBlock x:Name="CurrentUserTextBlock" Text="{Binding currentUserID}" HorizontalAlignment="Left" Margin="277,81,0,0" VerticalAlignment="Top" FontSize="38" FontFamily="Roboto" Foreground="#FF1EA9D3" Background="{x:Null}" Height="102" Width="279" TextWrapping="Wrap"/>
+        
         </Grid>
     </Grid>
 </Page>

@@ -23,12 +23,16 @@
                     <Setter Property="BorderThickness" Value="2"/>
                 </Style>
             </Grid.Resources>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="225*"/>
+                <ColumnDefinition Width="53*"/>
+            </Grid.ColumnDefinitions>
             <Grid.Background>
                 <SolidColorBrush Color="#FFD4EBFF" Opacity="0.8"/>
             </Grid.Background>
-            <Border></Border>
+            <Border Grid.ColumnSpan="2"></Border>
 
-            <Grid x:Name="UsernameGrid" Margin="275,0,0,471" Visibility="Collapsed">
+            <Grid x:Name="UsernameGrid" Margin="275,0,0,471" Visibility="Collapsed" Grid.ColumnSpan="2">
                 <Label Content="Grant Role To" HorizontalAlignment="Left" Margin="134,58,0,0" VerticalAlignment="Top" FontSize="24" FontFamily="Segoe UI" Foreground="#333" Background="{x:Null}" Width="230" FontWeight="Bold" />
                 <Label x:Name="UsernameLable" Content="Username:" HorizontalAlignment="Left" Margin="134,99,0,0" VerticalAlignment="Top" FontSize="18" FontFamily="Segoe UI" Foreground="#333" Background="{x:Null}" Width="230" FontWeight="Medium" Visibility="Visible"/>
 
@@ -73,7 +77,7 @@
 
             </Grid>
 
-            <Button x:Name="BackButton" Content="Back" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="50" Canvas.Left="129" Canvas.Top="496" Width="164" Click="BackButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="59,586,0,0" >
+            <Button x:Name="BackButton" Content="Back" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="50" Width="164" Click="BackButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="59,586,0,0" >
                 <Button.Resources>
                     <Style TargetType="{x:Type Border}">
                         <Setter Property="CornerRadius" Value="24"/>
@@ -87,7 +91,7 @@
                 </Button.Effect>
             </Button>
 
-            <TextBox x:Name="RoleNameTextBox" Width="230" Height="40" FontSize="20" Canvas.Left="568" Canvas.Top="353" BorderThickness="2" VerticalContentAlignment="Center" Padding="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" IsReadOnly="False" Margin="669,138,0,0" >
+            <TextBox x:Name="RoleNameTextBox" Width="230" Height="40" FontSize="20" BorderThickness="2" VerticalContentAlignment="Center" Padding="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" IsReadOnly="False" Margin="669,138,0,0" >
                 <TextBox.Resources>
                     <Style TargetType="{x:Type Border}">
                         <Setter Property="CornerRadius" Value="6"/>
@@ -101,7 +105,7 @@
                 </TextBox.BorderBrush>
             </TextBox>
 
-            <DataGrid x:Name="RoleDataGrid" Margin="60,205,60,110" AutoGenerateColumns="False" FontWeight="Medium" BorderBrush="{x:Null}" SelectionChanged="RoleDataGrid_SelectionChanged" Background="{x:Null}" VerticalScrollBarVisibility="Hidden" GridLinesVisibility="None">
+            <DataGrid x:Name="RoleDataGrid" Margin="60,205,60,110" AutoGenerateColumns="False" FontWeight="Medium" BorderBrush="{x:Null}" SelectionChanged="RoleDataGrid_SelectionChanged" Background="{x:Null}" VerticalScrollBarVisibility="Hidden" GridLinesVisibility="None" Grid.ColumnSpan="2">
                 <DataGrid.RowBackground>
                     <SolidColorBrush Color="#FFA3BDD2" Opacity="0.6"/>
                 </DataGrid.RowBackground>
@@ -315,7 +319,7 @@
                 </DataGrid.Columns>
             </DataGrid>
             <Label Content="Role Name:" HorizontalAlignment="Left" Margin="669,97,0,0" VerticalAlignment="Top" FontSize="18" FontFamily="Segoe UI" Foreground="#333" Background="{x:Null}" Width="230" FontWeight="Medium"/>
-            <Button x:Name="InsertRoleButton" Content="Add" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="50" Width="114" Click="InsertButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="938,56,0,0" >
+            <Button x:Name="InsertRoleButton" Content="Add" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="50" Width="114" Click="InsertButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="38,56,0,0" Grid.Column="1" >
                 <Button.Resources>
                     <Style TargetType="{x:Type Border}">
                         <Setter Property="CornerRadius" Value="24"/>
@@ -329,7 +333,7 @@
                 </Button.Effect>
             </Button>
 
-            <Button x:Name="DeleteRoleButton" Content="Delete" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="50" Width="114" Click="DeleteButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="938,128,0,0" >
+            <Button x:Name="DeleteRoleButton" Content="Delete" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="50" Width="114" Click="DeleteButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="38,128,0,0" Grid.Column="1" >
                 <Button.Resources>
                     <Style TargetType="{x:Type Border}">
                         <Setter Property="CornerRadius" Value="24"/>
@@ -369,7 +373,7 @@
                     <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
                 </Button.Effect>
             </Button>
-            <Button x:Name="PrivilegesUserButton" Content="Privileges" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="50" Width="162" Click="PriUserButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="890,586,0,0" RenderTransformOrigin="-2.052,5.949" >
+            <Button x:Name="PrivilegesUserButton" Content="Privileges" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="50" Width="162" Click="PriUserButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="890,586,0,0" RenderTransformOrigin="-2.052,5.949" Grid.ColumnSpan="2" >
                 <Button.Resources>
                     <Style TargetType="{x:Type Border}">
                         <Setter Property="CornerRadius" Value="24"/>
@@ -382,7 +386,23 @@
                     <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
                 </Button.Effect>
             </Button>
-            <Label x:Name="EditRoleLabel" Content="Edit Role Here" HorizontalAlignment="Left" Margin="669,58,0,0" VerticalAlignment="Top" FontSize="24" FontFamily="Segoe UI" Foreground="#333" Background="{x:Null}" Width="230" FontWeight="Bold" />
+            <Label x:Name="EditRoleLabel" Content="Edit Role Here" HorizontalAlignment="Left" Margin="670,36,0,0" VerticalAlignment="Top" FontSize="26" FontFamily="Segoe UI" Foreground="#333" Background="{x:Null}" Width="230" FontWeight="Bold" />
+
+            <Label Content="Current User ID " HorizontalAlignment="Left" Margin="272,36,0,0" VerticalAlignment="Top" Foreground="#333" Background="{x:Null}">
+                <Label.Style>
+                    <Style TargetType="{x:Type Label}">
+                        <Setter Property="FontSize" Value="26"/>
+                        <Setter Property="FontFamily" Value="Segoe UI"/>
+                        <Setter Property="FontWeight" Value="Bold"/>
+                        <!-- Đặt cỡ chữ to -->
+                        <!-- Đặt cỡ chữ dày -->
+                        <Setter Property="FontStyle" Value="Normal"/>
+                    </Style>
+                </Label.Style>
+
+            </Label>
+            <TextBlock x:Name="CurrentUserTextBlock" Text="{Binding currentUserID}" HorizontalAlignment="Left" Margin="277,81,0,0" VerticalAlignment="Top" FontSize="38" FontFamily="Roboto" Foreground="#FF1EA9D3" Background="{x:Null}" Height="102" Width="279" TextWrapping="Wrap"/>
+
         </Grid>
     </Grid>
 </Page>

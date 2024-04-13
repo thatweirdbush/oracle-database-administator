@@ -33,7 +33,6 @@ namespace oracle_database_administator.User
         public string currentUserID { get; set; }
 
         private string editedColumn = ""; 
-        private string newValue = "";
         
         string table_name = "";
         string delete_query = "";

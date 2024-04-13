@@ -42,7 +42,7 @@
                 </Button.Effect>
             </Button>
 
-            <TextBox x:Name="txtPassword" Width="230" Height="40" FontSize="20" Canvas.Left="568" Canvas.Top="353" BorderThickness="2" VerticalContentAlignment="Center" Padding="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" IsReadOnly="False" Margin="669,138,0,0" >
+            <TextBox x:Name="txtPassword" Width="180" Height="40" FontSize="20" Canvas.Left="568" Canvas.Top="353" BorderThickness="2" VerticalContentAlignment="Center" Padding="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" IsReadOnly="False" Margin="719,138,0,0" >
                 <TextBox.Resources>
                     <Style TargetType="{x:Type Border}">
                         <Setter Property="CornerRadius" Value="6"/>
@@ -97,7 +97,7 @@
                                 <Setter Property="Background" Value="#FF173D7B"/>
                             </Style>
                         </DataGridTextColumn.HeaderStyle>
-                        
+
 
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="{x:Type TextBlock}">
@@ -271,7 +271,7 @@
 
                 </DataGrid.Columns>
             </DataGrid>
-            <Label Content="Password:" HorizontalAlignment="Left" Margin="669,97,0,0" VerticalAlignment="Top" FontSize="18" FontFamily="Segoe UI" Foreground="#333" Background="{x:Null}" Width="230" FontWeight="Medium"/>
+            <Label Content="Password:" HorizontalAlignment="Left" Margin="719,97,0,0" VerticalAlignment="Top" FontSize="18" FontFamily="Segoe UI" Foreground="#333" Background="{x:Null}" Width="180" FontWeight="Medium"/>
             <Button x:Name="InsertUserButton" Content="Add" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="50" Width="114" Click="InsertButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="938,56,0,0" >
                 <Button.Resources>
                     <Style TargetType="{x:Type Border}">
@@ -337,8 +337,8 @@
                     <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
                 </Button.Effect>
             </Button>
-            <Label Content="Edit User Here" HorizontalAlignment="Left" Margin="408,58,0,0" VerticalAlignment="Top" FontSize="24" FontFamily="Segoe UI" Foreground="#333" Background="{x:Null}" Width="230" FontWeight="Bold"/>
-            <TextBox x:Name="txtUserName" Width="230" Height="40" FontSize="20" BorderThickness="2" VerticalContentAlignment="Center" Padding="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" IsReadOnly="False" Margin="408,138,0,0" BorderBrush="#FF173D7B" >
+            <Label Content="Edit User Here" HorizontalAlignment="Left" Margin="498,36,0,0" VerticalAlignment="Top" FontSize="26" FontFamily="Segoe UI" Foreground="#333" Background="{x:Null}" Width="230" FontWeight="Bold"/>
+            <TextBox x:Name="txtUserName" Width="180" Height="40" FontSize="20" BorderThickness="2" VerticalContentAlignment="Center" Padding="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" IsReadOnly="False" Margin="498,138,0,0" BorderBrush="#FF173D7B" >
                 <TextBox.Resources>
                     <Style TargetType="{x:Type Border}">
                         <Setter Property="CornerRadius" Value="6"/>
@@ -348,7 +348,23 @@
                     <SolidColorBrush Color="White" Opacity="0.6"/>
                 </TextBox.Background>
             </TextBox>
-            <Label Content="Username:" HorizontalAlignment="Left" Margin="408,97,0,0" VerticalAlignment="Top" FontSize="18" FontFamily="Segoe UI" Foreground="#333" Background="{x:Null}" Width="230" FontWeight="Medium"/>
+            <Label Content="Username:" HorizontalAlignment="Left" Margin="498,97,0,0" VerticalAlignment="Top" FontSize="18" FontFamily="Segoe UI" Foreground="#333" Background="{x:Null}" Width="180" FontWeight="Medium"/>
+
+            <Label Content="Current User ID " HorizontalAlignment="Left" Margin="272,36,0,0" VerticalAlignment="Top" Foreground="#333" Background="{x:Null}">
+                <Label.Style>
+                    <Style TargetType="{x:Type Label}">
+                        <Setter Property="FontSize" Value="26"/>
+                        <Setter Property="FontFamily" Value="Segoe UI"/>
+                        <Setter Property="FontWeight" Value="Bold"/>
+                        <!-- Đặt cỡ chữ to -->
+                        <!-- Đặt cỡ chữ dày -->
+                        <Setter Property="FontStyle" Value="Normal"/>
+                    </Style>
+                </Label.Style>
+
+            </Label>
+            <TextBlock x:Name="CurrentUserTextBlock" Text="{Binding currentUserID}" HorizontalAlignment="Left" Margin="277,81,0,0" VerticalAlignment="Top" FontSize="38" FontFamily="Roboto" Foreground="#FF1EA9D3" Background="{x:Null}" Height="102" Width="216" TextWrapping="Wrap"/>
+
         </Grid>
     </Grid>
 </Page>
