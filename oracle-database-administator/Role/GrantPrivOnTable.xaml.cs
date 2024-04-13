@@ -26,17 +26,17 @@ namespace oracle_database_administator.Role
 
         OracleConnection conn = Database.Instance.Connection;
 
-        private UserInfo selectedUserInfo;
+        private Role selectedRole;
 
         public string currentUserID { get; set; }
 
-        public string selectedUserName { get; set; }
+        public string selectedRoleName { get; set; }
 
-        public GrantPrivOnTable(UserInfo userInfo)
+        public GrantPrivOnTable(Role role)
         {
             InitializeComponent();
-            selectedUserInfo = userInfo;
-            selectedUserName = selectedUserInfo.UserName;
+            selectedRole= role;
+            selectedRoleName = selectedRole.RoleName;
             currentUserID = Database.Instance.CurrentUser;
             DataContext = this;
         }
@@ -84,7 +84,7 @@ namespace oracle_database_administator.Role
                     "    PRIVILEGE," +
                     "    GRANTABLE " +
                     "FROM ALL_TAB_PRIVS " +
-                    "WHERE GRANTEE = '" + selectedUserName + "'" +
+                    "WHERE GRANTEE = '" + selectedRoleName + "'" +
                     "UNION ALL " +
                     "SELECT" +
                     "   GRANTEE," +
@@ -93,7 +93,7 @@ namespace oracle_database_administator.Role
                     "   PRIVILEGE," +
                     "   GRANTABLE " +
                     "FROM dba_col_privs " +
-                    "WHERE GRANTEE = '" + selectedUserName + "'";
+                    "WHERE GRANTEE = '" + selectedRoleName + "'";
 
                 using (OracleCommand command = new OracleCommand(query, conn))
                 {
@@ -180,12 +180,12 @@ namespace oracle_database_administator.Role
                 // Check if there is no column selected
                 if (columnNameString == "")
                 {
-                    query = "GRANT " + privileges + " ON " + tableName + " TO " + selectedUserName + withGrantOptionString;
+                    query = "GRANT " + privileges + " ON " + tableName + " TO " + selectedRoleName + withGrantOptionString;
                 }
                 // Check if required privileges are contained
                 else if ((IsOnlyContains(privileges, "UPDATE") || IsOnlyContains(privileges, "SELECT, UPDATE") || IsOnlyContains(privileges, "UPDATE, SELECT")))
                 {
-                    query = "GRANT " + privileges + columnNameString + " ON " + tableName + " TO " + selectedUserName + withGrantOptionString;
+                    query = "GRANT " + privileges + columnNameString + " ON " + tableName + " TO " + selectedRoleName + withGrantOptionString;
                 }
                 else
                 {
@@ -230,7 +230,7 @@ namespace oracle_database_administator.Role
                     {
                         privilege = "UPDATE";
                     }
-                    string query = "REVOKE " + privilege + " ON " + tableName + " FROM " + selectedUserName;
+                    string query = "REVOKE " + privilege + " ON " + tableName + " FROM " + selectedRoleName;
 
                     using (OracleCommand command = new OracleCommand(query, conn))
                     {
@@ -262,7 +262,7 @@ namespace oracle_database_administator.Role
         {
             if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
             {
-                mainWindow.MainFrame.Navigate(new oracle_database_administator.Role.ViewPrivilegesOfRole(selectedUserInfo));
+                mainWindow.MainFrame.Navigate(new oracle_database_administator.Role.ViewPrivilegesOfRole(selectedRole));
             }
         }
 

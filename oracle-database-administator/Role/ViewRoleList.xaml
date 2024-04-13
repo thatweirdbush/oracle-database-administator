@@ -402,7 +402,7 @@
                     <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
                 </Button.Effect>
             </Button>
-            <Button x:Name="PrivilegesUserButton" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="50" Width="162" Click="PriUserButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="890,586,0,0" RenderTransformOrigin="-2.052,5.949" Grid.ColumnSpan="2" >
+            <Button x:Name="PrivilegesRoleButton" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="50" Width="162" Click="PrivilegesRoleButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="890,586,0,0" RenderTransformOrigin="-2.052,5.949" Grid.ColumnSpan="2" >
                 <StackPanel Orientation="Horizontal">
                     <Image Source="/images/star.png" Width="20" Height="20" Margin="0,0,10,0" />
                     <TextBlock Text="Privileges" VerticalAlignment="Center"/>

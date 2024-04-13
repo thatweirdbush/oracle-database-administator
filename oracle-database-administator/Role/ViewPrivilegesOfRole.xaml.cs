@@ -25,15 +25,15 @@ namespace oracle_database_administator.Role
     {
         OracleConnection conn = Database.Instance.Connection;
 
-        private UserInfo selectedUserInfo;
-        public string selectedUserName { get; set; }
+        private Role selectedRole;
+        public string selectedRoleName { get; set; }
         public string currentUserID { get; set; }
 
-        public ViewPrivilegesOfRole(UserInfo userInfo)
+        public ViewPrivilegesOfRole(Role role)
         {
             InitializeComponent();
-            selectedUserInfo = userInfo;
-            selectedUserName = selectedUserInfo.UserName;
+            selectedRole = role;
+            selectedRoleName = selectedRole.RoleName;
             currentUserID = Database.Instance.CurrentUser;
             DataContext = this;
         }     
@@ -53,7 +53,7 @@ namespace oracle_database_administator.Role
         {
             try
             {
-                string query = "SELECT * FROM ALL_TAB_PRIVS WHERE GRANTEE = '" + selectedUserName + "'";
+                string query = "SELECT * FROM ALL_TAB_PRIVS WHERE GRANTEE = '" + selectedRoleName + "'";
                 using (OracleCommand command = new OracleCommand(query, conn))
                 {
                     using (OracleDataAdapter adapter = new OracleDataAdapter(command))
@@ -74,7 +74,7 @@ namespace oracle_database_administator.Role
         {
             if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
             {
-                mainWindow.MainFrame.Navigate(new oracle_database_administator.Dashboard());
+                mainWindow.MainFrame.Navigate(new Dashboard());
             }
         }
 
@@ -87,35 +87,48 @@ namespace oracle_database_administator.Role
         {
             if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
             {
-                mainWindow.MainFrame.Navigate(new oracle_database_administator.Role.ViewRoleList());
+                mainWindow.MainFrame.Navigate(new ViewRoleList());
             }
         }
 
         private void TestPrivUserButton_Click(object sender, RoutedEventArgs e)
         {
-            // Tạo một instance của cửa sổ nhập mật khẩu
-            PasswordWindow passwordWindow = new PasswordWindow();
-
-            // Hiển thị cửa sổ nhập mật khẩu và chờ cho đến khi nó được đóng
-            bool? result = passwordWindow.ShowDialog();
-
-            // Kiểm tra xem cửa sổ nhập mật khẩu đã đóng hay không
-            if (result == true)
+            try
             {
-                // Lấy mật khẩu từ cửa sổ nhập mật khẩu
-                string password = passwordWindow.Password;
+                // Gán role hiện tại cho user mặc định `TEST_USER`
+                string username = "TEST_USER";
+                string password = "123";
+                string query = "GRANT " + selectedRoleName + " TO " + username;
 
-                // Truyền mật khẩu sang trang hoặc lớp khác
-                if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
+                using (OracleCommand command = new OracleCommand(query, conn))
                 {
-                    mainWindow.MainFrame.Navigate(new oracle_database_administator.User.TestPrivileges(selectedUserInfo, password));
+                    int rowSelected = command.ExecuteNonQuery();
+
+                    if (rowSelected == -1)
+                    {
+                        //MessageBox.Show($"Granted {selectedRoleName} to {username} successfully!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                        MessageBox.Show($"Successfully connected to default testing user \'{username}\'!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                        // Truyền mật khẩu sang trang hoặc lớp khác
+                        if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
+                        {
+                            mainWindow.MainFrame.Navigate(new TestPrivileges(selectedRole, username, password));
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show($"Failed to grant {selectedRoleName} to {username}.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
         private void EditPrivButton_Click(object sender, RoutedEventArgs e)
         {
-            GrantPrivOnTable grantPrivOnTabPage = new GrantPrivOnTable(selectedUserInfo);
+            GrantPrivOnTable grantPrivOnTabPage = new GrantPrivOnTable(selectedRole);
             NavigationService.Navigate(grantPrivOnTabPage);
         }
 
@@ -132,7 +145,7 @@ namespace oracle_database_administator.Role
 
                     try
                     {
-                        string query = "REVOKE " + privilege + " ON " + tableName + " FROM " + selectedUserName;
+                        string query = "REVOKE " + privilege + " ON " + tableName + " FROM " + selectedRoleName;
 
                         using (OracleCommand command = new OracleCommand(query, conn))
                         {

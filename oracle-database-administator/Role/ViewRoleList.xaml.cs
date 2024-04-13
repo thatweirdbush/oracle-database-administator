@@ -220,26 +220,26 @@ namespace oracle_database_administator.Role
             }
         }
 
-        private void PriUserButton_Click(object sender, RoutedEventArgs e)
+        private void PrivilegesRoleButton_Click(object sender, RoutedEventArgs e)
         {
             if (RoleDataGrid.SelectedItem != null)
             {
                 // Lấy dữ liệu từ dòng được chọn
                 DataRowView selectedRole = (DataRowView)RoleDataGrid.SelectedItem;
-                UserInfo selectedUserInfo;
+                Role selectedRoleInfo;
                 if (Database.Instance.IsSelectable)
                 {
-                    // Tạo một đối tượng chứa thông tin của người dùng được chọn
-                    selectedUserInfo = new UserInfo(selectedRole["ROLE"].ToString());
+                    // Tạo một đối tượng chứa thông tin của role được chọn
+                    selectedRoleInfo = new Role(selectedRole["ROLE"].ToString());
                 }
                 else
                 {
-                    // Tạo một đối tượng chứa thông tin của người dùng được chọn
-                    selectedUserInfo = new UserInfo(selectedRole["GRANTEE"].ToString());
+                    // Tạo một đối tượng chứa thông tin của role được chọn
+                    selectedRoleInfo = new Role(selectedRole["GRANTEE"].ToString());
                 }
 
-                // Chuyển sang trang mới và truyền thông tin về người dùng được chọn qua trang mới
-                ViewPrivilegesOfRole privilegesPage = new ViewPrivilegesOfRole(selectedUserInfo);
+                // Chuyển sang trang mới và truyền thông tin về role được chọn qua trang mới
+                ViewPrivilegesOfRole privilegesPage = new ViewPrivilegesOfRole(selectedRoleInfo);
                 NavigationService.Navigate(privilegesPage);
             }
             else

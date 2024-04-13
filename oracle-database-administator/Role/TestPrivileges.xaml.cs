@@ -26,8 +26,9 @@ namespace oracle_database_administator.Role
 
         //OracleConnection NewConnection ;
         OracleConnection alternate_user_connection = Database.Instance.Connection;
-        private UserInfo selectedUserInfo;
-        public string selectedUserName { get; set; }
+        private Role selectedRole;
+        public string selectedRoleName{ get; set; }
+        public string selectedUsername { get; set; }
         public string selectedPassWord { get; set; }
         public string currentUserID { get; set; }
 
@@ -38,14 +39,14 @@ namespace oracle_database_administator.Role
         string insert_query = "";
         string condition = "";
 
-        public TestPrivileges(UserInfo userInfo, string password)
+        public TestPrivileges(Role role, string username, string password)
         {
             InitializeComponent();
-            selectedUserInfo = userInfo;
-            selectedUserName = selectedUserInfo.UserName;
+            selectedRole= role;
+            selectedRoleName = selectedRole.RoleName;
+            selectedUsername = username;
             selectedPassWord = password;
-
-            alternate_user_connection = Database.Instance.AlternateConnection(selectedUserName, selectedPassWord);
+            alternate_user_connection = Database.Instance.AlternateConnection(selectedUsername, selectedPassWord);
             currentUserID = Database.Instance.CurrentUser;
             DataContext = this;
         }
@@ -116,14 +117,14 @@ namespace oracle_database_administator.Role
                     "    NULL AS COLUMN_NAME," +
                     "    PRIVILEGE " +
                     "FROM SYS.ALL_TAB_PRIVS " +
-                    "WHERE GRANTEE = '" + selectedUserName + "' " +
+                    "WHERE GRANTEE = '" + selectedRoleName + "' " +
                     "UNION ALL " +
                     "SELECT" +
                     "   TABLE_NAME," +
                     "   COLUMN_NAME," +
                     "   PRIVILEGE " +
                     "FROM SYS.all_col_privs " +
-                    "WHERE GRANTEE = '" + selectedUserName + "'";
+                    "WHERE GRANTEE = '" + selectedRoleName + "'";
 
                 using (OracleCommand command = new OracleCommand(query, alternate_user_connection))
                 {
@@ -153,7 +154,7 @@ namespace oracle_database_administator.Role
         {
             if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
             {
-                mainWindow.MainFrame.Navigate(new oracle_database_administator.Role.ViewPrivilegesOfRole(selectedUserInfo));
+                mainWindow.MainFrame.Navigate(new oracle_database_administator.Role.ViewPrivilegesOfRole(selectedRole));
             }
         }
 

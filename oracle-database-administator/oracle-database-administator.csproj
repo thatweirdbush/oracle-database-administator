@@ -112,6 +112,7 @@
     <Compile Include="Role\GrantPrivOnTable.xaml.cs">
       <DependentUpon>GrantPrivOnTable.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Role\Role.cs" />
     <Compile Include="Role\TestPrivileges.xaml.cs">
       <DependentUpon>TestPrivileges.xaml</DependentUpon>
     </Compile>

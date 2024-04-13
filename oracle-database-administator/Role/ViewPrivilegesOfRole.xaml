@@ -42,7 +42,7 @@
                 </Label.Style>
             </Label>
 
-            <TextBlock TextWrapping="Wrap" Text="{Binding selectedUserName}" HorizontalAlignment="Left" Margin="703,106,0,0" VerticalAlignment="Top" Foreground="#FF1EA9D3" Background="{x:Null}" FontWeight="SemiBold" Height="84" Width="349"  FontSize="34" FlowDirection="RightToLeft"/>
+            <TextBlock TextWrapping="Wrap" Text="{Binding selectedRoleName}" HorizontalAlignment="Left" Margin="703,106,0,0" VerticalAlignment="Top" Foreground="#FF1EA9D3" Background="{x:Null}" FontWeight="SemiBold" Height="84" Width="349"  FontSize="34" FlowDirection="RightToLeft"/>
 
             <Button x:Name="BackButton" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="50" Width="130" Click="BackButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="59,586,0,0" >
                 <StackPanel Orientation="Horizontal">

@@ -58,7 +58,7 @@
                 </Label.Style>
             </Label>
 
-            <TextBlock x:Name="SelectedUserTextBlock" TextWrapping="Wrap" Text="{Binding selectedUserName}" HorizontalAlignment="Left" Margin="703,106,0,0" VerticalAlignment="Top" Foreground="#FF1EA9D3" Background="{x:Null}" FontWeight="SemiBold" Height="84" Width="349"  FontSize="34" FlowDirection="RightToLeft"/>
+            <TextBlock x:Name="SelectedUserTextBlock" TextWrapping="Wrap" Text="{Binding selectedRoleName}" HorizontalAlignment="Left" Margin="703,106,0,0" VerticalAlignment="Top" Foreground="#FF1EA9D3" Background="{x:Null}" FontWeight="SemiBold" Height="84" Width="349"  FontSize="34" FlowDirection="RightToLeft"/>
 
             <Button x:Name="BackButton" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="50" Width="130" Click="BackButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="59,586,0,0" >
                 <StackPanel Orientation="Horizontal">
@@ -126,16 +126,16 @@
                 </Label.Style>
 
             </Label>
-            <Label x:Name="CurrentUserLabel" Content="{Binding currentUserID}" HorizontalAlignment="Left" Margin="231,145,0,0" VerticalAlignment="Top" Foreground="#FF1EA9D3" Background="{x:Null}" Width="188" FontWeight="SemiBold" Height="45">
-                <Label.Style>
-                    <Style TargetType="{x:Type Label}">
+            <TextBlock x:Name="CurrentUserLabel" Text="{Binding currentUserID}" HorizontalAlignment="Left" Margin="236,150,0,0" VerticalAlignment="Top" Foreground="#FF1EA9D3" Background="{x:Null}" Width="319" FontWeight="SemiBold" Height="45">
+                <TextBlock.Style>
+                    <Style TargetType="{x:Type TextBlock}">
                         <Setter Property="FontSize" Value="26"/>
                         <Setter Property="FontFamily" Value="Segoe UI"/>
                         <Setter Property="FontWeight" Value="Bold"/>
                         <Setter Property="FontStyle" Value="Normal"/>
                     </Style>
-                </Label.Style>
-            </Label>
+                </TextBlock.Style>
+            </TextBlock>
 
             <DataGrid x:Name="PrivUserDataGrid" Margin="60,205,557,110" AutoGenerateColumns="False" FontWeight="Medium" BorderBrush="{x:Null}" SelectionChanged="PrivUserDataGrid_SelectionChanged" Background="{x:Null}" VerticalScrollBarVisibility="Hidden" GridLinesVisibility="None">
                 <DataGrid.RowBackground>
