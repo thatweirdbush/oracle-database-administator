@@ -29,6 +29,7 @@ namespace oracle_database_administator.User
 
         private UserInfo selectedUserInfo;
         public string selectedUserName { get; set; }
+        public string selectedPassWord { get; set; }
 
         public string currentUserID { get; set; }
 
@@ -145,9 +146,9 @@ namespace oracle_database_administator.User
         }
 
         // Hàm thay đổi connection theo selected User_name => trả về string
-        private String AlternateConnectionString(String user)
+        private String AlternateConnectionString(String user, String pass)
         {
-            String connectionString = "DATA SOURCE=localhost:1521/XE;PERSIST SECURITY INFO=True;USER ID="+user+" ;PASSWORD=" + user;
+            String connectionString = "DATA SOURCE=localhost:1521/XE;PERSIST SECURITY INFO=True;USER ID="+user+" ;PASSWORD=" + pass;
 
             return connectionString;
         }

@@ -99,7 +99,7 @@ namespace oracle_database_administator.User
         {
             try
             {
-                string query = "SELECT TABLE_NAME FROM DBA_TABLES WHERE OWNER = \'C##ADMIN\'";
+                string query = "SELECT TABLE_NAME FROM DBA_TABLES WHERE TABLE_NAME LIKE \'%N09_%\'";
                 using (OracleCommand command = new OracleCommand(query, conn))
                 {
                     using (OracleDataAdapter adapter = new OracleDataAdapter(command))
@@ -238,6 +238,25 @@ namespace oracle_database_administator.User
                 {
                     MessageBox.Show("No permission to grant " + privileges + " on column " + colName + ".\nPlease select other privileges.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                     return;
+                }
+
+                if (privileges.Contains("INSERT"))
+                {
+                    String grantView = "GRANT SELECT ON UV_" + tableName + " TO " + selectedUserName;
+
+                    using (OracleCommand command = new OracleCommand(grantView, conn))
+                    {
+                        int rowSelected = command.ExecuteNonQuery();
+
+                        if (rowSelected == -1)
+                        {
+                            MessageBox.Show("Grant Select view successfully!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                        }
+                        else
+                        {
+                            MessageBox.Show("Failed to grant this privilege!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                        }
+                    }
                 }
 
                 using (OracleCommand command = new OracleCommand(query, conn))
