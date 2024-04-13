@@ -1,5 +1,6 @@
 ﻿using Oracle.ManagedDataAccess.Client;
 using System;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -155,7 +156,8 @@ namespace oracle_database_administator.User
 
                     string query = @"BEGIN
                             EXECUTE IMMEDIATE 'ALTER SESSION SET ""_ORACLE_SCRIPT"" = TRUE';
-                            EXECUTE IMMEDIATE 'create user " + userName + " identified by " + passWord + "';" +
+                            EXECUTE IMMEDIATE 'create user " + userName + " identified by " + passWord + "'; " +
+                            "EXECUTE IMMEDIATE 'GRANT CONNECT TO " + userName + "'; " + 
                                 " END;";
 
 
