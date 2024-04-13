@@ -23,34 +23,15 @@ namespace oracle_database_administator.Role
     /// </summary>
     public partial class ViewRoleList : Page
     {
-        OracleConnection conn;
+        OracleConnection conn = Database.Instance.Connection;
 
         public string currentUserID { get; set; }
 
         public ViewRoleList()
         {
             InitializeComponent();
-            Database.Instance.IsSelectable = true;
-            conn = Database.Instance.Connection;
-            try
-            {
-                if (conn.State == System.Data.ConnectionState.Open)
-                {
-                    Console.WriteLine("Connection opened successfully!");
-                    UpdateRoleGrid();
-                }
-                else
-                {
-                    MessageBox.Show("Failed to open connection.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-                }
-            }
-
-            catch (Exception ex)
-            {
-                MessageBox.Show("Connection error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-            currentUserID = USER(conn);
-
+            Database.Instance.IsSelectable = true;           
+            currentUserID = Database.Instance.CurrentUser;
             DataContext = this;
         }
 
@@ -130,15 +111,28 @@ namespace oracle_database_administator.Role
         // Sử dụng sự kiện Unloaded để đảm bảo rằng kết nối được đóng khi chuyển khỏi Page
         private void Page_Unloaded(object sender, RoutedEventArgs e)
         {
-            if (conn != null)
-            {
-                conn.Dispose();
-            }
+
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            
+            try
+            {
+                if (conn.State == System.Data.ConnectionState.Open)
+                {
+                    Console.WriteLine("Connection opened successfully!");
+                    UpdateRoleGrid();
+                }
+                else
+                {
+                    MessageBox.Show("Failed to open connection.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
+
+            catch (Exception ex)
+            {
+                MessageBox.Show("Connection error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
         }
 
         private void InsertButton_Click(object sender, RoutedEventArgs e)
@@ -289,7 +283,7 @@ namespace oracle_database_administator.Role
                 }
 
                 // Chuyển sang trang mới và truyền thông tin về người dùng được chọn qua trang mới
-                ViewPrivilegesOfUser privilegesPage = new ViewPrivilegesOfUser(selectedUserInfo);
+                ViewPrivilegesOfRole privilegesPage = new ViewPrivilegesOfRole(selectedUserInfo);
                 NavigationService.Navigate(privilegesPage);
             }
             else

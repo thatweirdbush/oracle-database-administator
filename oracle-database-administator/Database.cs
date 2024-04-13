@@ -128,5 +128,30 @@ namespace oracle_database_administator
                 return _connection;
             }
         }
+
+        public string CurrentUser
+        {
+            get
+            {
+                string user = "";
+                try
+                {
+                    string query = "SELECT USER FROM DUAL";
+                    using (OracleCommand command = new OracleCommand(query, _connection))
+                    {
+                        object result = command.ExecuteScalar();
+                        if (result != null)
+                        {
+                            user = result.ToString();
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("`Get current user` Error: " + ex.Message);
+                }
+                return user;
+            }
+        }
     }
 }
