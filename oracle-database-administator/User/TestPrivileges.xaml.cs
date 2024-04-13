@@ -100,6 +100,8 @@ namespace oracle_database_administator.User
                 {
                     string priv = row_priv["PRIVILEGE"].ToString();
                     string priv_col = row_priv["COLUMN_NAME"].ToString();
+                    string table_name = row_priv["TABLE_NAME"].ToString();
+
                     //Lấy cột được chỉnh sửa
                     editedColumn = e.Column.Header.ToString();
 
@@ -118,6 +120,17 @@ namespace oracle_database_administator.User
                         else
                         {
                             MessageBox.Show("Bạn không được quyền update trên cột này", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                            String query = " SELECT * FROM SYS." + table_name;
+
+                            using (OracleCommand command = new OracleCommand(query, NewConnection))
+                            {
+                                using (OracleDataAdapter adapter = new OracleDataAdapter(command))
+                                {
+                                    DataTable dataTable = new DataTable();
+                                    adapter.Fill(dataTable);
+                                    ResultViewDataGrid.ItemsSource = dataTable.DefaultView;
+                                }
+                            }
                         }
                     }
                     else if (priv == "INSERT")
