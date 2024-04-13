@@ -48,24 +48,8 @@ namespace oracle_database_administator.Role
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                if (conn.State == System.Data.ConnectionState.Open)
-                {
-                    Console.WriteLine("Connection opened successfully!");
-                    UpdateTablerGrid();
-                    UpdatePrivUserGrid();
-                }
-                else
-                {
-                    MessageBox.Show("Failed to open connection.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-                }
-            }
-
-            catch (Exception ex)
-            {
-                MessageBox.Show("Connection error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
+            UpdateTablerGrid();
+            UpdatePrivUserGrid();
         }
 
         private void UpdateTablerGrid()
@@ -93,8 +77,6 @@ namespace oracle_database_administator.Role
         {
             try
             {
-                //string query1 = "SELECT * FROM ALL_TAB_PRIVS WHERE GRANTEE = '" + selectedUserName + "'";
-
                 string query = "SELECT" +
                     "    GRANTEE," +
                     "    TABLE_NAME," +
@@ -144,10 +126,8 @@ namespace oracle_database_administator.Role
                     selectedItems.Add(listBoxItem.Content.ToString());
                 }
             }
-
             // Gán danh sách các mục được chọn vào chuỗi temp, phân tách bằng dấu phẩy
             string temp = string.Join(", ", selectedItems);
-
             return temp;
         }
 
@@ -278,7 +258,7 @@ namespace oracle_database_administator.Role
             }
         }
 
-        private void BackViewPrivUserButton_Click(object sender, RoutedEventArgs e)
+        private void BackButton_Click(object sender, RoutedEventArgs e)
         {
             if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
             {
@@ -306,7 +286,6 @@ namespace oracle_database_administator.Role
                             ColumnTableDataGrid.ItemsSource = dataTable.DefaultView;
                         }
                     }
-
                 }
             }
             catch (Exception ex)
@@ -330,7 +309,6 @@ namespace oracle_database_administator.Role
                 MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
-
         private void PrivUserDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 

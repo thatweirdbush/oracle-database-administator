@@ -28,7 +28,11 @@
             </Grid.Background>
             <Border></Border>
 
-            <Button x:Name="BackButton" Content="Back" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="50" Canvas.Left="129" Canvas.Top="496" Width="164" Click="BackButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="59,586,0,0" >
+            <Button x:Name="BackButton" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="50" Width="130" Click="BackButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="59,586,0,0" >
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="/images/back-icon.png" Width="25" Height="25" Margin="0,0,7,0" />
+                    <TextBlock Text="Back" VerticalAlignment="Center"/>
+                </StackPanel>
                 <Button.Resources>
                     <Style TargetType="{x:Type Border}">
                         <Setter Property="CornerRadius" Value="24"/>
@@ -271,8 +275,12 @@
 
                 </DataGrid.Columns>
             </DataGrid>
-            <Label Content="Password:" HorizontalAlignment="Left" Margin="719,97,0,0" VerticalAlignment="Top" FontSize="18" FontFamily="Segoe UI" Foreground="#333" Background="{x:Null}" Width="180" FontWeight="Medium"/>
-            <Button x:Name="InsertUserButton" Content="Add" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="50" Width="114" Click="InsertButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="938,56,0,0" >
+            <Label Content="Password:" HorizontalAlignment="Left" Margin="719,104,0,0" VerticalAlignment="Top" FontSize="18" FontFamily="Segoe UI" Foreground="#333" Background="{x:Null}" Width="180" FontWeight="Medium"/>
+            <Button x:Name="InsertUserButton" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="50" Width="114" Click="InsertButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="938,56,0,0" >
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="/images/add-icon-2.png" Width="25" Height="25" Margin="0,0,0,0" />
+                    <TextBlock Text=" Add" VerticalAlignment="Center" Width="48"/>
+                </StackPanel>
                 <Button.Resources>
                     <Style TargetType="{x:Type Border}">
                         <Setter Property="CornerRadius" Value="24"/>
@@ -285,7 +293,11 @@
                     <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
                 </Button.Effect>
             </Button>
-            <Button x:Name="DeleteUserButton" Content="Delete" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="50" Width="114" Click="DeleteButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="938,128,0,0" >
+            <Button x:Name="DeleteUserButton" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="50" Width="114" Click="DeleteButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="938,128,0,0" >
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="/images/trash.png" Width="25" Height="25" Margin="0,0,5,0" />
+                    <TextBlock Text="Delete" VerticalAlignment="Center"/>
+                </StackPanel>
                 <Button.Resources>
                     <Style TargetType="{x:Type Border}">
                         <Setter Property="CornerRadius" Value="24"/>
@@ -298,7 +310,12 @@
                     <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
                 </Button.Effect>
             </Button>
-            <Button x:Name="HomeButton" Content="Home Page" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="22" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="95" Width="163" Click="HomeButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="60,32,0,0" RenderTransformOrigin="-2.052,5.949" >
+            <Button x:Name="HomeButton" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="22" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="82" Width="164" Click="HomeButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="59,49,0,0" RenderTransformOrigin="-2.052,5.949" >
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="/images/home-icon.png" Width="30" Height="30" Margin="0,0,7,0" />
+                    <TextBlock Text="Home" VerticalAlignment="Center"/>
+                </StackPanel>
+
                 <Button.Resources>
                     <Style TargetType="{x:Type Border}">
                         <Setter Property="CornerRadius" Value="24"/>
@@ -332,7 +349,11 @@
                     </Style>
                 </Label.Style>
             </Label>
-            <Button x:Name="RoleUserButton" Content="Roles" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="50" Width="164" Click="RolesUserButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="702,585,0,0" RenderTransformOrigin="-2.052,5.949" >
+            <Button x:Name="RoleUserButton" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="50" Width="164" Click="RolesUserButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="702,585,0,0" RenderTransformOrigin="-2.052,5.949" >
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="/images/role-icon.png" Width="20" Height="20" Margin="0,0,10,0" />
+                    <TextBlock Text="Roles" VerticalAlignment="Center"/>
+                </StackPanel>
                 <Button.Resources>
                     <Style TargetType="{x:Type Border}">
                         <Setter Property="CornerRadius" Value="24"/>
@@ -345,7 +366,11 @@
                     <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
                 </Button.Effect>
             </Button>
-            <Button x:Name="PrivilegesUserButton" Content="Privileges" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="50" Width="162" Click="PriUserButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="890,586,0,0" RenderTransformOrigin="-2.052,5.949" >
+            <Button x:Name="PrivilegesUserButton" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="50" Width="162" Click="PriUserButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="890,586,0,0" RenderTransformOrigin="-2.052,5.949" >
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="/images/star.png" Width="20" Height="20" Margin="0,0,10,0" />
+                    <TextBlock Text="Privileges" VerticalAlignment="Center"/>
+                </StackPanel>
                 <Button.Resources>
                     <Style TargetType="{x:Type Border}">
                         <Setter Property="CornerRadius" Value="24"/>
@@ -358,7 +383,7 @@
                     <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
                 </Button.Effect>
             </Button>
-            <Label Content="Edit User Here" HorizontalAlignment="Left" Margin="498,36,0,0" VerticalAlignment="Top" FontSize="26" FontFamily="Segoe UI" Foreground="#333" Background="{x:Null}" Width="230" FontWeight="Bold"/>
+            <Label Content="Edit User Here" HorizontalAlignment="Left" Margin="498,57,0,0" VerticalAlignment="Top" FontSize="26" FontFamily="Segoe UI" Foreground="#333" Background="{x:Null}" Width="230" FontWeight="Bold"/>
             <TextBox x:Name="txtUserName" Width="180" Height="40" FontSize="20" BorderThickness="2" VerticalContentAlignment="Center" Padding="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" IsReadOnly="False" Margin="498,138,0,0" BorderBrush="#FF173D7B" >
                 <TextBox.Resources>
                     <Style TargetType="{x:Type Border}">
@@ -369,7 +394,7 @@
                     <SolidColorBrush Color="White" Opacity="0.6"/>
                 </TextBox.Background>
             </TextBox>
-            <Label Content="Username:" HorizontalAlignment="Left" Margin="498,97,0,0" VerticalAlignment="Top" FontSize="18" FontFamily="Segoe UI" Foreground="#333" Background="{x:Null}" Width="180" FontWeight="Medium"/>
+            <Label Content="Username:" HorizontalAlignment="Left" Margin="498,102,0,0" VerticalAlignment="Top" FontSize="18" FontFamily="Segoe UI" Foreground="#333" Background="{x:Null}" Width="180" FontWeight="Medium"/>
 
         </Grid>
     </Grid>

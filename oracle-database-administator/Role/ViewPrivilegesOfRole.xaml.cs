@@ -46,24 +46,7 @@ namespace oracle_database_administator.Role
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                if (conn.State == System.Data.ConnectionState.Open)
-                {
-                    Console.WriteLine("Connection opened successfully!");
-
-                    UpdatePrivUserGrid();
-                }
-                else
-                {
-                    MessageBox.Show("Failed to open connection.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-                }
-            }
-
-            catch (Exception ex)
-            {
-                MessageBox.Show("Connection error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
+            UpdatePrivUserGrid();
         }
 
         private void UpdatePrivUserGrid()
@@ -100,7 +83,7 @@ namespace oracle_database_administator.Role
 
         }
 
-        private void BackViewUserButton_Click(object sender, RoutedEventArgs e)
+        private void BackButton_Click(object sender, RoutedEventArgs e)
         {
             if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
             {

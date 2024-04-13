@@ -236,6 +236,51 @@
     <Resource Include="images\background2.jpg" />
     <Resource Include="images\background5.jpg" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\password.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\app-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\connect-to-server.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\home.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\home-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\back-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\add-icon-2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\trash.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\user-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\role-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\star.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\pencil.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\edit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\test.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\play.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Text.Json.6.0.1\build\System.Text.Json.targets" Condition="Exists('..\packages\System.Text.Json.6.0.1\build\System.Text.Json.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

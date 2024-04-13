@@ -87,7 +87,7 @@ namespace oracle_database_administator.User
         {
             if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
             {
-                mainWindow.MainFrame.Navigate(new oracle_database_administator.Dashboard());
+                mainWindow.MainFrame.Navigate(new Dashboard());
             }
         }
       
@@ -96,25 +96,8 @@ namespace oracle_database_administator.User
             
         }
 
-        private void Page_Loaded(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                if (conn.State == System.Data.ConnectionState.Open)
-                {
-                    Console.WriteLine("Connection opened successfully!");
-                    UpdateUserGrid();
-                }
-                else
-                {
-                    MessageBox.Show("Failed to open connection.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-                }
-            }
-
-            catch (Exception ex)
-            {
-                MessageBox.Show("Connection error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
+        private void Page_Loaded(object sender, RoutedEventArgs e) {
+            UpdateUserGrid();
         }
 
         private void InsertButton_Click(object sender, RoutedEventArgs e){
@@ -132,7 +115,6 @@ namespace oracle_database_administator.User
                             EXECUTE IMMEDIATE 'create user " + userName + " identified by " + passWord + "'; " +
                             "EXECUTE IMMEDIATE 'GRANT CONNECT TO " + userName + "'; " + 
                                 " END;";
-
 
                     using (OracleCommand command = new OracleCommand(query, conn))
                     {
@@ -168,40 +150,31 @@ namespace oracle_database_administator.User
 
                     if (!string.IsNullOrEmpty(userName))
                     {
-
                         // Kiểm tra xem username có phải là "SYS" không
                         if (userName.IndexOf("SYS", StringComparison.OrdinalIgnoreCase) != -1)
                         {
                             MessageBox.Show("No permission to delete this user.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                             return; // Không thực hiện tiếp các bước sau khi kiểm tra
                         }
-
-                        try
-                        {
-                            string query = @"BEGIN
+                        string query = @"BEGIN
                             EXECUTE IMMEDIATE 'ALTER SESSION SET ""_ORACLE_SCRIPT"" = TRUE';
                             EXECUTE IMMEDIATE 'drop user " + userName + "';" +
-                                " END;";
+                            " END;";
 
-                            using (OracleCommand command = new OracleCommand(query, conn))
-                            {
-                                int rowSelected = command.ExecuteNonQuery();
-
-
-                                if (rowSelected == -1)
-                                {
-                                    MessageBox.Show("Drop user successfully!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-                                    UpdateUserGrid();
-                                }
-                                else
-                                {
-                                    MessageBox.Show("Cannot drop user!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-                                }
-                            }
-                        }
-                        catch (Exception ex)
+                        using (OracleCommand command = new OracleCommand(query, conn))
                         {
-                            MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                            int rowSelected = command.ExecuteNonQuery();
+
+
+                            if (rowSelected == -1)
+                            {
+                                MessageBox.Show("Drop user successfully!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                                UpdateUserGrid();
+                            }
+                            else
+                            {
+                                MessageBox.Show("Cannot drop user!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                            }
                         }
                     }
                     else
@@ -220,11 +193,11 @@ namespace oracle_database_administator.User
         {
             if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null && dataGridSelectionEnabled == true)
             {
-                mainWindow.MainFrame.Navigate(new oracle_database_administator.Dashboard());
+                mainWindow.MainFrame.Navigate(new Dashboard());
             }
             else if (Application.Current.MainWindow is MainWindow mainWindow2 && mainWindow2.MainFrame != null && dataGridSelectionEnabled == false)
             {
-                mainWindow2.MainFrame.Navigate(new oracle_database_administator.User.ViewUserList());
+                mainWindow2.MainFrame.Navigate(new ViewUserList());
             }
         }
 
@@ -234,10 +207,9 @@ namespace oracle_database_administator.User
             {
                 DeleteUserButton.Visibility = Visibility.Collapsed;
                 RoleUserButton.Visibility = Visibility.Collapsed;
-
                 ModeVisible_UserDataGrid(dataGridSelectionEnabled);
 
-                string query = "SELECT * FROM DBA_ROLE_PRIVS";
+                string query = "SELECT * FROM SYS.DBA_ROLE_PRIVS";
                 using (OracleCommand command = new OracleCommand(query, conn))
                 {
                     using (OracleDataAdapter adapter = new OracleDataAdapter(command))
@@ -249,7 +221,6 @@ namespace oracle_database_administator.User
                 }
                 dataGridSelectionEnabled = false;
             }
-
             catch (Exception ex)
             {
                 MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -262,22 +233,17 @@ namespace oracle_database_administator.User
             {
                 // Lấy dữ liệu từ dòng được chọn
                 DataRowView selectedUser = (DataRowView)UserDataGrid.SelectedItem;
+                UserInfo selectedUserInfo;
                 if (dataGridSelectionEnabled)
                 {
-                    // Tạo một đối tượng chứa thông tin của người dùng được chọn
-                    UserInfo selectedUserInfo = new UserInfo(selectedUser["USERNAME"].ToString());
-
-                    // Chuyển sang trang mới và truyền thông tin về người dùng được chọn qua trang mới
-                    ViewPrivilegesOfUser privilegesPage = new ViewPrivilegesOfUser(selectedUserInfo);
-                    NavigationService.Navigate(privilegesPage);
+                    selectedUserInfo = new UserInfo(selectedUser["USERNAME"].ToString());
                 }
                 else
                 {
-                    UserInfo selectedUserInfo = new UserInfo(selectedUser["GRANTEE"].ToString());
-
-                    ViewPrivilegesOfUser privilegesPage = new ViewPrivilegesOfUser(selectedUserInfo);
-                    NavigationService.Navigate(privilegesPage);
+                    selectedUserInfo = new UserInfo(selectedUser["GRANTEE"].ToString());
                 }
+                ViewPrivilegesOfUser privilegesPage = new ViewPrivilegesOfUser(selectedUserInfo);
+                NavigationService.Navigate(privilegesPage);
             }
             else
             {

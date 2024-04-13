@@ -24,18 +24,27 @@ namespace oracle_database_administator
         {
             get
             {
-                if (_connection == null)
+                if (_connection == null || !CurrentUser.Equals("SYS"))
                 {
-                    // Đóng kết nối hiện tại (nếu có)
-                    DisposeConnection();
-
-                    // Đọc chuỗi kết nối từ tệp cấu hình
-                    string connectionString = ConfigurationManager.ConnectionStrings["OracleDbContext"].ConnectionString;
-
-                    _connection = new OracleConnection(connectionString);
                     try
                     {
+                        // Đóng kết nối hiện tại (nếu khác SYS)
+                        DisposeConnection();
+
+                        // Đọc chuỗi kết nối từ tệp cấu hình
+                        string connectionString = ConfigurationManager.ConnectionStrings["OracleDbContext"].ConnectionString;
+
+                        _connection = new OracleConnection(connectionString);
+
                         _connection.Open();
+                        if (_connection.State == System.Data.ConnectionState.Open)
+                        {
+                            Console.WriteLine("Connection opened successfully!");
+                        }
+                        else
+                        {
+                            MessageBox.Show("Failed to open connection.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                        }
                     }
                     catch (OracleException ex)
                     {
@@ -64,7 +73,7 @@ namespace oracle_database_administator
         public void Dispose()
         {
             Dispose(true);
-            //GC.SuppressFinalize(this);
+            GC.SuppressFinalize(this);
         }
 
         protected virtual void Dispose(bool disposing)

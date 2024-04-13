@@ -92,23 +92,7 @@ namespace oracle_database_administator.Role
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                if (conn.State == System.Data.ConnectionState.Open)
-                {
-                    Console.WriteLine("Connection opened successfully!");
-                    UpdateRoleGrid();
-                }
-                else
-                {
-                    MessageBox.Show("Failed to open connection.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-                }
-            }
-
-            catch (Exception ex)
-            {
-                MessageBox.Show("Connection error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
+            UpdateRoleGrid();
         }
 
         private void InsertButton_Click(object sender, RoutedEventArgs e)

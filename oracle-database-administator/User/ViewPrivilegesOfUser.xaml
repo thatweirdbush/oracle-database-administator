@@ -26,7 +26,6 @@
                 <SolidColorBrush Color="#FFD4EBFF" Opacity="0.8"/>
             </Grid.Background>
             <Border>
-                <!--<TextBlock TextWrapping="Wrap" Text="TextBlock"/>-->
             </Border>
 
             <Label Content="Privileges Of User" HorizontalAlignment="Left" Margin="792,55,0,0" VerticalAlignment="Top" Foreground="#333" Background="{x:Null}">
@@ -43,7 +42,11 @@
             <TextBlock x:Name="SelectedUserTextBlock" TextWrapping="Wrap" Text="{Binding selectedUserName}" HorizontalAlignment="Left" Margin="703,106,0,0" VerticalAlignment="Top" Foreground="#FF1EA9D3" Background="{x:Null}" FontWeight="SemiBold" Height="84" Width="349"  FontSize="34" FlowDirection="RightToLeft"/>
 
 
-            <Button x:Name="BackButton" Content="Back" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="50" Canvas.Left="129" Canvas.Top="496" Width="164" Click="BackViewUserButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="59,586,0,0" >
+            <Button x:Name="BackButton" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="50" Width="130" Click="BackButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="59,586,0,0" >
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="/images/back-icon.png" Width="25" Height="25" Margin="0,0,7,0" />
+                    <TextBlock Text="Back" VerticalAlignment="Center"/>
+                </StackPanel>
                 <Button.Resources>
                     <Style TargetType="{x:Type Border}">
                         <Setter Property="CornerRadius" Value="24"/>
@@ -57,7 +60,11 @@
                 </Button.Effect>
             </Button>
 
-            <Button x:Name="TestPrivUserButton" Content="Test Privileges" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="50" Width="164" Click="TestPrivUserButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="703,586,0,0" >
+            <Button x:Name="TestPrivUserButton" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="50" Width="130" Click="TestPrivUserButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="773,586,0,0" >
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="/images/test.png" Width="30" Height="25" Margin="0,0,5,0" />
+                    <TextBlock Text="Test" VerticalAlignment="Center" Width="43"/>
+                </StackPanel>
                 <Button.Resources>
                     <Style TargetType="{x:Type Border}">
                         <Setter Property="CornerRadius" Value="24"/>
@@ -71,7 +78,11 @@
                 </Button.Effect>
             </Button>
 
-            <Button x:Name="EditPrivButton" Content="Edit Privileges" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="50" Width="164" Click="EditPrivButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="888,586,0,0" >
+            <Button x:Name="EditPrivButton" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="50" Width="130" Click="EditPrivButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="922,586,0,0" >
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="/images/edit.png" Width="27" Height="25" Margin="0,0,7,0" />
+                    <TextBlock Text="Edit" VerticalAlignment="Center" Width="46"/>
+                </StackPanel>
                 <Button.Resources>
                     <Style TargetType="{x:Type Border}">
                         <Setter Property="CornerRadius" Value="24"/>
@@ -85,7 +96,12 @@
                 </Button.Effect>
             </Button>
 
-            <Button x:Name="HomeButton" Content="Home Page" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="22" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="95" Width="163" Click="HomeButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="60,32,0,0" RenderTransformOrigin="-2.052,5.949" >
+            <Button x:Name="HomeButton" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="22" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="82" Width="164" Click="HomeButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="59,49,0,0" RenderTransformOrigin="-2.052,5.949" >
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="/images/home-icon.png" Width="30" Height="30" Margin="0,0,7,0" />
+                    <TextBlock Text="Home" VerticalAlignment="Center"/>
+                </StackPanel>
+
                 <Button.Resources>
                     <Style TargetType="{x:Type Border}">
                         <Setter Property="CornerRadius" Value="24"/>
@@ -356,7 +372,7 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
 
-                    
+
 
                     <DataGridTextColumn Header="INH" Binding="{Binding INHERITED}" Width="50">
                         <DataGridTextColumn.HeaderStyle>

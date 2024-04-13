@@ -52,34 +52,16 @@ namespace oracle_database_administator.Role
 
         private void Page_Unloaded(object sender, RoutedEventArgs e)
         {
-            if (alternate_user_connection != null)
-            {
-                alternate_user_connection.Dispose();
-                alternate_user_connection = null;
-            }
+            //if (alternate_user_connection != null)
+            //{
+            //    alternate_user_connection.Dispose();
+            //    alternate_user_connection = null;
+            //}
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                if (alternate_user_connection.State == System.Data.ConnectionState.Open)
-                {
-                    Console.WriteLine("Connection opened successfully!");
-                    UpdatePrivUserGrid();
-                }
-                else
-                {
-                    if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
-                    {
-                        mainWindow.MainFrame.Navigate(new oracle_database_administator.User.ViewPrivilegesOfUser(selectedUserInfo));
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Connection error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
+            UpdatePrivUserGrid();
         }
 
         private void ResultViewDataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
@@ -167,7 +149,7 @@ namespace oracle_database_administator.Role
             }
         }
 
-        private void BackViewPrivUserButton_Click(object sender, RoutedEventArgs e)
+        private void BackButton_Click(object sender, RoutedEventArgs e)
         {
             if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
             {

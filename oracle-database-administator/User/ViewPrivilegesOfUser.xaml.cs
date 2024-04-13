@@ -47,23 +47,7 @@ namespace oracle_database_administator.User
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                if (conn.State == System.Data.ConnectionState.Open)
-                {
-                    Console.WriteLine("Connection opened successfully!");
-                    UpdatePrivUserGrid();
-                }
-                else
-                {
-                    MessageBox.Show("Failed to open connection.");
-                }
-            }
-
-            catch (Exception ex)
-            {
-                MessageBox.Show("Connection error: " + ex.Message);
-            }
+            UpdatePrivUserGrid();
         }
 
         private void HomeButton_Click(object sender, RoutedEventArgs e)
@@ -120,7 +104,7 @@ namespace oracle_database_administator.User
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error: " + ex.Message);
+                MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
@@ -129,7 +113,7 @@ namespace oracle_database_administator.User
             
         }
 
-        private void BackViewUserButton_Click(object sender, RoutedEventArgs e)
+        private void BackButton_Click(object sender, RoutedEventArgs e)
         {
             if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
             {
@@ -151,7 +135,7 @@ namespace oracle_database_administator.User
                 // Lấy mật khẩu từ cửa sổ nhập mật khẩu
                 string password = passwordWindow.Password;
 
-                TestPrivileges testPrivileges = new oracle_database_administator.User.TestPrivileges(selectedUserInfo, password);
+                TestPrivileges testPrivileges = new TestPrivileges(selectedUserInfo, password);
                 if (!testPrivileges.currentUserID.Equals(""))
                 {
                     NavigationService.Navigate(testPrivileges);
@@ -175,40 +159,31 @@ namespace oracle_database_administator.User
 
                     string tableName = selectedUser["TABLE_NAME"].ToString();
                     string privilege = selectedUser["PRIVILEGE"].ToString();
+                    string query = "REVOKE " + privilege + " ON " + tableName + " FROM " + selectedUserName;
 
-                    try
+                    using (OracleCommand command = new OracleCommand(query, conn))
                     {
-                        string query = "REVOKE " + privilege + " ON " + tableName + " FROM " + selectedUserName;
+                        int rowSelected = command.ExecuteNonQuery();
 
-                        using (OracleCommand command = new OracleCommand(query, conn))
+                        if (rowSelected == -1)
                         {
-                            int rowSelected = command.ExecuteNonQuery();
-
-
-                            if (rowSelected == -1)
-                            {
-                                MessageBox.Show("Drop user successfully!");
-                                UpdatePrivUserGrid();
-                            }
-                            else
-                            {
-                                MessageBox.Show("Cannot revoke privilege of user!");
-                            }
+                            MessageBox.Show("Drop user successfully!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                            UpdatePrivUserGrid();
                         }
-                    }
-                    catch(Exception ex)
-                    {
-                        MessageBox.Show("Error: " + ex.Message);
+                        else
+                        {
+                            MessageBox.Show("Cannot revoke privilege of user!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                        }
                     }
                 }
                 else
                 {
-                    MessageBox.Show("Vui lòng chọn một người dùng trước.");
+                    MessageBox.Show("Please select a user.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
             catch (Exception ex) 
             {
-                MessageBox.Show("Error: " + ex.Message);
+                MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
     }
