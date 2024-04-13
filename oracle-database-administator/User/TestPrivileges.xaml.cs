@@ -48,7 +48,7 @@ namespace oracle_database_administator.User
             selectedUserInfo = userInfo;
             selectedUserName = selectedUserInfo.UserName;
 
-            string NewConnStr = AlternateConnectionString(selectedUserName);
+            string NewConnStr = AlternateConnectionString(selectedUserName, selectedPassWord);
 
             NewConnection = new OracleConnection(NewConnStr);
 
