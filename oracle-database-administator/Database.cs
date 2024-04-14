@@ -55,14 +55,7 @@ namespace oracle_database_administator
                         _connection = new OracleConnection(connectionString);
 
                         _connection.Open();
-                        if (_connection.State == System.Data.ConnectionState.Open)
-                        {
-                            Console.WriteLine("Connection opened successfully!");
-                        }
-                        else
-                        {
-                            MessageBox.Show("Failed to open connection.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-                        }
+
                     }
                     catch (OracleException ex)
                     {
