@@ -126,10 +126,8 @@ namespace oracle_database_administator.User
                     selectedItems.Add(listBoxItem.Content.ToString());
                 }
             }
-
             // Gán danh sách các mục được chọn vào chuỗi temp, phân tách bằng dấu phẩy
             string temp = string.Join(", ", selectedItems);
-
             return temp;
         }
 
@@ -202,15 +200,6 @@ namespace oracle_database_administator.User
                     using (OracleCommand command = new OracleCommand(grantView, conn))
                     {
                         int rowSelected = command.ExecuteNonQuery();
-
-                        //if (rowSelected == -1)
-                        //{
-                        //    MessageBox.Show("Grant Select view successfully!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-                        //}
-                        //else
-                        //{
-                        //    MessageBox.Show("Failed to grant this privilege!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-                        //}
                     }
                 }
 
@@ -307,10 +296,9 @@ namespace oracle_database_administator.User
                             ColumnTableDataGrid.ItemsSource = dataTable.DefaultView;
                         }
                     }
-
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
             }

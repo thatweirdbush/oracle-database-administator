@@ -130,7 +130,7 @@ namespace oracle_database_administator.User
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Grid Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
@@ -144,6 +144,10 @@ namespace oracle_database_administator.User
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
+            if (alternate_user_connection != null)
+            {
+                Database.Instance.Disconnect();
+            }
             if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
             {
                 mainWindow.MainFrame.Navigate(new oracle_database_administator.User.ViewPrivilegesOfUser(selectedUserInfo));
@@ -157,14 +161,12 @@ namespace oracle_database_administator.User
                 DataRowView row_priv = (DataRowView)PrivUserDataGrid.SelectedItem;
                 DataRowView row_col = (DataRowView)ResultViewDataGrid.SelectedItem;
 
-
                 if (row_priv != null)
                 {
                     table_name = row_priv["TABLE_NAME"].ToString();
                     string column_str = row_priv["COLUMN_NAME"].ToString();
                     string priv = row_priv["PRIVILEGE"].ToString();
                     string query = "";
-
 
                     if (priv == "SELECT")
                     {

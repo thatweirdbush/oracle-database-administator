@@ -37,6 +37,7 @@ namespace oracle_database_administator.User
             selectedUserInfo = userInfo;
             selectedUserName = selectedUserInfo.UserName;
             currentUserID = Database.Instance.CurrentUser;
+
             DataContext = this;
         }
 
@@ -48,6 +49,7 @@ namespace oracle_database_administator.User
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             UpdatePrivUserGrid();
+
         }
 
         private void HomeButton_Click(object sender, RoutedEventArgs e)
@@ -104,7 +106,7 @@ namespace oracle_database_administator.User
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("This Grid Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
@@ -136,6 +138,7 @@ namespace oracle_database_administator.User
                 string password = passwordWindow.Password;
 
                 TestPrivileges testPrivileges = new TestPrivileges(selectedUserInfo, password);
+
                 if (!testPrivileges.currentUserID.Equals(""))
                 {
                     NavigationService.Navigate(testPrivileges);

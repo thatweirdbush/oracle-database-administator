@@ -1,5 +1,4 @@
 ﻿using Oracle.ManagedDataAccess.Client;
-using oracle_database_administator.User;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -21,6 +20,7 @@ namespace oracle_database_administator.Role
     /// <summary>
     /// Interaction logic for GrantPrivOnTable.xaml
     /// </summary>
+    
     public partial class GrantPrivOnTable : Page
     {
 
@@ -56,7 +56,7 @@ namespace oracle_database_administator.Role
         {
             try
             {
-                string query = "SELECT TABLE_NAME FROM DBA_TABLES WHERE OWNER = \'C##ADMIN\'";
+                string query = "SELECT TABLE_NAME FROM DBA_TABLES WHERE TABLE_NAME LIKE \'%N09_%\'";
                 using (OracleCommand command = new OracleCommand(query, conn))
                 {
                     using (OracleDataAdapter adapter = new OracleDataAdapter(command))
@@ -191,6 +191,16 @@ namespace oracle_database_administator.Role
                 {
                     MessageBox.Show("No permission to grant " + privileges + " on column " + colName + ".\nPlease select other privileges.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                     return;
+                }
+
+                if (privileges.Contains("INSERT"))
+                {
+                    String grantView = "GRANT SELECT ON UV_" + tableName + " TO " + selectedRoleName;
+
+                    using (OracleCommand command = new OracleCommand(grantView, conn))
+                    {
+                        int rowSelected = command.ExecuteNonQuery();
+                    }
                 }
 
                 using (OracleCommand command = new OracleCommand(query, conn))

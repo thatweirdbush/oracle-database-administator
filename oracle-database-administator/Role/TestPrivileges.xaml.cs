@@ -1,5 +1,4 @@
 ﻿using Oracle.ManagedDataAccess.Client;
-using oracle_database_administator.User;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -23,8 +22,6 @@ namespace oracle_database_administator.Role
     /// </summary>
     public partial class TestPrivileges : Page
     {
-
-        //OracleConnection NewConnection ;
         OracleConnection alternate_user_connection = Database.Instance.Connection;
         private Role selectedRole;
         public string selectedRoleName{ get; set; }
@@ -42,7 +39,7 @@ namespace oracle_database_administator.Role
         public TestPrivileges(Role role, string username, string password)
         {
             InitializeComponent();
-            selectedRole= role;
+            selectedRole = role;
             selectedRoleName = selectedRole.RoleName;
             selectedUsername = username;
             selectedPassWord = password;
@@ -53,11 +50,7 @@ namespace oracle_database_administator.Role
 
         private void Page_Unloaded(object sender, RoutedEventArgs e)
         {
-            //if (alternate_user_connection != null)
-            //{
-            //    alternate_user_connection.Dispose();
-            //    alternate_user_connection = null;
-            //}
+
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
@@ -89,7 +82,7 @@ namespace oracle_database_administator.Role
                             update_query = editedColumn + " = '" + newValue + "'";
 
                             update_query = string.Format("UPDATE SYS.{0} SET {1} WHERE {2}", table_name, update_query, condition);
-                            MessageBox.Show(update_query, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                            //MessageBox.Show(update_query, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                         }
                         else
                         {
@@ -102,8 +95,7 @@ namespace oracle_database_administator.Role
                     }
                 }
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 MessageBox.Show("Error: " + ex.Message);
             }
         }
@@ -138,7 +130,7 @@ namespace oracle_database_administator.Role
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Grid Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
@@ -152,6 +144,10 @@ namespace oracle_database_administator.Role
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
+            if (alternate_user_connection != null)
+            {
+                Database.Instance.Disconnect();
+            }
             if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
             {
                 mainWindow.MainFrame.Navigate(new oracle_database_administator.Role.ViewPrivilegesOfRole(selectedRole));
@@ -172,7 +168,6 @@ namespace oracle_database_administator.Role
                     string column_str = row_priv["COLUMN_NAME"].ToString();
                     string priv = row_priv["PRIVILEGE"].ToString();
                     string query = "";
-
 
                     if (priv == "SELECT")
                     {
@@ -345,7 +340,6 @@ namespace oracle_database_administator.Role
         }
 
 
-
         private void PrivUserDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             try
@@ -358,22 +352,12 @@ namespace oracle_database_administator.Role
                     string priv = row_priv["PRIVILEGE"].ToString();
                     string query = "";
 
-                    if (priv != "SELECT" && priv != "INSERT")
+                    if (priv == "SELECT")
                     {
-                        query += " SELECT * FROM SYS." + table_name;
-
-                        using (OracleCommand command = new OracleCommand(query, alternate_user_connection))
-                        {
-                            using (OracleDataAdapter adapter = new OracleDataAdapter(command))
-                            {
-                                DataTable dataTable = new DataTable();
-                                adapter.Fill(dataTable);
-                                ResultViewDataGrid.ItemsSource = dataTable.DefaultView;
-                            }
-                        }
+                        // Reset result table
+                        ResultViewDataGrid.ItemsSource = null;
                     }
-
-                    if (priv == "INSERT")
+                    else if (priv == "INSERT")
                     {
                         query += " SELECT * FROM SYS.UV_" + table_name + " WHERE 1=0";
 
@@ -405,6 +389,20 @@ namespace oracle_database_administator.Role
 
                         // Thêm phần VALUES vào câu truy vấn
                         insert_query += ") VALUES (";
+                    }
+                    else
+                    {
+                        query += " SELECT * FROM SYS." + table_name;
+
+                        using (OracleCommand command = new OracleCommand(query, alternate_user_connection))
+                        {
+                            using (OracleDataAdapter adapter = new OracleDataAdapter(command))
+                            {
+                                DataTable dataTable = new DataTable();
+                                adapter.Fill(dataTable);
+                                ResultViewDataGrid.ItemsSource = dataTable.DefaultView;
+                            }
+                        }
                     }
                 }
             }
