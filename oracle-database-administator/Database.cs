@@ -20,9 +20,16 @@ namespace oracle_database_administator
         private OracleConnection _alternated_connection = null;
         private bool disposed = false;
         private bool dataGridSelectionEnabled = true;
+        private string password = "";
 
         public OracleConnection GetAlternateConnection {
         get { return _alternated_connection; }
+        }
+
+        public string ConnectionPassword 
+        {
+            get { return password; }
+            set { password = value; }
         }
 
         public OracleConnection GetConnection()
@@ -42,7 +49,8 @@ namespace oracle_database_administator
                         //DisposeConnection();
 
                         // Đọc chuỗi kết nối từ tệp cấu hình
-                        string connectionString = ConfigurationManager.ConnectionStrings["OracleDbContext"].ConnectionString;
+                        string connectionString = $"DATA SOURCE=localhost:1521/XE;DBA PRIVILEGE=SYSDBA;PERSIST SECURITY INFO=True;USER ID=SYS;PASSWORD={ConnectionPassword}";
+                        //string connectionString = ConfigurationManager.ConnectionStrings["OracleDbContext"].ConnectionString;
 
                         _connection = new OracleConnection(connectionString);
 

@@ -1,4 +1,5 @@
 ﻿using Oracle.ManagedDataAccess.Client;
+using oracle_database_administator.User;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -25,6 +26,22 @@ namespace oracle_database_administator
         public Dashboard()
         {
             InitializeComponent();
+
+        }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (Database.Instance.ConnectionPassword != "")
+                return;
+
+            PasswordWindow passwordWindow = new PasswordWindow();
+            bool? result = passwordWindow.ShowDialog();
+
+            if (result == true)
+            {
+                string password = passwordWindow.Password;
+                Database.Instance.ConnectionPassword = password;
+            }
         }
 
         private void UserButton_Click(object sender, RoutedEventArgs e)
