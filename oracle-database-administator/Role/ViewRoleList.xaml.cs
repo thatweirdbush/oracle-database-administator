@@ -288,10 +288,7 @@ namespace oracle_database_administator.Role
                 string roleName = RoleNameTextBox.Text;
                 string userName = UserNameTextBox.Text;
 
-                string query = @"BEGIN
-                            EXECUTE IMMEDIATE 'ALTER SESSION SET ""_ORACLE_SCRIPT"" = TRUE';
-                            EXECUTE IMMEDIATE 'REVOKE " + roleName + " FROM " + userName + "';" +
-                            " END;";
+                string query = "REVOKE " + roleName + " FROM " + userName ;
 
                 using (OracleCommand command = new OracleCommand(query, conn))
                 {
