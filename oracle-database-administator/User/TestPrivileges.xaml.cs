@@ -30,7 +30,6 @@ namespace oracle_database_administator.User
         public string selectedPassWord { get; set; }
         public string currentUserID { get; set; }
         private string editedColumn = ""; 
-        
         string table_name = "";
         string delete_query = "";
         string update_query = "";
@@ -42,8 +41,10 @@ namespace oracle_database_administator.User
             InitializeComponent();
             selectedUserInfo = userInfo;
             selectedUserName = selectedUserInfo.UserName;
-            selectedPassWord = password;
-            alternate_user_connection = Database.Instance.AlternateConnection(selectedUserName, selectedPassWord);
+
+            // Create alternate connection
+            // SYS connection still exists
+            alternate_user_connection = Database.Instance.AlternateConnection(selectedUserName, password);
             currentUserID = Database.Instance.CurrentUser;
             DataContext = this;
         }
@@ -73,7 +74,7 @@ namespace oracle_database_administator.User
                     editedColumn = e.Column.Header.ToString();
 
                     //Lấy giá trị mới
-                    String newValue = (e.EditingElement as TextBox)?.Text; // Sử dụng ?. để tránh lỗi nếu không phải TextBox
+                    string newValue = (e.EditingElement as TextBox)?.Text; // Sử dụng ?. để tránh lỗi nếu không phải TextBox
 
                     if (priv == "UPDATE")
                     {
@@ -86,7 +87,7 @@ namespace oracle_database_administator.User
                         }
                         else
                         {
-                            MessageBox.Show($"\'Update\' permission DENIED on {editedColumn} column.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                            MessageBox.Show($"UPDATE permission DENIED on {editedColumn} column.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                         }
                     }
                     else if (priv == "INSERT")
@@ -96,7 +97,7 @@ namespace oracle_database_administator.User
                 }
             }
             catch (Exception ex) {
-                MessageBox.Show("Error: " + ex.Message);
+                MessageBox.Show(ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
@@ -130,12 +131,16 @@ namespace oracle_database_administator.User
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Grid Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show(ex.Message, "Privilege Loading Error", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
         private void HomeButton_Click(object sender, RoutedEventArgs e)
         {
+            if (alternate_user_connection != null)
+            {
+                Database.Instance.Disconnect();
+            }
             if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
             {
                 mainWindow.MainFrame.Navigate(new oracle_database_administator.Dashboard());
@@ -307,6 +312,9 @@ namespace oracle_database_administator.User
                                 // Lấy tên của cột
                                 string columnName = column.Header.ToString();
 
+                                /// <WARNING>
+                                /// TODO: FIX DATETIME EXCEPTION
+                                /// </WARNING>
                                 if (columnName == "NGAYSINH" || columnName == "NGAYLAP")
                                 {
                                     continue;
@@ -375,10 +383,15 @@ namespace oracle_database_administator.User
                         {
                             // Lấy tên cột
                             string columnName = column.Header.ToString();
+
+                            /// <WARNING>
+                            /// TODO: FIX DATETIME EXCEPTION
+                            /// </WARNING>
                             if (columnName == "NGAYSINH" || columnName == "NGAYLAP")
                             {
                                 continue;
                             }
+
                             // Thêm tên cột vào câu truy vấn INSERT
                             insert_query += columnName + ",";
                         }

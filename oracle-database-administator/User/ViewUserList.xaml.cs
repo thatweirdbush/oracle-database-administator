@@ -26,7 +26,7 @@ namespace oracle_database_administator.User
     {
         OracleConnection conn = Database.Instance.Connection;
 
-        private bool dataGridSelectionEnabled = true;
+        private bool dataGridChanged = true;
 
         public string currentUserID { get; set; }
 
@@ -37,9 +37,9 @@ namespace oracle_database_administator.User
             DataContext = this;
         }
 
-        private void ModeVisible_UserDataGrid(bool dataGridSelectionEnabled)
+        private void ModeVisible_UserDataGrid(bool dataGridChanged)
         {
-            if (dataGridSelectionEnabled)
+            if (dataGridChanged)
             {
                 for (int col = 0; col < 2; col++)
                 {
@@ -123,7 +123,7 @@ namespace oracle_database_administator.User
                         if (rowSelected == -1)
                         {
                             MessageBox.Show("Create user successfully!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-                            dataGridSelectionEnabled = true;
+                            dataGridChanged = true;
                             UpdateUserGrid();
                         }
                         else
@@ -143,7 +143,7 @@ namespace oracle_database_administator.User
         {
             try
             {
-                if (dataGridSelectionEnabled)
+                if (dataGridChanged)
                 {
                     string userName = txtUserName.Text;
                     txtUserName.Text = string.Empty;
@@ -191,11 +191,11 @@ namespace oracle_database_administator.User
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
-            if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null && dataGridSelectionEnabled == true)
+            if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null && dataGridChanged == true)
             {
                 mainWindow.MainFrame.Navigate(new Dashboard());
             }
-            else if (Application.Current.MainWindow is MainWindow mainWindow2 && mainWindow2.MainFrame != null && dataGridSelectionEnabled == false)
+            else if (Application.Current.MainWindow is MainWindow mainWindow2 && mainWindow2.MainFrame != null && dataGridChanged == false)
             {
                 mainWindow2.MainFrame.Navigate(new ViewUserList());
             }
@@ -207,7 +207,7 @@ namespace oracle_database_administator.User
             {
                 DeleteUserButton.Visibility = Visibility.Collapsed;
                 RoleUserButton.Visibility = Visibility.Collapsed;
-                ModeVisible_UserDataGrid(dataGridSelectionEnabled);
+                ModeVisible_UserDataGrid(dataGridChanged);
 
                 string query = "SELECT * FROM SYS.DBA_ROLE_PRIVS";
                 using (OracleCommand command = new OracleCommand(query, conn))
@@ -219,7 +219,7 @@ namespace oracle_database_administator.User
                         UserDataGrid.ItemsSource = dataTable.DefaultView;
                     }
                 }
-                dataGridSelectionEnabled = false;
+                dataGridChanged = false;
             }
             catch (Exception ex)
             {
@@ -234,7 +234,7 @@ namespace oracle_database_administator.User
                 // Lấy dữ liệu từ dòng được chọn
                 DataRowView selectedUser = (DataRowView)UserDataGrid.SelectedItem;
                 UserInfo selectedUserInfo;
-                if (dataGridSelectionEnabled)
+                if (dataGridChanged)
                 {
                     selectedUserInfo = new UserInfo(selectedUser["USERNAME"].ToString());
                 }
@@ -255,7 +255,7 @@ namespace oracle_database_administator.User
         {
             try
             {
-                if (dataGridSelectionEnabled)
+                if (dataGridChanged)
                 {
                     if (UserDataGrid.SelectedItem != null)
                     {

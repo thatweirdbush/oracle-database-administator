@@ -235,7 +235,7 @@ namespace oracle_database_administator.Role
                 else
                 {
                     // Tạo một đối tượng chứa thông tin của role được chọn
-                    selectedRoleInfo = new Role(selectedRole["GRANTEE"].ToString());
+                    selectedRoleInfo = new Role(selectedRole["GRANTED_ROLE"].ToString());
                 }
 
                 // Chuyển sang trang mới và truyền thông tin về role được chọn qua trang mới

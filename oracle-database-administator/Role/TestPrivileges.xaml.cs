@@ -43,6 +43,9 @@ namespace oracle_database_administator.Role
             selectedRoleName = selectedRole.RoleName;
             selectedUsername = username;
             selectedPassWord = password;
+
+            // Create alternate connection
+            // SYS connection still exists
             alternate_user_connection = Database.Instance.AlternateConnection(selectedUsername, selectedPassWord);
             currentUserID = Database.Instance.CurrentUser;
             DataContext = this;
@@ -86,7 +89,7 @@ namespace oracle_database_administator.Role
                         }
                         else
                         {
-                            MessageBox.Show($"\'Update\' permission DENIED on {editedColumn} column.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                            MessageBox.Show($"UPDATE permission DENIED on {editedColumn} column.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                         }
                     }
                     else if (priv == "INSERT")
@@ -130,15 +133,19 @@ namespace oracle_database_administator.Role
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Grid Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show(ex.Message, "Privilege Loading Error", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
         private void HomeButton_Click(object sender, RoutedEventArgs e)
         {
+            if (alternate_user_connection != null)
+            {
+                Database.Instance.Disconnect();
+            }
             if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
             {
-                mainWindow.MainFrame.Navigate(new oracle_database_administator.Dashboard());
+                mainWindow.MainFrame.Navigate(new Dashboard());
             }
         }
 
@@ -150,7 +157,7 @@ namespace oracle_database_administator.Role
             }
             if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
             {
-                mainWindow.MainFrame.Navigate(new oracle_database_administator.Role.ViewPrivilegesOfRole(selectedRole));
+                mainWindow.MainFrame.Navigate(new ViewPrivilegesOfRole(selectedRole));
             }
         }
 
@@ -160,7 +167,6 @@ namespace oracle_database_administator.Role
             {
                 DataRowView row_priv = (DataRowView)PrivUserDataGrid.SelectedItem;
                 DataRowView row_col = (DataRowView)ResultViewDataGrid.SelectedItem;
-
 
                 if (row_priv != null)
                 {
@@ -308,6 +314,9 @@ namespace oracle_database_administator.Role
                                 // Lấy tên của cột
                                 string columnName = column.Header.ToString();
 
+                                /// <WARNING>
+                                /// TODO: FIX DATETIME EXCEPTION
+                                /// </WARNING>
                                 if (columnName == "NGAYSINH" || columnName == "NGAYLAP")
                                 {
                                     continue;
@@ -327,7 +336,6 @@ namespace oracle_database_administator.Role
                                     condition += $"{columnName} = '{cellValue}'";
                                 }
                             }
-
                             delete_query = string.Format("DELETE FROM SYS.{0} WHERE {1}", table_name, condition);
                         }
                     }
@@ -338,7 +346,6 @@ namespace oracle_database_administator.Role
                 //MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
-
 
         private void PrivUserDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -377,6 +384,10 @@ namespace oracle_database_administator.Role
                         {
                             // Lấy tên cột
                             string columnName = column.Header.ToString();
+
+                            /// <WARNING>
+                            /// TODO: FIX DATETIME EXCEPTION
+                            /// </WARNING>
                             if (columnName == "NGAYSINH" || columnName == "NGAYLAP")
                             {
                                 continue;

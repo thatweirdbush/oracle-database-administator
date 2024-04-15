@@ -60,6 +60,9 @@ namespace oracle_database_administator.User
             }
         }
 
+        /// <WARNING>
+        /// TODO: SELECT PRIVILEGES FROM USER'S GRANTED ROLES
+        /// </WARNING>
         private void UpdatePrivUserGrid()
         {
             try

@@ -26,7 +26,6 @@
                 <SolidColorBrush Color="#FFD4EBFF" Opacity="0.8"/>
             </Grid.Background>
             <Border>
-                <!--<TextBlock TextWrapping="Wrap" Text="TextBlock"/>-->
             </Border>
 
             <DataGrid x:Name="ResultViewDataGrid" Margin="574,205,60,110"  ItemsSource="{Binding YourData}" AutoGenerateColumns="True" FontWeight="Medium" BorderBrush="{x:Null}"  Background="{x:Null}" VerticalScrollBarVisibility="Hidden" GridLinesVisibility="None" SelectionChanged="ResultViewDataGrid_SelectionChanged" CellEditEnding="ResultViewDataGrid_CellEditEnding">
