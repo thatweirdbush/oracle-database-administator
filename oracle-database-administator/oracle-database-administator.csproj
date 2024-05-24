@@ -228,16 +228,6 @@
     <Resource Include="images\background.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="images\background3.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="images\background4.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="images\background2.jpg" />
-    <Resource Include="images\background5.jpg" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="images\password.png" />
   </ItemGroup>
   <ItemGroup>
@@ -245,9 +235,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="images\connect-to-server.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="images\home.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="images\home-icon.png" />
@@ -269,9 +256,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="images\star.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="images\pencil.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="images\edit.png" />
