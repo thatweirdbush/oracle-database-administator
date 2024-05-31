@@ -60,25 +60,16 @@ namespace oracle_database_administator.Role
             {
                 string roleName = RoleNameTextBox.Text;
 
-                string query = @"BEGIN
-                            EXECUTE IMMEDIATE 'ALTER SESSION SET ""_ORACLE_SCRIPT"" = TRUE';
-                            EXECUTE IMMEDIATE 'CREATE ROLE " + roleName + "';" +
-                            " END;";
-
-                using (OracleCommand command = new OracleCommand(query, conn))
+                int status = Db.CreateRole(roleName);
+                if (status == -1)
                 {
-                    int rowSelected = command.ExecuteNonQuery();
-
-                    if (rowSelected == -1)
-                    {
-                        MessageBox.Show("Create role successfully!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-                        Database.Instance.IsSelectable = true;
-                        RoleDataGrid.ItemsSource = Db.UpdateDataView(Db.ROLES);
-                    }
-                    else
-                    {
-                        MessageBox.Show("Cannot create role!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-                    }
+                    MessageBox.Show("Create role successfully!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                    Database.Instance.IsSelectable = true;
+                    RoleDataGrid.ItemsSource = Db.UpdateDataView(Db.ROLES);
+                }
+                else
+                {
+                    MessageBox.Show("Cannot create role!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
             catch (Exception ex)
@@ -98,31 +89,15 @@ namespace oracle_database_administator.Role
 
                     if (!string.IsNullOrEmpty(roleName))
                     {
-                        try
+                        int status = Db.DropRole(roleName);
+                        if (status == -1)
                         {
-                            string query = @"BEGIN
-                            EXECUTE IMMEDIATE 'ALTER SESSION SET ""_ORACLE_SCRIPT"" = TRUE';
-                            EXECUTE IMMEDIATE 'DROP ROLE " + roleName + "';" +
-                                " END;";
-
-                            using (OracleCommand command = new OracleCommand(query, conn))
-                            {
-                                int rowSelected = command.ExecuteNonQuery();
-
-                                if (rowSelected == -1)
-                                {
-                                    MessageBox.Show("Drop role successfully!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-                                    RoleDataGrid.ItemsSource = Db.UpdateDataView(Db.ROLES);
-                                }
-                                else
-                                {
-                                    MessageBox.Show("Cannot drop role!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-                                }
-                            }
+                            MessageBox.Show("Drop role successfully!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                            RoleDataGrid.ItemsSource = Db.UpdateDataView(Db.ROLES);
                         }
-                        catch (Exception ex)
+                        else
                         {
-                            MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                            MessageBox.Show("Cannot drop role!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                         }
                     }
                     else

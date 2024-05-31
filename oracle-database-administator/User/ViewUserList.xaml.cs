@@ -95,26 +95,16 @@ namespace oracle_database_administator.User
                     string userName = txtUserName.Text;
                     string passWord = txtPassword.Text;
 
-                    string query = @"BEGIN
-                            EXECUTE IMMEDIATE 'ALTER SESSION SET ""_ORACLE_SCRIPT"" = TRUE';
-                            EXECUTE IMMEDIATE 'create user " + userName + " identified by " + passWord + "'; " +
-                            "EXECUTE IMMEDIATE 'GRANT CONNECT TO " + userName + "'; " + 
-                                " END;";
-
-                    using (OracleCommand command = new OracleCommand(query, conn))
+                    int status = Db.CreateUser(userName, passWord);
+                    if (status == -1)
                     {
-                        int rowSelected = command.ExecuteNonQuery();
-
-                        if (rowSelected == -1)
-                        {
-                            MessageBox.Show("Create user successfully!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-                            dataGridChanged = true;
-                            UpdateUserGrid();
-                        }
-                        else
-                        {
-                            MessageBox.Show("Cannot create user!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-                        }
+                        MessageBox.Show("Create user successfully!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                        dataGridChanged = true;
+                        UpdateUserGrid();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Cannot create user!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                 }
             }
@@ -139,27 +129,17 @@ namespace oracle_database_administator.User
                         if (userName.IndexOf("SYS", StringComparison.OrdinalIgnoreCase) != -1)
                         {
                             MessageBox.Show("No permission to delete this user.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-                            return; // Không thực hiện tiếp các bước sau khi kiểm tra
+                            return;
                         }
-                        string query = @"BEGIN
-                            EXECUTE IMMEDIATE 'ALTER SESSION SET ""_ORACLE_SCRIPT"" = TRUE';
-                            EXECUTE IMMEDIATE 'drop user " + userName + "';" +
-                            " END;";
-
-                        using (OracleCommand command = new OracleCommand(query, conn))
+                        int status = Db.DropUser(userName);
+                        if (status == -1)
                         {
-                            int rowSelected = command.ExecuteNonQuery();
-
-
-                            if (rowSelected == -1)
-                            {
-                                MessageBox.Show("Drop user successfully!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-                                UpdateUserGrid();
-                            }
-                            else
-                            {
-                                MessageBox.Show("Cannot drop user!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-                            }
+                            MessageBox.Show("Drop user successfully!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                            UpdateUserGrid();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Cannot drop user!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                         }
                     }
                     else

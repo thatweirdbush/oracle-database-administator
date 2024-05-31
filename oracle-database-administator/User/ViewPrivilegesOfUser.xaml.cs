@@ -109,44 +109,6 @@ namespace oracle_database_administator.User
         {
             GrantPrivOnTable grantPrivOnTabPage = new GrantPrivOnTable(selectedUserInfo);
             NavigationService.Navigate(grantPrivOnTabPage);
-        }
-
-        private void RevokePriUserButton_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                if (PrivUserDataGrid.SelectedItem != null)
-                {
-                    DataRowView selectedUser = (DataRowView)PrivUserDataGrid.SelectedItem;
-
-                    string tableName = selectedUser["TABLE_NAME"].ToString();
-                    string privilege = selectedUser["PRIVILEGE"].ToString();
-                    string query = "REVOKE " + privilege + " ON " + tableName + " FROM " + selectedUserName;
-
-                    using (OracleCommand command = new OracleCommand(query, conn))
-                    {
-                        int rowSelected = command.ExecuteNonQuery();
-
-                        if (rowSelected == -1)
-                        {
-                            MessageBox.Show("Drop user successfully!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-                            UpdatePrivUserGrid();
-                        }
-                        else
-                        {
-                            MessageBox.Show("Cannot revoke privilege of user!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-                        }
-                    }
-                }
-                else
-                {
-                    MessageBox.Show("Please select a user.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-                }
-            }
-            catch (Exception ex) 
-            {
-                MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-        }
+        }    
     }
 }

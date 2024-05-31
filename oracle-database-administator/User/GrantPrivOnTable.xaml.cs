@@ -62,7 +62,7 @@ namespace oracle_database_administator.User
             PrivUserDataGrid.ItemsSource = Db.UpdateDataView(Db.PRIVS_SIMPLIFY, selectedUserName);
         }
 
-        private String SelectItemsListBox()
+        private string SelectItemsListBox()
         {
             List<string> selectedItems = new List<string>();
 
@@ -80,11 +80,6 @@ namespace oracle_database_administator.User
             // Gán danh sách các mục được chọn vào chuỗi temp, phân tách bằng dấu phẩy
             string temp = string.Join(", ", selectedItems);
             return temp;
-        }
-
-        public string EncloseInParentheses(string input)
-        {
-            return "(" + input + ")";
         }
 
         public bool IsOnlyContains(string originalString, string subString)
@@ -110,11 +105,9 @@ namespace oracle_database_administator.User
             try
             {
                 string tableName = txtTableName.Text;
-                string colName = EncloseInParentheses(txtColumnName.Text);
+                string colName = txtColumnName.Text;
                 string privileges = SelectItemsListBox();
-                string withGrantOptionString = (myCheckBoxGrantOption.IsChecked == true) ? " WITH GRANT OPTION" : "";
-                string columnNameString = (colName != "()") ? colName : "";
-                string query = "";
+                string withGrantOptionString = (myCheckBoxGrantOption.IsChecked == true) ? " WITH GRANT OPTION " : null;
 
                 // Check null privilege & table name selection
                 if (privileges == "")
@@ -127,47 +120,31 @@ namespace oracle_database_administator.User
                     MessageBox.Show("Select a table.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                     return;
                 }
- 
-                // Check if there is no column selected
-                if (columnNameString == "")
-                {
-                    query = "GRANT " + privileges + " ON " + tableName + " TO " + selectedUserName + withGrantOptionString;
-                }
-                // Check if required privileges are contained
-                else if ((IsOnlyContains(privileges, "UPDATE") || IsOnlyContains(privileges, "SELECT, UPDATE") || IsOnlyContains(privileges, "UPDATE, SELECT")))
-                {
-                    query = "GRANT " + privileges + columnNameString + " ON " + tableName + " TO " + selectedUserName + withGrantOptionString;
-                }
-                else
-                {
+                if (!IsOnlyContains(privileges, "UPDATE") && !IsOnlyContains(privileges, "SELECT, UPDATE") && !IsOnlyContains(privileges, "UPDATE, SELECT")){
                     MessageBox.Show("No permission to grant " + privileges + " on column " + colName + ".\nPlease select other privileges.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                     return;
                 }
 
+                // Start granting privileges
+                int status = Db.GrantPrivilege(privileges, selectedUserName, withGrantOptionString, tableName, colName);
+
+                // If INSERT privilege is granted, automatically grant SELECT privilege on view with corresponding table name
                 if (privileges.Contains("INSERT"))
                 {
-                    String grantView = "GRANT SELECT ON UV_" + tableName + " TO " + selectedUserName;
-
-                    using (OracleCommand command = new OracleCommand(grantView, conn))
-                    {
-                        int rowSelected = command.ExecuteNonQuery();
-                    }
+                    Db.GrantPrivilege("SELECT", selectedUserName, null, $"UV_{tableName}");
                 }
 
-                using (OracleCommand command = new OracleCommand(query, conn))
+                // Show notification when grant privilege successfully
+                if (status == -1)
                 {
-                    int rowSelected = command.ExecuteNonQuery();
-
-                    if (rowSelected == -1)
-                    {
-                        MessageBox.Show("Grant privilege successfully!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-                        UpdatePrivUserGrid();
-                    }
-                    else
-                    {
-                        MessageBox.Show("Failed to grant this privilege!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-                    }
+                    MessageBox.Show("Grant privilege successfully!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                    UpdatePrivUserGrid();
                 }
+                else
+                {
+                    MessageBox.Show("Failed to grant this privilege!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                }            
+                
                 myListBox.SelectedItems.Clear();
             }
             catch (Exception ex)
@@ -183,29 +160,21 @@ namespace oracle_database_administator.User
                 if (PrivUserDataGrid.SelectedItem != null)
                 {
                     DataRowView selectedUser = (DataRowView)PrivUserDataGrid.SelectedItem;
-
                     string tableName = selectedUser["TABLE_NAME"].ToString();
                     string privilege = selectedUser["PRIVILEGE"].ToString();
 
-                    if (privilege == "")
+                    // Start revoking privileges
+                    int status = Db.RevokePrivilege(privilege, selectedUserName, tableName);
+
+                    // Show notification when grant privilege successfully
+                    if (status == -1)
                     {
-                        privilege = "UPDATE";
+                        MessageBox.Show("Revoke privilege successfully!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                        UpdatePrivUserGrid();
                     }
-                    string query = "REVOKE " + privilege + " ON " + tableName + " FROM " + selectedUserName;
-
-                    using (OracleCommand command = new OracleCommand(query, conn))
+                    else
                     {
-                        int rowSelected = command.ExecuteNonQuery();
-
-                        if (rowSelected == -1)
-                        {
-                            MessageBox.Show("Revoke privilege successfully!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-                            UpdatePrivUserGrid();
-                        }
-                        else
-                        {
-                            MessageBox.Show("Failed to revoke this privilege!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-                        }
+                        MessageBox.Show("Failed to revoke this privilege!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                 }
                 else
@@ -237,16 +206,7 @@ namespace oracle_database_administator.User
                     txtTableName.Text = row["TABLE_NAME"].ToString();
                     txtColumnName.Text = null;
 
-                    string query = "Select column_name from user_tab_columns WHERE TABLE_NAME = '" + row["TABLE_NAME"].ToString() + "'";
-                    using (OracleCommand command = new OracleCommand(query, conn))
-                    {
-                        using (OracleDataAdapter adapter = new OracleDataAdapter(command))
-                        {
-                            DataTable dataTable = new DataTable();
-                            adapter.Fill(dataTable);
-                            ColumnTableDataGrid.ItemsSource = dataTable.DefaultView;
-                        }
-                    }
+                    ColumnTableDataGrid.ItemsSource = Db.UpdateDataView(Db.TABLE_COLUMNS, txtTableName.Text);
                 }
             }
             catch (Exception ex)

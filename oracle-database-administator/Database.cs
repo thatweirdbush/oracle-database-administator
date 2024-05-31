@@ -184,8 +184,9 @@ namespace oracle_database_administator
         public string PRIVS = $"{DEFAULT_SCHEMA}{DEFAULT_PREFIX}SELECT_USER_OR_ROLE_PRIVS";
         public string PRIVS_SIMPLIFY = $"{DEFAULT_SCHEMA}{DEFAULT_PREFIX}SELECT_USER_OR_ROLE_PRIVS_SIMPLIFY";
         public string TABLES = $"{DEFAULT_SCHEMA}{DEFAULT_PREFIX}SELECT_DBA_TABLES";
+        public string TABLE_COLUMNS = $"{DEFAULT_SCHEMA}{DEFAULT_PREFIX}SELECT_TAB_COLUMNS";
 
-
+        //////////////////////////////////////////////
         /// <summary>
         /// Constant for output parameter in stored procedures
         /// Ex: CREATE OR REPLACE PROCEDURE MyProcedure(OUTPUT OUT SYS_REFCURSOR)
@@ -198,7 +199,12 @@ namespace oracle_database_administator
         /**********************************************************
         * Database's Stored Procedures - General
         ***********************************************************/
-        // For SELECT stored procedures with INPUT optional parameter
+        /// <summary>
+        /// Return a table when SELECT stored procedures with INPUT optional parameter
+        /// </summary>
+        /// <param name="procedureName"></param>
+        /// <param name="inputValue"></param>
+        /// <returns>Table type with selected cols</returns>
         public DataView UpdateDataView(string procedureName, string inputValue = null)
         {
             try {
@@ -225,14 +231,175 @@ namespace oracle_database_administator
             }
         }
 
-        // For SELECT stored procedures with INPUT optional parameter in SYS schema
+        /// <summary>
+        /// Grant privilege to user or role with optional: with grant option, table or view and columns
+        /// </summary>
+        /// <param name="privilege"></param>
+        /// <param name="userOrRole"></param>
+        /// <param name="withGrantOption"></param>
+        /// <param name="tableOrView"></param>
+        /// <param name="columns"></param>
+        /// <returns>Number of affected rows. Return -1 when got error!</returns>
+        /// NOTE: The columns parameter is separated by comma ','
+        public int GrantPrivilege(string privilege, string userOrRole, string withGrantOption = null, string tableOrView = null, string columns = null)
+        {
+            try
+            {
+                using (OracleCommand command = new OracleCommand($"{DEFAULT_SCHEMA}{DEFAULT_PREFIX}GRANT_PRIVILEGE", this.Connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("PRIVILEGE", OracleDbType.Varchar2).Value = privilege;
+                    command.Parameters.Add("USER_OR_ROLE", OracleDbType.Varchar2).Value = userOrRole;
 
+                    // Default value for withGrantOption is NULL so we don't need to check it
+                    command.Parameters.Add("WITH_GRANT_OPTION", OracleDbType.Varchar2).Value = withGrantOption;
 
+                    if (tableOrView != null)
+                    {
+                        command.Parameters.Add("TABLE_OR_VIEW", OracleDbType.Varchar2).Value = tableOrView;
+                        if (columns != null)
+                        {
+                            command.Parameters.Add("COLUMNS_CSV", OracleDbType.Varchar2).Value = columns;
+                        }
+                    }
+                    return command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                return 0;
+            }
+        }
 
+        /// <summary>
+        /// Revoke privilege from user or role with optional: table or view and columns
+        /// </summary>
+        /// <param name="privilege"></param>
+        /// <param name="userOrRole"></param>
+        /// <param name="tableOrView"></param>
+        /// <param name="columns"></param>
+        /// <returns></returns>
+        public int RevokePrivilege(string privilege, string userOrRole, string tableOrView = null, string columns = null)
+        {
+            try
+            {
+                using (OracleCommand command = new OracleCommand($"{DEFAULT_SCHEMA}{DEFAULT_PREFIX}REVOKE_PRIVILEGE", this.Connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("PRIVILEGE", OracleDbType.Varchar2).Value = privilege;
+                    command.Parameters.Add("USER_OR_ROLE", OracleDbType.Varchar2).Value = userOrRole;
+                    if (tableOrView != null)
+                    {
+                        command.Parameters.Add("TABLE_OR_VIEW", OracleDbType.Varchar2).Value = tableOrView;
+                        if (columns != null)
+                        {
+                            command.Parameters.Add("COLUMNS_CSV", OracleDbType.Varchar2).Value = columns;
+                        }
+                    }
+                    return command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                return 0;
+            }
+        }
 
+        /// <summary>
+        /// Create a new user with password and grant CONNECT privilege
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        /// <returns>Status: -1 when successfully!</returns>
+        public int CreateUser(string username, string password)
+        {
+            try
+            {
+                using (OracleCommand command = new OracleCommand($"{DEFAULT_SCHEMA}{DEFAULT_PREFIX}CREATE_USER", this.Connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("USERNAME", OracleDbType.Varchar2).Value = username;
+                    command.Parameters.Add("PASSWORD", OracleDbType.Varchar2).Value = password;
+                    return command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                return 0;
+            }
+        }
 
+        /// <summary>
+        /// Create a new role
+        /// </summary>
+        /// <param name="roleName"></param>
+        /// <returns>Status: -1 when successfully!</returns>
+        public int CreateRole(string roleName)
+        {
+            try
+            {
+                using (OracleCommand command = new OracleCommand($"{DEFAULT_SCHEMA}{DEFAULT_PREFIX}CREATE_ROLE", this.Connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("ROLE_NAME", OracleDbType.Varchar2).Value = roleName;
+                    return command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                return 0;
+            }
+        }
 
+        /// <summary>
+        /// Drop a user
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <returns>Status: -1 when successfully!</returns>
+        public int DropUser(string userName)
+        {
+            try
+            {
+                using (OracleCommand command = new OracleCommand($"{DEFAULT_SCHEMA}{DEFAULT_PREFIX}DROP_USER", this.Connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("USERNAME", OracleDbType.Varchar2).Value = userName;
+                    return command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                return 0;
+            }
+        }
 
+        /// <summary>
+        /// Drop a role
+        /// </summary>
+        /// <param name="roleName"></param>
+        /// <returns>Status: -1 when successfully!</returns>
+        public int DropRole(string roleName)
+        {
+            try
+            {
+                using (OracleCommand command = new OracleCommand($"{DEFAULT_SCHEMA}{DEFAULT_PREFIX}DROP_ROLE", this.Connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("ROLE_NAME", OracleDbType.Varchar2).Value = roleName;
+                    return command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                return 0;
+            }
+        }
 
 
 
@@ -246,9 +413,6 @@ namespace oracle_database_administator
         /**********************************************************
         * Database's Stored Procedures - Users
         ***********************************************************/
-
-
-
 
 
     }
