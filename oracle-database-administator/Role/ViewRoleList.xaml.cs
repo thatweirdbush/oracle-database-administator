@@ -24,6 +24,7 @@ namespace oracle_database_administator.Role
     public partial class ViewRoleList : Page
     {
         OracleConnection conn = Database.Instance.Connection;
+        Database Db = Database.Instance;
 
         public string currentUserID { get; set; }
 
@@ -33,49 +34,7 @@ namespace oracle_database_administator.Role
             Database.Instance.IsSelectable = true;           
             currentUserID = Database.Instance.CurrentUser;
             DataContext = this;
-        }
-
-        private void UpdateRoleGrid()
-        {
-            try
-            {
-                string query = "SELECT ROLE, ROLE_ID FROM SYS.DBA_ROLES";
-                using (OracleCommand command = new OracleCommand(query, conn))
-                {
-                    using (OracleDataAdapter adapter = new OracleDataAdapter(command))
-                    {
-                        DataTable dataTable = new DataTable();
-                        adapter.Fill(dataTable);
-                        RoleDataGrid.ItemsSource = dataTable.DefaultView;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-        }
-
-        private void UpdateUserPrivilegesGrid()
-        {
-            try
-            {
-                string query = "SELECT * FROM DBA_ROLE_PRIVS";
-                using (OracleCommand command = new OracleCommand(query, conn))
-                {
-                    using (OracleDataAdapter adapter = new OracleDataAdapter(command))
-                    {
-                        DataTable dataTable = new DataTable();
-                        adapter.Fill(dataTable);
-                        RoleDataGrid.ItemsSource = dataTable.DefaultView;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-        }
+        }              
 
         private void HomeButton_Click(object sender, RoutedEventArgs e)
         {
@@ -92,7 +51,7 @@ namespace oracle_database_administator.Role
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            UpdateRoleGrid();
+            RoleDataGrid.ItemsSource = Db.UpdateDataView(Db.ROLES);
         }
 
         private void InsertButton_Click(object sender, RoutedEventArgs e)
@@ -114,7 +73,7 @@ namespace oracle_database_administator.Role
                     {
                         MessageBox.Show("Create role successfully!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                         Database.Instance.IsSelectable = true;
-                        UpdateRoleGrid();
+                        RoleDataGrid.ItemsSource = Db.UpdateDataView(Db.ROLES);
                     }
                     else
                     {
@@ -153,7 +112,7 @@ namespace oracle_database_administator.Role
                                 if (rowSelected == -1)
                                 {
                                     MessageBox.Show("Drop role successfully!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-                                    UpdateRoleGrid();
+                                    RoleDataGrid.ItemsSource = Db.UpdateDataView(Db.ROLES);
                                 }
                                 else
                                 {
@@ -211,7 +170,8 @@ namespace oracle_database_administator.Role
                 EditRoleLabel.Visibility = Visibility.Collapsed;
                 UsernameGrid.Visibility = Visibility.Visible;
 
-                UpdateUserPrivilegesGrid();
+                RoleDataGrid.ItemsSource = Db.UpdateDataView(Db.ROLE_PRIVS);
+
                 Database.Instance.IsSelectable = false;
             }
             catch (Exception ex)
@@ -267,7 +227,8 @@ namespace oracle_database_administator.Role
                     if (rowSelected == -1)
                     {
                         MessageBox.Show("Grant role successfully!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-                        UpdateUserPrivilegesGrid();
+                        RoleDataGrid.ItemsSource = Db.UpdateDataView(Db.ROLE_PRIVS);
+
                     }
                     else
                     {
@@ -300,7 +261,7 @@ namespace oracle_database_administator.Role
                     if (rowSelected == -1)
                     {
                         MessageBox.Show("Revoke role successfully!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-                        UpdateUserPrivilegesGrid();
+                        RoleDataGrid.ItemsSource = Db.UpdateDataView(Db.ROLE_PRIVS);
                     }
                     else
                     {

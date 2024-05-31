@@ -24,6 +24,7 @@ namespace oracle_database_administator.User
     public partial class ViewPrivilegesOfUser : Page
     {
         OracleConnection conn = Database.Instance.Connection;
+        Database Db = Database.Instance;
 
         private UserInfo selectedUserInfo;
 
@@ -65,52 +66,7 @@ namespace oracle_database_administator.User
         /// </WARNING>
         private void UpdatePrivUserGrid()
         {
-            try
-            {
-                string query = "SELECT" +
-                    "    GRANTOR," +
-                    "    GRANTEE," +
-                    "    TABLE_SCHEMA," +
-                    "    TABLE_NAME," +
-                    "    NULL AS COLUMN_NAME," +
-                    "    PRIVILEGE," +
-                    "    GRANTABLE," +
-                    "    HIERARCHY," +
-                    "    COMMON," +
-                    "    TYPE," +
-                    "    INHERITED " +
-                    "FROM ALL_TAB_PRIVS " +
-                    "WHERE GRANTEE = '" + selectedUserName + "' " +
-                    "UNION ALL " +
-                    "SELECT" +
-                    "    GRANTOR," +
-                    "    GRANTEE," +
-                    "    TABLE_SCHEMA," +
-                    "    TABLE_NAME," +
-                    "    COLUMN_NAME," +
-                    "    PRIVILEGE," +
-                    "    GRANTABLE," +
-                    "    NULL AS HIERARCHY," +
-                    "    COMMON," +
-                    "    NULL AS TYPE," +
-                    "    INHERITED " +
-                    "FROM all_col_privs " +
-                    "WHERE GRANTEE = '" + selectedUserName + "'";
-
-                using (OracleCommand command = new OracleCommand(query, conn))
-                {
-                    using (OracleDataAdapter adapter = new OracleDataAdapter(command))
-                    {
-                        DataTable dataTable = new DataTable();
-                        adapter.Fill(dataTable);
-                        PrivUserDataGrid.ItemsSource = dataTable.DefaultView;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("This Grid Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
+            PrivUserDataGrid.ItemsSource = Db.UpdateDataView(Db.PRIVS, selectedUserName);
         }
 
         private void PrivUserDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)

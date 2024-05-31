@@ -25,6 +25,7 @@ namespace oracle_database_administator.User
     public partial class TestPrivileges : Page
     {
         OracleConnection alternate_user_connection = Database.Instance.Connection;
+        Database Db = Database.Instance;
         private UserInfo selectedUserInfo;
         public string selectedUserName { get; set; }
         public string selectedPassWord { get; set; }
@@ -103,36 +104,7 @@ namespace oracle_database_administator.User
 
         private void UpdatePrivUserGrid()
         {
-            try
-            {
-                string query = "SELECT" +
-                    "    TABLE_NAME," +
-                    "    NULL AS COLUMN_NAME," +
-                    "    PRIVILEGE " +
-                    "FROM SYS.ALL_TAB_PRIVS " +
-                    "WHERE GRANTEE = '" + selectedUserName + "' " +
-                    "UNION ALL " +
-                    "SELECT" +
-                    "   TABLE_NAME," +
-                    "   COLUMN_NAME," +
-                    "   PRIVILEGE " +
-                    "FROM SYS.all_col_privs " +
-                    "WHERE GRANTEE = '" + selectedUserName + "'";
-
-                using (OracleCommand command = new OracleCommand(query, alternate_user_connection))
-                {
-                    using (OracleDataAdapter adapter = new OracleDataAdapter(command))
-                    {
-                        DataTable dataTable = new DataTable();
-                        adapter.Fill(dataTable);
-                        PrivUserDataGrid.ItemsSource = dataTable.DefaultView;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Privilege Loading Error", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
+            PrivUserDataGrid.ItemsSource = Db.UpdateDataView(Db.PRIVS_SIMPLIFY, selectedUserName);
         }
 
         private void HomeButton_Click(object sender, RoutedEventArgs e)

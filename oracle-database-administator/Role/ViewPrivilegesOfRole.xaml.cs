@@ -23,6 +23,7 @@ namespace oracle_database_administator.Role
     public partial class ViewPrivilegesOfRole : Page
     {
         OracleConnection conn = Database.Instance.Connection;
+        Database Db = Database.Instance;
 
         private Role selectedRole;
         public string selectedRoleName { get; set; }
@@ -53,52 +54,7 @@ namespace oracle_database_administator.Role
         /// </WARNING>
         private void UpdatePrivRoleGrid()
         {
-            try
-            {
-                string query = "SELECT" +
-                    "    GRANTOR," +
-                    "    GRANTEE," +
-                    "    TABLE_SCHEMA," +
-                    "    TABLE_NAME," +
-                    "    NULL AS COLUMN_NAME," +
-                    "    PRIVILEGE," +
-                    "    GRANTABLE," +
-                    "    HIERARCHY," +
-                    "    COMMON," +
-                    "    TYPE," +
-                    "    INHERITED " +
-                    "FROM ALL_TAB_PRIVS " +
-                    "WHERE GRANTEE = '" + selectedRoleName + "' " +
-                    "UNION ALL " +
-                    "SELECT" +
-                    "    GRANTOR," +
-                    "    GRANTEE," +
-                    "    TABLE_SCHEMA," +
-                    "    TABLE_NAME," +
-                    "    COLUMN_NAME," +
-                    "    PRIVILEGE," +
-                    "    GRANTABLE," +
-                    "    NULL AS HIERARCHY," +
-                    "    COMMON," +
-                    "    NULL AS TYPE," +
-                    "    INHERITED " +
-                    "FROM all_col_privs " +
-                    "WHERE GRANTEE = '" + selectedRoleName + "'";
-
-                using (OracleCommand command = new OracleCommand(query, conn))
-                {
-                    using (OracleDataAdapter adapter = new OracleDataAdapter(command))
-                    {
-                        DataTable dataTable = new DataTable();
-                        adapter.Fill(dataTable);
-                        PrivUserDataGrid.ItemsSource = dataTable.DefaultView;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("This Grid Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
+            PrivUserDataGrid.ItemsSource = Db.UpdateDataView(Db.PRIVS, selectedRoleName);
         }
 
         private void HomeButton_Click(object sender, RoutedEventArgs e)
@@ -139,6 +95,7 @@ namespace oracle_database_administator.Role
                     {
                         //MessageBox.Show($"Granted {selectedRoleName} to {username} successfully!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                         MessageBox.Show($"Default test user: {username}", "Successfully Connected", MessageBoxButton.OK, MessageBoxImage.Information);
+                      
                         // Truyền mật khẩu sang trang hoặc lớp khác
                         if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
                         {

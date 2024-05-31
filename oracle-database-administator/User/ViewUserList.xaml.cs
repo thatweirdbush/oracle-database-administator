@@ -25,6 +25,7 @@ namespace oracle_database_administator.User
     public partial class ViewUserList : Page
     {
         OracleConnection conn = Database.Instance.Connection;
+        Database Db = Database.Instance;
 
         private bool dataGridChanged = true;
 
@@ -64,23 +65,7 @@ namespace oracle_database_administator.User
 
         private void UpdateUserGrid()
         {
-            try
-            {
-                string query = "SELECT * FROM SYS.ALL_USERS";
-                using (OracleCommand command = new OracleCommand(query, conn))
-                {
-                    using (OracleDataAdapter adapter = new OracleDataAdapter(command))
-                    {
-                        DataTable dataTable = new DataTable();
-                        adapter.Fill(dataTable);
-                        UserDataGrid.ItemsSource = dataTable.DefaultView;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
+            UserDataGrid.ItemsSource = Db.UpdateDataView(Db.USERS);
         }
 
         private void HomeButton_Click(object sender, RoutedEventArgs e)
@@ -203,28 +188,13 @@ namespace oracle_database_administator.User
 
         private void RolesUserButton_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                DeleteUserButton.Visibility = Visibility.Collapsed;
-                RoleUserButton.Visibility = Visibility.Collapsed;
-                ModeVisible_UserDataGrid(dataGridChanged);
+            DeleteUserButton.Visibility = Visibility.Collapsed;
+            RoleUserButton.Visibility = Visibility.Collapsed;
+            ModeVisible_UserDataGrid(dataGridChanged);
 
-                string query = "SELECT * FROM SYS.DBA_ROLE_PRIVS";
-                using (OracleCommand command = new OracleCommand(query, conn))
-                {
-                    using (OracleDataAdapter adapter = new OracleDataAdapter(command))
-                    {
-                        DataTable dataTable = new DataTable();
-                        adapter.Fill(dataTable);
-                        UserDataGrid.ItemsSource = dataTable.DefaultView;
-                    }
-                }
-                dataGridChanged = false;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
+            UserDataGrid.ItemsSource = Db.UpdateDataView(Db.ROLE_PRIVS);
+
+            dataGridChanged = false;
         }
 
         private void PriUserButton_Click(object sender, RoutedEventArgs e)

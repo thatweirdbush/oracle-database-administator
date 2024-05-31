@@ -25,7 +25,7 @@ namespace oracle_database_administator.User
     {
 
         OracleConnection conn = Database.Instance.Connection;
-
+        Database Db = Database.Instance;
         private UserInfo selectedUserInfo;
 
         public string currentUserID { get; set; }
@@ -54,61 +54,12 @@ namespace oracle_database_administator.User
 
         private void UpdateTablerGrid()
         {
-            try
-            {
-                string query = "SELECT TABLE_NAME FROM DBA_TABLES WHERE TABLE_NAME LIKE \'%N09_%\'";
-                using (OracleCommand command = new OracleCommand(query, conn))
-                {
-                    using (OracleDataAdapter adapter = new OracleDataAdapter(command))
-                    {
-                        DataTable dataTable = new DataTable();
-                        adapter.Fill(dataTable);
-                        TableDataGrid.ItemsSource = dataTable.DefaultView;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
+            TableDataGrid.ItemsSource = Db.UpdateDataView(Db.TABLES, Database.DEFAULT_PREFIX);
         }
 
         private void UpdatePrivUserGrid()
         {
-            try
-            {
-                string query = "SELECT" +
-                    "    GRANTEE," +
-                    "    TABLE_NAME," +
-                    "    NULL AS COLUMN_NAME," +
-                    "    PRIVILEGE," +
-                    "    GRANTABLE " +
-                    "FROM ALL_TAB_PRIVS " +
-                    "WHERE GRANTEE = '" + selectedUserName + "'" +
-                    "UNION ALL " +
-                    "SELECT" +
-                    "   GRANTEE," +
-                    "   TABLE_NAME," +
-                    "   COLUMN_NAME," +
-                    "   PRIVILEGE," +
-                    "   GRANTABLE " +
-                    "FROM dba_col_privs " +
-                    "WHERE GRANTEE = '" + selectedUserName + "'";
-
-                using (OracleCommand command = new OracleCommand(query, conn))
-                {
-                    using (OracleDataAdapter adapter = new OracleDataAdapter(command))
-                    {
-                        DataTable dataTable = new DataTable();
-                        adapter.Fill(dataTable);
-                        PrivUserDataGrid.ItemsSource = dataTable.DefaultView;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
+            PrivUserDataGrid.ItemsSource = Db.UpdateDataView(Db.PRIVS_SIMPLIFY, selectedUserName);
         }
 
         private String SelectItemsListBox()

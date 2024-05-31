@@ -11,10 +11,12 @@ using System.Windows;
 using System.Data;
 
 namespace oracle_database_administator
-{
-    
+{    
     public class Database : IDisposable
     {
+        /**********************************************************
+        * Database's Connection
+        ***********************************************************/
         private static Database _instance = null;
         private OracleConnection _connection = null;
         private bool disposed = false;
@@ -165,5 +167,89 @@ namespace oracle_database_administator
                 return user;
             }
         }
+
+        /**********************************************************
+        * Define Application default schema & default tablespace prefix
+        ***********************************************************/
+        static public string DEFAULT_SCHEMA = "SYS.";
+        static public string DEFAULT_PREFIX = "N09_";
+
+
+        /**********************************************************
+        * Define Application Data Table name by stored procedure name
+        ***********************************************************/
+        public string ROLES = $"{DEFAULT_SCHEMA}{DEFAULT_PREFIX}SELECT_DBA_ROLES";
+        public string ROLE_PRIVS = $"{DEFAULT_SCHEMA}{DEFAULT_PREFIX}SELECT_DBA_ROLE_PRIVS";
+        public string USERS = $"{DEFAULT_SCHEMA}{DEFAULT_PREFIX}SELECT_ALL_USERS";
+        public string PRIVS = $"{DEFAULT_SCHEMA}{DEFAULT_PREFIX}SELECT_USER_OR_ROLE_PRIVS";
+        public string PRIVS_SIMPLIFY = $"{DEFAULT_SCHEMA}{DEFAULT_PREFIX}SELECT_USER_OR_ROLE_PRIVS_SIMPLIFY";
+        public string TABLES = $"{DEFAULT_SCHEMA}{DEFAULT_PREFIX}SELECT_DBA_TABLES";
+
+
+        /// <summary>
+        /// Constant for output parameter in stored procedures
+        /// Ex: CREATE OR REPLACE PROCEDURE MyProcedure(OUTPUT OUT SYS_REFCURSOR)
+        /// NOTE: Currently, the output parameter is useless
+        /// </summary>
+        private string outParameter = "OUTPUT";
+        private string inParameter = "INPUT";
+
+
+        /**********************************************************
+        * Database's Stored Procedures - General
+        ***********************************************************/
+        // For SELECT stored procedures with INPUT optional parameter
+        public DataView UpdateDataView(string procedureName, string inputValue = null)
+        {
+            try {
+                using (OracleCommand command = new OracleCommand(procedureName, this.Connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add(outParameter, OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                    if (inputValue != null)
+                    {
+                        command.Parameters.Add(inParameter, OracleDbType.Varchar2).Value = inputValue;
+                    }
+
+                    using (OracleDataAdapter adapter = new OracleDataAdapter(command))
+                    {
+                        DataTable dataTable = new DataTable();
+                        adapter.Fill(dataTable);
+                        return dataTable.DefaultView;
+                    }
+                }
+            }
+            catch (Exception ex) {
+                MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                return null;
+            }
+        }
+
+        // For SELECT stored procedures with INPUT optional parameter in SYS schema
+
+
+
+
+
+
+
+
+
+
+
+
+        /**********************************************************
+        * Database's Stored Procedures - Roles
+        ***********************************************************/
+
+
+        /**********************************************************
+        * Database's Stored Procedures - Users
+        ***********************************************************/
+
+
+
+
+
     }
 }
