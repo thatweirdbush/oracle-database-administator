@@ -121,7 +121,7 @@ namespace oracle_database_administator.Role
                     MessageBox.Show("Select a table.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                     return;
                 }
-                if (!IsOnlyContains(privileges, "UPDATE") && !IsOnlyContains(privileges, "SELECT, UPDATE") && !IsOnlyContains(privileges, "UPDATE, SELECT"))
+                if (colName != "" && !IsOnlyContains(privileges, "UPDATE") && !IsOnlyContains(privileges, "SELECT, UPDATE") && !IsOnlyContains(privileges, "UPDATE, SELECT"))
                 {
                     MessageBox.Show("No permission to grant " + privileges + " on column " + colName + ".\nPlease select other privileges.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                     return;

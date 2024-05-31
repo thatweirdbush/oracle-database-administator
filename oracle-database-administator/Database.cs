@@ -173,6 +173,7 @@ namespace oracle_database_administator
         ***********************************************************/
         static public string DEFAULT_SCHEMA = "SYS.";
         static public string DEFAULT_PREFIX = "N09_";
+        static public string DEFAULT_PREFIX_VIEW = "UV_";
 
 
         /**********************************************************
@@ -186,6 +187,9 @@ namespace oracle_database_administator
         public string TABLES = $"{DEFAULT_SCHEMA}{DEFAULT_PREFIX}SELECT_DBA_TABLES";
         public string TABLE_COLUMNS = $"{DEFAULT_SCHEMA}{DEFAULT_PREFIX}SELECT_TAB_COLUMNS";
 
+        // Special stored procedures
+        public string SELECT_ANY_TABLE = $"{DEFAULT_SCHEMA}{DEFAULT_PREFIX}SELECT_ANY_TABLE";
+
         //////////////////////////////////////////////
         /// <summary>
         /// Constant for output parameter in stored procedures
@@ -194,6 +198,8 @@ namespace oracle_database_administator
         /// </summary>
         private string outParameter = "OUTPUT";
         private string inParameter = "INPUT";
+
+
 
 
         /**********************************************************
@@ -226,6 +232,41 @@ namespace oracle_database_administator
                 }
             }
             catch (Exception ex) {
+                MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Return a table when SELECT stored procedures with optional 'condition' parameter
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="condition"></param>
+        /// <returns>Table type with all cols</returns>
+        public DataView GetAnyTable(string tableName, string condition = null)
+        {
+            try
+            {
+                using (OracleCommand command = new OracleCommand(SELECT_ANY_TABLE, this.Connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add(outParameter, OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                    command.Parameters.Add("STR_TABLE_NAME", OracleDbType.Varchar2).Value = tableName;
+                    if (condition != null)
+                    {
+                        command.Parameters.Add("STR_CONDITION", OracleDbType.Varchar2).Value = condition;
+                    }
+
+                    using (OracleDataAdapter adapter = new OracleDataAdapter(command))
+                    {
+                        DataTable dataTable = new DataTable();
+                        adapter.Fill(dataTable);
+                        return dataTable.DefaultView;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
                 MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                 return null;
             }

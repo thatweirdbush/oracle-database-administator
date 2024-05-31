@@ -120,7 +120,7 @@ namespace oracle_database_administator.User
                     MessageBox.Show("Select a table.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                     return;
                 }
-                if (!IsOnlyContains(privileges, "UPDATE") && !IsOnlyContains(privileges, "SELECT, UPDATE") && !IsOnlyContains(privileges, "UPDATE, SELECT")){
+                if (colName != "" && !IsOnlyContains(privileges, "UPDATE") && !IsOnlyContains(privileges, "SELECT, UPDATE") && !IsOnlyContains(privileges, "UPDATE, SELECT")){
                     MessageBox.Show("No permission to grant " + privileges + " on column " + colName + ".\nPlease select other privileges.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                     return;
                 }
@@ -131,7 +131,7 @@ namespace oracle_database_administator.User
                 // If INSERT privilege is granted, automatically grant SELECT privilege on view with corresponding table name
                 if (privileges.Contains("INSERT"))
                 {
-                    Db.GrantPrivilege("SELECT", selectedUserName, null, $"UV_{tableName}");
+                    Db.GrantPrivilege("SELECT", selectedUserName, null, $"{Database.DEFAULT_SCHEMA}{Database.DEFAULT_PREFIX_VIEW}{tableName}");
                 }
 
                 // Show notification when grant privilege successfully

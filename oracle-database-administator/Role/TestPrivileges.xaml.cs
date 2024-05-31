@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using oracle_database_administator;
 
 namespace oracle_database_administator.Role
 {
@@ -77,14 +78,13 @@ namespace oracle_database_administator.Role
                     editedColumn = e.Column.Header.ToString();
 
                     //Lấy giá trị mới
-                    String newValue = (e.EditingElement as TextBox)?.Text; // Sử dụng ?. để tránh lỗi nếu không phải TextBox
+                    string newValue = (e.EditingElement as TextBox)?.Text; // Sử dụng ?. để tránh lỗi nếu không phải TextBox
 
                     if (priv == "UPDATE")
                     {
                         if (priv_col == editedColumn || priv_col == "")
                         {
                             update_query = editedColumn + " = '" + newValue + "'";
-
                             update_query = string.Format("UPDATE SYS.{0} SET {1} WHERE {2}", table_name, update_query, condition);
                             //MessageBox.Show(update_query, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                         }
@@ -145,21 +145,10 @@ namespace oracle_database_administator.Role
                     table_name = row_priv["TABLE_NAME"].ToString();
                     string column_str = row_priv["COLUMN_NAME"].ToString();
                     string priv = row_priv["PRIVILEGE"].ToString();
-                    string query = "";
 
                     if (priv == "SELECT")
                     {
-                        query += " SELECT * FROM SYS." + table_name;
-
-                        using (OracleCommand command = new OracleCommand(query, alternate_user_connection))
-                        {
-                            using (OracleDataAdapter adapter = new OracleDataAdapter(command))
-                            {
-                                DataTable dataTable = new DataTable();
-                                adapter.Fill(dataTable);
-                                ResultViewDataGrid.ItemsSource = dataTable.DefaultView;
-                            }
-                        }
+                        ResultViewDataGrid.ItemsSource = Db.GetAnyTable($"{Database.DEFAULT_SCHEMA}{table_name}");
                     }
                     else if (priv == "INSERT")
                     {
@@ -184,16 +173,7 @@ namespace oracle_database_administator.Role
                                     MessageBox.Show("Failed to execute \'Insert\'!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                                 }
                             }
-                            query = " SELECT * FROM SYS.UV_" + table_name;
-                            using (OracleCommand command = new OracleCommand(query, alternate_user_connection))
-                            {
-                                using (OracleDataAdapter adapter = new OracleDataAdapter(command))
-                                {
-                                    DataTable dataTable = new DataTable();
-                                    adapter.Fill(dataTable);
-                                    ResultViewDataGrid.ItemsSource = dataTable.DefaultView;
-                                }
-                            }
+                            ResultViewDataGrid.ItemsSource = Db.GetAnyTable($"{Database.DEFAULT_SCHEMA}{Database.DEFAULT_PREFIX_VIEW}{table_name}");
                         }
                     }
                     else if (priv == "UPDATE")
@@ -214,17 +194,7 @@ namespace oracle_database_administator.Role
                                 }
                             }
                         }
-
-                        query = " SELECT * FROM SYS." + table_name;
-                        using (OracleCommand command = new OracleCommand(query, alternate_user_connection))
-                        {
-                            using (OracleDataAdapter adapter = new OracleDataAdapter(command))
-                            {
-                                DataTable dataTable = new DataTable();
-                                adapter.Fill(dataTable);
-                                ResultViewDataGrid.ItemsSource = dataTable.DefaultView;
-                            }
-                        }
+                        ResultViewDataGrid.ItemsSource = Db.GetAnyTable($"{Database.DEFAULT_SCHEMA}{table_name}");
                     }
                     else if (priv == "DELETE")
                     {
@@ -244,17 +214,7 @@ namespace oracle_database_administator.Role
                                 }
                             }
                         }
-
-                        query = " SELECT * FROM SYS." + table_name;
-                        using (OracleCommand command = new OracleCommand(query, alternate_user_connection))
-                        {
-                            using (OracleDataAdapter adapter = new OracleDataAdapter(command))
-                            {
-                                DataTable dataTable = new DataTable();
-                                adapter.Fill(dataTable);
-                                ResultViewDataGrid.ItemsSource = dataTable.DefaultView;
-                            }
-                        }
+                        ResultViewDataGrid.ItemsSource = Db.GetAnyTable($"{Database.DEFAULT_SCHEMA}{table_name}");
                     }
                 }
             }
@@ -329,7 +289,6 @@ namespace oracle_database_administator.Role
                     table_name = row_priv["TABLE_NAME"].ToString();
                     string column_str = row_priv["COLUMN_NAME"].ToString();
                     string priv = row_priv["PRIVILEGE"].ToString();
-                    string query = "";
 
                     if (priv == "SELECT")
                     {
@@ -338,17 +297,12 @@ namespace oracle_database_administator.Role
                     }
                     else if (priv == "INSERT")
                     {
-                        query += " SELECT * FROM SYS.UV_" + table_name + " WHERE 1=0";
-
-                        using (OracleCommand command = new OracleCommand(query, alternate_user_connection))
-                        {
-                            using (OracleDataAdapter adapter = new OracleDataAdapter(command))
-                            {
-                                DataTable dataTable = new DataTable();
-                                adapter.Fill(dataTable);
-                                ResultViewDataGrid.ItemsSource = dataTable.DefaultView;
-                            }
-                        }
+                        // Reason to put false condition '1=0' is because
+                        // we want to get the structure of the table when inserting
+                        // after inserting, we can get select data later
+                        string false_condition = "1=0";
+                        ResultViewDataGrid.ItemsSource = Db.GetAnyTable($"{Database.DEFAULT_SCHEMA}{Database.DEFAULT_PREFIX_VIEW}{table_name}", false_condition);
+                      
                         insert_query = "INSERT INTO SYS." + table_name + " (";
 
                         // Lặp qua tất cả các cột trong DataGrid
@@ -375,17 +329,7 @@ namespace oracle_database_administator.Role
                     }
                     else
                     {
-                        query += " SELECT * FROM SYS." + table_name;
-
-                        using (OracleCommand command = new OracleCommand(query, alternate_user_connection))
-                        {
-                            using (OracleDataAdapter adapter = new OracleDataAdapter(command))
-                            {
-                                DataTable dataTable = new DataTable();
-                                adapter.Fill(dataTable);
-                                ResultViewDataGrid.ItemsSource = dataTable.DefaultView;
-                            }
-                        }
+                        ResultViewDataGrid.ItemsSource = Db.GetAnyTable($"{Database.DEFAULT_SCHEMA}{table_name}");
                     }
                 }
             }
