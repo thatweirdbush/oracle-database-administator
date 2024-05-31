@@ -1,0 +1,40 @@
+﻿<Page x:Class="oracle_database_administator.Staff.HomePageStaff"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:oracle_database_administator.Staff"
+      mc:Ignorable="d" 
+      d:DesignHeight="800" d:DesignWidth="1200"
+      Title="HomePageStaff">
+
+    <Grid>
+        <Grid.Background>
+            <SolidColorBrush Color="#FFD4EBFF" Opacity="0.8"/>
+        </Grid.Background>
+        <Label Content="TRƯỜNG ĐẠI HỌC X" FontFamily="Segoe UI Semibold" FontSize="22" HorizontalAlignment="Left" Height="40" Margin="44,0,0,0" VerticalAlignment="Top" Width="238"/>
+        <Label Content="HỆ THỐNG QUẢN LÝ NỘI BỘ" FontFamily="Segoe UI Semibold" FontSize="22" HorizontalAlignment="Left" Height="40" Margin="44,45,0,0" VerticalAlignment="Top" Width="315"/>
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Center" Height="650" Margin="0,150,0,0" VerticalAlignment="Top" Width="1200">
+            <Button x:Name="Logout" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="22" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="50" Width="145" Click="HomeButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="-2.052,5.949" Margin="1025,-128,0,0" >
+
+                <Button.Resources>
+                    <Style TargetType="{x:Type Border}">
+                        <Setter Property="CornerRadius" Value="24"/>
+                    </Style>
+                </Button.Resources>
+                <Button.Background>
+                    <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.MenuHighlightColorKey}}" Opacity="0.75"/>
+                </Button.Background>
+                <Button.Effect>
+                    <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
+                </Button.Effect>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="LOGOUT"/>
+                </StackPanel>
+
+            </Button>
+        </Border>
+
+    </Grid>
+</Page>
+    
