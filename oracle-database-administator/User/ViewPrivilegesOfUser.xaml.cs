@@ -57,7 +57,7 @@ namespace oracle_database_administator.User
         {
             if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
             {
-                mainWindow.MainFrame.Navigate(new oracle_database_administator.Dashboard());
+                mainWindow.MainFrame.Navigate(new oracle_database_administator.SystemDashboard());
             }
         }
 
@@ -85,7 +85,7 @@ namespace oracle_database_administator.User
         private void TestPrivUserButton_Click(object sender, RoutedEventArgs e)
         {
             // Tạo một instance của cửa sổ nhập mật khẩu
-            PasswordWindow passwordWindow = new PasswordWindow();
+            PasswordWindow passwordWindow = new PasswordWindow(selectedUserName);
 
             // Hiển thị cửa sổ nhập mật khẩu và chờ cho đến khi nó được đóng
             bool? result = passwordWindow.ShowDialog();

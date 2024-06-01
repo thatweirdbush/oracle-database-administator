@@ -21,8 +21,8 @@ namespace oracle_database_administator
         private OracleConnection _connection = null;
         private bool disposed = false;
         private bool dataGridChanged = true;
+        private string username = "";
         private string password = "";
-
 
         /// <WARNING>
         /// TODO: THIS MUST NOT BE PUBLIC
@@ -33,6 +33,16 @@ namespace oracle_database_administator
             set { password = value; }
         }
 
+        /// <WARNING>
+        /// TODO: THIS MUST NOT BE PUBLIC
+        /// </WARNING>
+        public string ConnectionUsername
+        {
+            // Tự động chuyển username thành chữ in hoa
+            get { return username; }
+            set { username = value.ToUpper(); }
+        }
+
         public OracleConnection Connection
         {
             get
@@ -41,12 +51,13 @@ namespace oracle_database_administator
                 {
                     try
                     {
-                        //// Đóng kết nối hiện tại
-                        //DisposeConnection();
+                        string SYSDBA_OPTION = "";
 
-                        // Đọc chuỗi kết nối từ tệp cấu hình
-                        //string connectionString = ConfigurationManager.ConnectionStrings["OracleDbContext"].ConnectionString;
-                        string connectionString = $"DATA SOURCE=localhost:1521/XE;DBA PRIVILEGE=SYSDBA;PERSIST SECURITY INFO=True;USER ID=SYS;PASSWORD={ConnectionPassword}";
+                        if (ConnectionUsername == "SYS" || ConnectionUsername == "SYSTEM")
+                        {
+                            SYSDBA_OPTION = "DBA PRIVILEGE=SYSDBA;";
+                        }
+                        string connectionString = $"DATA SOURCE=localhost:1521/XE;{SYSDBA_OPTION}PERSIST SECURITY INFO=True;USER ID={ConnectionUsername};PASSWORD={ConnectionPassword}";
                         _connection = new OracleConnection(connectionString);
                         _connection.Open();
                     }
@@ -62,6 +73,7 @@ namespace oracle_database_administator
             }
         }
 
+        // Disconnect current connection (Mainly used)
         public void Disconnect()
         {
             if (_connection != null)
@@ -73,7 +85,7 @@ namespace oracle_database_administator
             }
         }
 
-        // Giải phóng tài nguyên kết nối hiện tại
+        // Dispose current connection
         private void DisposeConnection()
         {
             if (_connection != null)
@@ -83,13 +95,14 @@ namespace oracle_database_administator
             }
         }
 
-        // Phương thức giải phóng tài nguyên
+        // Free managed resources
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
 
+        // Free unmanaged resources
         protected virtual void Dispose(bool disposing)
         {
             if (!disposed)
@@ -105,6 +118,7 @@ namespace oracle_database_administator
             }
         }
 
+        // Implement Singleton pattern
         public static Database Instance
         {
             get
@@ -123,17 +137,21 @@ namespace oracle_database_administator
             set {  dataGridChanged = value; }
         }
 
-        public OracleConnection AlternateConnection(string username, string password)
+        public OracleConnection AlternateConnection(string new_username, string new_password)
         {
             if (_connection != null)
             {
-                // Đóng kết nối hiện tại (nếu có)
-                //DisposeConnection();
-
-                string connectionString = $"DATA SOURCE=localhost:1521/XE;PERSIST SECURITY INFO=True;USER ID={username};PASSWORD={password}";
-                _connection = new OracleConnection(connectionString);
                 try
                 {
+                    string SYSDBA_OPTION = "";
+
+                    if (new_username == "SYS" || new_username == "SYSTEM")
+                    {
+                        SYSDBA_OPTION = "DBA PRIVILEGE=SYSDBA;";
+                    }
+                    string connectionString = $"DATA SOURCE=localhost:1521/XE;{SYSDBA_OPTION}PERSIST SECURITY INFO=True;USER ID={new_username};PASSWORD={new_password}";
+
+                    _connection = new OracleConnection(connectionString);
                     _connection.Open();
                 }
                 catch (OracleException ex)
@@ -151,20 +169,10 @@ namespace oracle_database_administator
         {
             get
             {
-                string user = "";
                 if (_connection != null)
-                {
-                    string query = "SELECT USER FROM DUAL";
-                    using (OracleCommand command = new OracleCommand(query, _connection))
-                    {
-                        object result = command.ExecuteScalar();
-                        if (result != null)
-                        {
-                            user = result.ToString();
-                        }
-                    }
-                }
-                return user;
+                    return GetCurrentUser();
+                else
+                    return null;
             }
         }
 
@@ -175,20 +183,24 @@ namespace oracle_database_administator
         static public string DEFAULT_PREFIX = "N09_";
         static public string DEFAULT_PREFIX_VIEW = "UV_";
 
+        // Combine schema and prefix to create stored procedure & function name
+        static public string COMBINED_PREFIX = $"{DEFAULT_SCHEMA}{DEFAULT_PREFIX}";
+
 
         /**********************************************************
         * Define Application Data Table name by stored procedure name
         ***********************************************************/
-        public string ROLES = $"{DEFAULT_SCHEMA}{DEFAULT_PREFIX}SELECT_DBA_ROLES";
-        public string ROLE_PRIVS = $"{DEFAULT_SCHEMA}{DEFAULT_PREFIX}SELECT_DBA_ROLE_PRIVS";
-        public string USERS = $"{DEFAULT_SCHEMA}{DEFAULT_PREFIX}SELECT_ALL_USERS";
-        public string PRIVS = $"{DEFAULT_SCHEMA}{DEFAULT_PREFIX}SELECT_USER_OR_ROLE_PRIVS";
-        public string PRIVS_SIMPLIFY = $"{DEFAULT_SCHEMA}{DEFAULT_PREFIX}SELECT_USER_OR_ROLE_PRIVS_SIMPLIFY";
-        public string TABLES = $"{DEFAULT_SCHEMA}{DEFAULT_PREFIX}SELECT_DBA_TABLES";
-        public string TABLE_COLUMNS = $"{DEFAULT_SCHEMA}{DEFAULT_PREFIX}SELECT_TAB_COLUMNS";
+        public string ROLES = $"{COMBINED_PREFIX}SELECT_DBA_ROLES";
+        public string ROLE_PRIVS = $"{COMBINED_PREFIX}SELECT_DBA_ROLE_PRIVS";
+        public string USERS = $"{COMBINED_PREFIX}SELECT_ALL_USERS";
+        public string PRIVS = $"{COMBINED_PREFIX}SELECT_USER_OR_ROLE_PRIVS";
+        public string PRIVS_SIMPLIFY = $"{COMBINED_PREFIX}SELECT_USER_OR_ROLE_PRIVS_SIMPLIFY";
+        public string TABLES = $"{COMBINED_PREFIX}SELECT_DBA_TABLES";
+        public string TABLE_COLUMNS = $"{COMBINED_PREFIX}SELECT_TAB_COLUMNS";
 
         // Special stored procedures
-        public string SELECT_ANY_TABLE = $"{DEFAULT_SCHEMA}{DEFAULT_PREFIX}SELECT_ANY_TABLE";
+        public string SELECT_ANY_TABLE = $"{COMBINED_PREFIX}SELECT_ANY_TABLE";
+        public string GET_CURRENT_USER = $"{COMBINED_PREFIX}GET_CURRENT_USER";
 
         //////////////////////////////////////////////
         /// <summary>
@@ -205,6 +217,31 @@ namespace oracle_database_administator
         /**********************************************************
         * Database's Stored Procedures - General
         ***********************************************************/
+        /// <summary>
+        /// Return current user that connected to database
+        /// </summary>
+        /// <returns>Current user in string</returns>
+        public string GetCurrentUser()
+        {
+            try
+            {
+                using (OracleCommand command = new OracleCommand(GET_CURRENT_USER, this.Connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add(outParameter, OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+
+                    object result = command.ExecuteScalar();
+                    return result.ToString();
+                }            
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                return null;
+            }
+        }
+
+
         /// <summary>
         /// Return a table when SELECT stored procedures with INPUT optional parameter
         /// </summary>
@@ -286,7 +323,7 @@ namespace oracle_database_administator
         {
             try
             {
-                using (OracleCommand command = new OracleCommand($"{DEFAULT_SCHEMA}{DEFAULT_PREFIX}GRANT_PRIVILEGE", this.Connection))
+                using (OracleCommand command = new OracleCommand($"{COMBINED_PREFIX}GRANT_PRIVILEGE", this.Connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add("PRIVILEGE", OracleDbType.Varchar2).Value = privilege;
@@ -325,7 +362,7 @@ namespace oracle_database_administator
         {
             try
             {
-                using (OracleCommand command = new OracleCommand($"{DEFAULT_SCHEMA}{DEFAULT_PREFIX}REVOKE_PRIVILEGE", this.Connection))
+                using (OracleCommand command = new OracleCommand($"{COMBINED_PREFIX}REVOKE_PRIVILEGE", this.Connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add("PRIVILEGE", OracleDbType.Varchar2).Value = privilege;
@@ -358,7 +395,7 @@ namespace oracle_database_administator
         {
             try
             {
-                using (OracleCommand command = new OracleCommand($"{DEFAULT_SCHEMA}{DEFAULT_PREFIX}CREATE_USER", this.Connection))
+                using (OracleCommand command = new OracleCommand($"{COMBINED_PREFIX}CREATE_USER", this.Connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add("USERNAME", OracleDbType.Varchar2).Value = username;
@@ -382,7 +419,7 @@ namespace oracle_database_administator
         {
             try
             {
-                using (OracleCommand command = new OracleCommand($"{DEFAULT_SCHEMA}{DEFAULT_PREFIX}CREATE_ROLE", this.Connection))
+                using (OracleCommand command = new OracleCommand($"{COMBINED_PREFIX}CREATE_ROLE", this.Connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add("ROLE_NAME", OracleDbType.Varchar2).Value = roleName;
@@ -405,7 +442,7 @@ namespace oracle_database_administator
         {
             try
             {
-                using (OracleCommand command = new OracleCommand($"{DEFAULT_SCHEMA}{DEFAULT_PREFIX}DROP_USER", this.Connection))
+                using (OracleCommand command = new OracleCommand($"{COMBINED_PREFIX}DROP_USER", this.Connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add("USERNAME", OracleDbType.Varchar2).Value = userName;
@@ -428,7 +465,7 @@ namespace oracle_database_administator
         {
             try
             {
-                using (OracleCommand command = new OracleCommand($"{DEFAULT_SCHEMA}{DEFAULT_PREFIX}DROP_ROLE", this.Connection))
+                using (OracleCommand command = new OracleCommand($"{COMBINED_PREFIX}DROP_ROLE", this.Connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add("ROLE_NAME", OracleDbType.Varchar2).Value = roleName;

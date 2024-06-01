@@ -72,7 +72,7 @@ namespace oracle_database_administator.User
         {
             if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
             {
-                mainWindow.MainFrame.Navigate(new Dashboard());
+                mainWindow.MainFrame.Navigate(new SystemDashboard());
             }
         }
       
@@ -158,7 +158,7 @@ namespace oracle_database_administator.User
         {
             if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null && dataGridChanged == true)
             {
-                mainWindow.MainFrame.Navigate(new Dashboard());
+                mainWindow.MainFrame.Navigate(new SystemDashboard());
             }
             else if (Application.Current.MainWindow is MainWindow mainWindow2 && mainWindow2.MainFrame != null && dataGridChanged == false)
             {

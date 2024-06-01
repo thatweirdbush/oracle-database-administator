@@ -97,7 +97,7 @@ namespace oracle_database_administator.Role
         {
             if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
             {
-                mainWindow.MainFrame.Navigate(new oracle_database_administator.Dashboard());
+                mainWindow.MainFrame.Navigate(new oracle_database_administator.SystemDashboard());
             }
         }
 

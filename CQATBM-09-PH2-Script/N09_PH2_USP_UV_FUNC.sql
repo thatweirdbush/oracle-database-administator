@@ -42,6 +42,20 @@ AS
 
 
 ----------------------------------------------------------------
+-- Stored Procedure lấy thông tin User hiện tại
+----------------------------------------------------------------
+CREATE OR REPLACE PROCEDURE N09_GET_CURRENT_USER
+AS
+BEGIN
+    EXECUTE IMMEDIATE 'SELECT USER FROM DUAL';
+END;
+/
+
+CONN HUYP/123;
+EXEC N09_GET_CURRENT_USER;
+
+
+----------------------------------------------------------------
 -- Stored Procedure SELECT bất kỳ Table nào
 -- Tham số truyền vào: Tên Table
 -- Tham số optional: Điều kiện WHERE
@@ -60,11 +74,16 @@ BEGIN
 END;
 /
 
+-- Gán quyền thực thi thủ tục trên cho tất cả user
+GRANT EXECUTE ON N09_SELECT_ANY_TABLE TO PUBLIC;
+
+
 -- -- Test
--- -- SELECT tất cả các dòng của Table N09_NHANVIEN
--- VARIABLE rc REFCURSOR;
---     EXECUTE SYS.N09_SELECT_ANY_TABLE(:rc, 'N09_NHANVIEN');
--- PRINT rc;
+ -- SELECT tất cả các dòng của Table N09_NHANVIEN
+ CONN HUYP/123
+ VARIABLE rc REFCURSOR;
+     EXECUTE SYS.N09_SELECT_ANY_TABLE(:rc, 'N09_BAOCAO');
+ PRINT rc;
 
 -- -- Không SELECT được dòng nào trong Table N09_NHANVIEN
 -- VARIABLE rc REFCURSOR;
@@ -168,6 +187,9 @@ BEGIN
                     WHERE GRANTEE = USER_OR_ROLE_NAME;
 END;
 /
+
+-- Gán quyền thực thi thủ tục trên cho tất cả user
+GRANT EXECUTE ON N09_SELECT_USER_OR_ROLE_PRIVS_SIMPLIFY TO PUBLIC;
 
 -- -- Test
 -- VARIABLE rc REFCURSOR;

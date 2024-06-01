@@ -115,7 +115,7 @@ namespace oracle_database_administator.User
             }
             if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
             {
-                mainWindow.MainFrame.Navigate(new oracle_database_administator.Dashboard());
+                mainWindow.MainFrame.Navigate(new oracle_database_administator.SystemDashboard());
             }
         }
 
@@ -296,9 +296,11 @@ namespace oracle_database_administator.User
                     }
                     else if (priv == "INSERT")
                     {
-                        // Reason to put false condition '1=0' is because
-                        // we want to get the structure of the table when inserting
-                        // after inserting, we can get select data later
+                        /// <NOTE>
+                        /// Reason to put false condition '1=0' is because
+                        /// we want to get the structure of the table when inserting
+                        /// after inserting, we can get select data later
+                        /// <NOTE>
                         string false_condition = "1=0";
                         ResultViewDataGrid.ItemsSource = Db.GetAnyTable($"{Database.DEFAULT_SCHEMA}{Database.DEFAULT_PREFIX_VIEW}{table_name}", false_condition);
                         insert_query = "INSERT INTO SYS." + table_name + " (";

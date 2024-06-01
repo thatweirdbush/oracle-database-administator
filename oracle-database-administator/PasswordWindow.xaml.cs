@@ -21,16 +21,46 @@ namespace oracle_database_administator.User
     public partial class PasswordWindow : Window
     {
         public string Password { get; private set; }
+        public string Username { get; private set; }
 
-        public PasswordWindow()
+        public PasswordWindow(string username = null)
         {
             InitializeComponent();
-            PasswordBox.Focus();
+            if (username != null)
+            {
+                Username = username;
+                UsernameTextBox.Text = username;
+                UsernameTextBox.IsEnabled = false;
+                PasswordBox.Focus();
+
+                // Nhấn Enter sẽ thực hiện đăng nhập
+                PasswordBox.KeyDown += (sender, e) =>
+                {
+                    if (e.Key == Key.Enter)
+                    {
+                        OKButton_Click(sender, e);
+                    }
+                };
+            }
+            else
+            {
+                UsernameTextBox.Focus();
+
+                // Nhấn Enter sẽ thực hiện đăng nhập
+                PasswordBox.KeyDown += (sender, e) =>
+                {
+                    if (e.Key == Key.Enter)
+                    {
+                        OKButton_Click(sender, e);
+                    }
+                };
+            }
         }
 
         private void OKButton_Click(object sender, RoutedEventArgs e)
         {
-            // Lưu mật khẩu khi người dùng nhấn nút OK
+            // Lưu tên người dùng & mật khẩu khi người dùng nhấn nút OK
+            Username = UsernameTextBox.Text;
             Password = PasswordBox.Password;
 
             // Đóng cửa sổ nhập mật khẩu
@@ -39,7 +69,8 @@ namespace oracle_database_administator.User
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
-            // Không lưu mật khẩu nếu người dùng nhấn nút Cancel
+            // Không lưu tài khoản & mật khẩu nếu người dùng nhấn nút Cancel
+            Username = null;
             Password = null;
 
             // Đóng cửa sổ nhập mật khẩu
