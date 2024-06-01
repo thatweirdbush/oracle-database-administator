@@ -11,12 +11,12 @@
 ----------------------------------------------------------------
 -- Chèn dữ liệu vào bảng N09_DONVI
 ----------------------------------------------------------------
-INSERT INTO N09_DONVI (MADV, TENDV, TRGDV) VALUES ('DV001', 'Van phong khoa', 'NV102');
-INSERT INTO N09_DONVI (MADV, TENDV, TRGDV) VALUES ('DV002', 'Bo mon HTTT', 'NV103');
-INSERT INTO N09_DONVI (MADV, TENDV, TRGDV) VALUES ('DV003', 'Bo mon CNPM', 'NV104');
-INSERT INTO N09_DONVI (MADV, TENDV, TRGDV) VALUES ('DV004', 'Bo mon KHMT', 'NV105');
-INSERT INTO N09_DONVI (MADV, TENDV, TRGDV) VALUES ('DV005', 'Bo mon CNTT', 'NV106');
-INSERT INTO N09_DONVI (MADV, TENDV, TRGDV) VALUES ('DV006', 'Bo mon TGMT', 'NV102');
+INSERT INTO N09_DONVI (MADV, TENDV, TRGDV) VALUES ('DV001', 'Van phong khoa', 'NV001');
+INSERT INTO N09_DONVI (MADV, TENDV, TRGDV) VALUES ('DV002', 'Bo mon HTTT', 'NV101');
+INSERT INTO N09_DONVI (MADV, TENDV, TRGDV) VALUES ('DV003', 'Bo mon CNPM', 'NV102');
+INSERT INTO N09_DONVI (MADV, TENDV, TRGDV) VALUES ('DV004', 'Bo mon KHMT', 'NV103');
+INSERT INTO N09_DONVI (MADV, TENDV, TRGDV) VALUES ('DV005', 'Bo mon CNTT', 'NV104');
+INSERT INTO N09_DONVI (MADV, TENDV, TRGDV) VALUES ('DV006', 'Bo mon TGMT', 'NV105');
 INSERT INTO N09_DONVI (MADV, TENDV, TRGDV) VALUES ('DV007', 'Bo mon MMT va Vien thong', 'NV102');
 /
 
@@ -31,10 +31,12 @@ VALUES ('NV001', 'Nguyễn Thị Minh Thư', 'Nu', TO_DATE('1991-01-01', 'YYYY-M
 ----------------------------------------------------------------
 -- Thêm dữ liệu cho vai trò "Trưởng đơn vị"
 ----------------------------------------------------------------
+-- <NOTE>
+-- Chỉ tạo 5 Trưởng đơn vị vì Trưởng khoa cũng là 1 Trưởng đơn vị
 DECLARE
     v_manv CHAR(5);
 BEGIN
-    FOR i IN 1..6 LOOP
+    FOR i IN 1..5 LOOP
         v_manv := 'NV1' || LPAD(i, 2, '0');        
         INSERT INTO N09_NHANSU (MANV, HOTEN, PHAI, NGSINH, PHUCAP, DT, VAITRO, MADV)
         VALUES (v_manv, 'Trưởng Đơn Vị ' || i, 
@@ -151,6 +153,9 @@ INSERT INTO N09_KHMO (MAHP, HK, NAM, MACT) VALUES ('HP007', 1, 2024, 'CTTT');
 INSERT INTO N09_KHMO (MAHP, HK, NAM, MACT) VALUES ('HP008', 2, 2024, 'VP');
 INSERT INTO N09_KHMO (MAHP, HK, NAM, MACT) VALUES ('HP009', 3, 2024, 'CQ');
 INSERT INTO N09_KHMO (MAHP, HK, NAM, MACT) VALUES ('HP010', 1, 2024, 'CLC');
+INSERT INTO N09_KHMO (MAHP, HK, NAM, MACT) VALUES ('HP001', 2, 2024, 'CLC');
+INSERT INTO N09_KHMO (MAHP, HK, NAM, MACT) VALUES ('HP001', 2, 2024, 'CQ');
+INSERT INTO N09_KHMO (MAHP, HK, NAM, MACT) VALUES ('HP002', 3, 2024, 'CLC');
 /
 
 ----------------------------------------------------------------
@@ -166,6 +171,9 @@ INSERT INTO N09_PHANCONG (MAGV, MAHP, HK, NAM, MACT) VALUES ('NV207', 'HP007', 1
 INSERT INTO N09_PHANCONG (MAGV, MAHP, HK, NAM, MACT) VALUES ('NV208', 'HP008', 2, 2024, 'VP');
 INSERT INTO N09_PHANCONG (MAGV, MAHP, HK, NAM, MACT) VALUES ('NV209', 'HP009', 3, 2024, 'CQ');
 INSERT INTO N09_PHANCONG (MAGV, MAHP, HK, NAM, MACT) VALUES ('NV210', 'HP010', 1, 2024, 'CLC');
+INSERT INTO N09_PHANCONG (MAGV, MAHP, HK, NAM, MACT) VALUES ('NV211', 'HP001', 2, 2024, 'CQ');
+INSERT INTO N09_PHANCONG (MAGV, MAHP, HK, NAM, MACT) VALUES ('NV212', 'HP002', 3, 2024, 'CLC');
+
 /
 
 ----------------------------------------------------------------

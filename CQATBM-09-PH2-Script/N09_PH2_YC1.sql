@@ -99,10 +99,10 @@ GRANT UPDATE (DT) ON UV_N09_NHANSU_VIEWBY_NHANVIEN TO N09_RL_NHANVIEN;
 /
 
 -- 1b. Xem thông tin của tất cả SINHVIEN, ĐƠNVỊ, HOCPHAN, KHMO.
-GRANT SELECT * ON N09_SINHVIEN TO N09_RL_NHANVIEN;
-GRANT SELECT * ON N09_DONVI TO N09_RL_NHANVIEN;
-GRANT SELECT * ON N09_HOCPHAN TO N09_RL_NHANVIEN;
-GRANT SELECT * ON N09_KHMO TO N09_RL_NHANVIEN;
+GRANT SELECT ON N09_SINHVIEN TO N09_RL_NHANVIEN;
+GRANT SELECT ON N09_DONVI TO N09_RL_NHANVIEN;
+GRANT SELECT ON N09_HOCPHAN TO N09_RL_NHANVIEN;
+GRANT SELECT ON N09_KHMO TO N09_RL_NHANVIEN;
 /
 
 
@@ -137,10 +137,10 @@ GRANT UPDATE (DT) ON UV_N09_NHANSU_VIEWBY_GIANGVIEN TO N09_RL_GIANGVIEN;
 /
 
 -- 1b. Xem thông tin của tất cả SINHVIEN, ĐƠNVỊ, HOCPHAN, KHMO.
-GRANT SELECT * ON N09_SINHVIEN TO N09_RL_NHANVIEN;
-GRANT SELECT * ON N09_DONVI TO N09_RL_NHANVIEN;
-GRANT SELECT * ON N09_HOCPHAN TO N09_RL_NHANVIEN;
-GRANT SELECT * ON N09_KHMO TO N09_RL_NHANVIEN;
+GRANT SELECT ON N09_SINHVIEN TO N09_RL_NHANVIEN;
+GRANT SELECT ON N09_DONVI TO N09_RL_NHANVIEN;
+GRANT SELECT ON N09_HOCPHAN TO N09_RL_NHANVIEN;
+GRANT SELECT ON N09_KHMO TO N09_RL_NHANVIEN;
 /
 
 
@@ -208,10 +208,10 @@ GRANT UPDATE (DT) ON UV_N09_NHANSU_VIEWBY_GIAOVU TO N09_RL_GIAOVU;
 /
 
 -- 1b. Xem thông tin của tất cả SINHVIEN, ĐƠNVỊ, HOCPHAN, KHMO.
-GRANT SELECT * ON N09_SINHVIEN TO N09_RL_NHANVIEN;
-GRANT SELECT * ON N09_DONVI TO N09_RL_NHANVIEN;
-GRANT SELECT * ON N09_HOCPHAN TO N09_RL_NHANVIEN;
-GRANT SELECT * ON N09_KHMO TO N09_RL_NHANVIEN;
+GRANT SELECT ON N09_SINHVIEN TO N09_RL_NHANVIEN;
+GRANT SELECT ON N09_DONVI TO N09_RL_NHANVIEN;
+GRANT SELECT ON N09_HOCPHAN TO N09_RL_NHANVIEN;
+GRANT SELECT ON N09_KHMO TO N09_RL_NHANVIEN;
 /
 
 
@@ -234,42 +234,57 @@ AS
     SELECT * FROM N09_PHANCONG;
 /
 
-GRANT SELECT ON UV_N09_PHANCONG_VIEWBY_GIAOVU TO N09_RL_GIAOVU;
+GRANT SELECT, UPDATE ON UV_N09_PHANCONG_VIEWBY_GIAOVU TO N09_RL_GIAOVU;
+GRANT SELECT, UPDATE ON N09_PHANCONG TO N09_RL_GIAOVU;
 /
 
--- 3c.(cont). Tạo Trigger khi Update vào bảng PHANCONG
+-- 3c.(cont). Tạo Trigger khi Update vào bảng PHANCONG bởi Giáo vụ
 CREATE OR REPLACE TRIGGER TR_N09_PHANCONG_UPDATE_BY_GIAOVU
 BEFORE UPDATE ON N09_PHANCONG
 FOR EACH ROW
 DECLARE
-    l_vanphongkhoa_madv CHAR(5);
     l_count NUMBER;
 BEGIN
-    -- Lấy mã đơn vị của "Văn phòng khoa"
-    SELECT MADV
-    INTO l_vanphongkhoa_madv
-    FROM N09_DONVI
-    WHERE TENDV = 'Văn phòng khoa';
-
-    -- Kiểm tra nếu hành động là cập nhật dữ liệu phân công
+    -- Kiểm tra nếu người dùng hiện tại là Giáo vụ
     SELECT COUNT(*)
     INTO l_count
-    FROM N09_HOCPHAN hp
-    JOIN N09_DONVI dv ON hp.MADV = dv.MADV
-    WHERE hp.MAHP = :OLD.MAHP
-      AND dv.MADV = l_vanphongkhoa_madv
-      AND dv.TRGDV IN (SELECT MANV FROM N09_NHANSU WHERE VAITRO = 'Trưởng khoa');
-
-    IF l_count = 0 THEN
-        RAISE_APPLICATION_ERROR(-20002, 'Bạn không có quyền cập nhật dữ liệu phân công này vì nó không thuộc đơn vị Văn phòng khoa hoặc trưởng đơn vị không phải là trưởng khoa.');
+    FROM N09_NHANSU
+    WHERE MANV = SYS_CONTEXT('userenv', 'session_user')
+      AND VAITRO = 'Giao vu';
+    
+    IF l_count > 0 THEN
+        -- Nếu là Giáo vụ, kiểm tra nếu học phần thuộc đơn vị "Văn phòng khoa"
+        SELECT COUNT(*)
+        INTO l_count
+        FROM N09_HOCPHAN hp
+        JOIN N09_DONVI dv ON hp.MADV = dv.MADV
+        WHERE hp.MAHP = :NEW.MAHP
+          AND dv.TENDV = 'Van phong khoa';
+        
+        IF l_count = 0 THEN
+            RAISE_APPLICATION_ERROR(-20002, 'Bạn không có quyền cập nhật dữ liệu phân công này vì học phần này không thuộc đơn vị Văn phòng khoa.');
+        END IF;
     END IF;
 END;
-
-
--- <NOTE>
--- FINISH THIS
--- <NOTE>
 /
+
+---- Test
+--CREATE USER NV301 IDENTIFIED BY NV301;
+--GRANT CONNECT TO NV301;
+--GRANT N09_RL_GIAOVU TO NV301;
+--/
+--
+--CONN NV301/NV301;
+--SELECT * FROM C##ADMIN.N09_PHANCONG;
+--/
+--
+--CONN NV301/NV301;
+---- UPDATE thành công
+--UPDATE C##ADMIN.N09_PHANCONG SET HK = 1 WHERE MAGV = 'NV211';
+---- UPDATE KHÔNG thành công
+--UPDATE C##ADMIN.N09_PHANCONG SET HK = 3 WHERE MAGV = 'NV202';
+--/
+
 
 -- 3d. Xóa hoặc Thêm mới dữ liệu trên quan hệ ĐANGKY theo yêu cầu của sinh viên trong
 -- khoảng thời gian còn cho hiệu chỉnh đăng ký
@@ -279,22 +294,87 @@ END;
 --   không vượt quá 14 ngày so với ngày bắt đầu học kỳ
 --
 -- * Lưu ý: Mỗi năm học có 3 học kỳ (HK) bắt đầu tương ứng vào ngày đầu tiên các tháng 1, 5, 9.
-CREATE OR REPLACE VIEW UV_N09_DANGKY_VIEWBY_SINHVIEN
+--
+-- Vì chưa đủ thông tin và Giáo vụ có thể thêm, xóa dữ liệu nên
+-- mặc định Giáo vụ có quyền xem toàn bộ bảng DANGKY và View của nó 
+CREATE OR REPLACE VIEW UV_N09_DANGKY_VIEWBY_GIAOVU
 AS
-    SELECT * FROM N09_DANGKY WHERE MASV = SYS_CONTEXT ('userenv', 'session_user');
+    SELECT * FROM N09_DANGKY;
 /
 
-GRANT SELECT ON UV_N09_DANGKY_VIEWBY_SINHVIEN TO N09_RL_GIAOVU;
+GRANT SELECT, INSERT, DELETE ON UV_N09_DANGKY_VIEWBY_GIAOVU TO N09_RL_GIAOVU;
+GRANT SELECT, INSERT, DELETE ON N09_DANGKY TO N09_RL_GIAOVU;
 /
 
-GRANT INSERT, DELETE ON UV_N09_DANGKY_VIEWBY_SINHVIEN TO N09_RL_GIAOVU;
--- <NOTE>
--- FINISH THIS
--- <NOTE>
+-- Tạo Trigger khi Insert vào bảng DANGKY bởi Giáo vụ
+CREATE OR REPLACE TRIGGER TR_N09_DANGKY_MANAGE_BY_GIAOVU
+BEFORE INSERT OR DELETE ON N09_DANGKY
+FOR EACH ROW
+DECLARE
+    l_role_count NUMBER;
+    l_start_date DATE;
+    l_current_date DATE := SYSDATE;
+BEGIN
+    -- Kiểm tra nếu người dùng hiện tại là Giáo vụ
+    SELECT COUNT(*)
+    INTO l_role_count
+    FROM N09_NHANSU
+    WHERE MANV = SYS_CONTEXT('userenv', 'session_user')
+      AND VAITRO = 'Giao vu';
+
+    IF l_role_count > 0 THEN
+        -- Xác định ngày bắt đầu học kỳ dựa trên giá trị của HK và thao tác (INSERT hoặc DELETE)
+        IF INSERTING THEN
+            IF :NEW.HK = 1 THEN
+                l_start_date := TO_DATE(:NEW.NAM || '-01-01', 'YYYY-MM-DD');
+            ELSIF :NEW.HK = 2 THEN
+                l_start_date := TO_DATE(:NEW.NAM || '-05-01', 'YYYY-MM-DD');
+            ELSIF :NEW.HK = 3 THEN
+                l_start_date := TO_DATE(:NEW.NAM || '-09-01', 'YYYY-MM-DD');
+            ELSE
+                RAISE_APPLICATION_ERROR(-20005, 'Giá trị học kỳ không hợp lệ.');
+            END IF;
+        ELSIF DELETING THEN
+            IF :OLD.HK = 1 THEN
+                l_start_date := TO_DATE(:OLD.NAM || '-01-01', 'YYYY-MM-DD');
+            ELSIF :OLD.HK = 2 THEN
+                l_start_date := TO_DATE(:OLD.NAM || '-05-01', 'YYYY-MM-DD');
+            ELSIF :OLD.HK = 3 THEN
+                l_start_date := TO_DATE(:OLD.NAM || '-09-01', 'YYYY-MM-DD');
+            ELSE
+                RAISE_APPLICATION_ERROR(-20005, 'Giá trị học kỳ không hợp lệ.');
+            END IF;
+        END IF;
+
+        -- Kiểm tra nếu ngày hiện tại không vượt quá 14 ngày so với ngày bắt đầu học kỳ
+        IF l_current_date > l_start_date + 14 THEN
+            RAISE_APPLICATION_ERROR(-20004, 'Không thể thực hiện thao tác vì đã quá thời gian hiệu chỉnh đăng ký.');
+        END IF;
+    END IF;
+END;
+/
 
 
-
-
+---- Test
+--CONN NV301/NV301;
+--SELECT * FROM C##ADMIN.N09_DANGKY;
+--/
+--
+--CONN NV301/NV301;
+---- INSERT KHÔNG thành công
+--INSERT INTO C##ADMIN.N09_DANGKY(MASV, MAGV, MAHP, HK, NAM, MACT) VALUES('SV001', 'NV202', 'HP002', 2, 2024, 'CLC');
+--/
+---- INSERT thành công
+--INSERT INTO C##ADMIN.N09_DANGKY(MASV, MAGV, MAHP, HK, NAM, MACT) VALUES('SV001', 'NV212', 'HP002', 3, 2024, 'CLC');
+--/
+----------
+--CONN NV301/NV301;
+---- DELETE KHÔNG thành công
+--DELETE FROM C##ADMIN.N09_DANGKY WHERE MASV = 'SV001' AND MAGV = 'NV201' AND MAHP = 'HP001' AND HK = 1 AND NAM = 2024 AND MACT = 'CQ';
+--/
+---- DELETE thành công
+--DELETE FROM C##ADMIN.N09_DANGKY WHERE MASV = 'SV001' AND MAGV = 'NV212' AND MAHP = 'HP002' AND HK = 3 AND NAM = 2024 AND MACT = 'CLC';
+--/
 
 
 
@@ -341,12 +421,12 @@ GRANT SELECT, INSERT, UPDATE ON N09_KHMO TO N09_RL_GIAOVU;
 -- 2b. Xem dữ liệu phân công giảng dạy liên quan đến bản thân mình (PHANCONG).
 -- <NOTE>
 -- Không cấp quyền giống với Giảng viên vì Trưởng đơn vị có kiểu xem khác (xem mục 4c. bên dưới)
--- <NOTE>
+-- </NOTE>
 
 -- 2c. Xem dữ liệu trên quan hệ ĐANGKY liên quan đến các lớp học phần mà giảng viên được phân công giảng dạy.
 -- <NOTE>
 -- Vì Trưởng đơn vị không tham gia giảng dạy (không có MAGV) nên khi xem View này sẽ không có dữ liệu.
--- <NOTE>
+-- </NOTE>
 CREATE OR REPLACE VIEW UV_N09_DANGKY_VIEWBY_TRUONGDONVI 
 AS
     SELECT * FROM N09_DANGKY WHERE MAGV = SYS_CONTEXT ('userenv', 'session_user');
@@ -360,7 +440,7 @@ GRANT SELECT ON UV_N09_DANGKY_VIEWBY_TRUONGDONVI TO N09_RL_GIANGVIEN;
 -- Các trường liên quan điểm số bao gồm: ĐIEMTH, ĐIEMQT, ĐIEMCK, ĐIEMTK.
 -- <NOTE>
 -- Vì Trưởng đơn vị không tham gia giảng dạy (không có MAGV) nên sẽ không có dữ liệu khi cập nhật View này.
--- <NOTE>
+-- </NOTE>
 GRANT UPDATE (DIEMTH, DIEMQT, DIEMCK, DIEMTK) ON UV_N09_DANGKY_VIEWBY_TRUONGDONVI TO N09_RL_GIANGVIEN;
 /
 
@@ -387,35 +467,102 @@ CREATE OR REPLACE TRIGGER TR_N09_PHANCONG_BY_TRUONGDONVI
 INSTEAD OF INSERT OR DELETE OR UPDATE ON UV_N09_PHANCONG_VIEWBY_TRUONGDONVI
 FOR EACH ROW
 DECLARE
+    l_role_count NUMBER;
     l_count NUMBER;
+    l_is_truongdonvi NUMBER;
 BEGIN
+    -- Kiểm tra nếu người dùng hiện tại là Trưởng đơn vị
     SELECT COUNT(*)
-    INTO l_count
-    FROM N09_HOCPHAN hp
-    JOIN N09_DONVI dv ON hp.MADV = dv.MADV
-    WHERE hp.MAHP = :NEW.MAHP
-      AND dv.TRGDV = SYS_CONTEXT('userenv', 'session_user');
-    
-    IF l_count > 0 THEN
-        NULL; -- Thực hiện hành động nếu điều kiện thỏa mãn
-    ELSE
-        RAISE_APPLICATION_ERROR(-20001, 'Không thể thực hiện thao tác vì học phần này không thuộc đơn vị của bạn.');
-    END IF;
+    INTO l_is_truongdonvi
+    FROM N09_NHANSU
+    WHERE MANV = SYS_CONTEXT('userenv', 'session_user')
+      AND VAITRO = 'Truong don vi';
+
+    IF l_is_truongdonvi > 0 THEN
+        IF UPDATING THEN
+            -- Kiểm tra khi UPDATE
+            SELECT COUNT(*)
+            INTO l_count
+            FROM N09_HOCPHAN hp
+            JOIN N09_DONVI dv ON hp.MADV = dv.MADV
+            WHERE hp.MAHP = :NEW.MAHP
+              AND dv.TRGDV = SYS_CONTEXT('userenv', 'session_user');
+            
+            IF l_count = 0 THEN
+                RAISE_APPLICATION_ERROR(-20001, 'Không thể thực hiện thao tác UPDATE vì học phần này không thuộc đơn vị của bạn.');
+            ELSE
+                UPDATE N09_PHANCONG
+                SET MAGV = :NEW.MAGV, MAHP = :NEW.MAHP, HK = :NEW.HK, NAM = :NEW.NAM, MACT = :NEW.MACT
+                WHERE MAGV = :OLD.MAGV AND MAHP = :OLD.MAHP AND HK = :OLD.HK AND NAM = :OLD.NAM AND MACT = :OLD.MACT;
+            END IF;
+            
+        ELSIF INSERTING THEN
+            -- Kiểm tra khi INSERT
+            SELECT COUNT(*)
+            INTO l_count
+            FROM N09_HOCPHAN hp
+            JOIN N09_DONVI dv ON hp.MADV = dv.MADV
+            WHERE hp.MAHP = :NEW.MAHP
+              AND dv.TRGDV = SYS_CONTEXT('userenv', 'session_user');
+            
+            IF l_count = 0 THEN
+                RAISE_APPLICATION_ERROR(-20001, 'Không thể thực hiện thao tác INSERT vì học phần này không thuộc đơn vị của bạn.');
+            ELSE
+                INSERT INTO N09_PHANCONG (MAGV, MAHP, HK, NAM, MACT)
+                VALUES (:NEW.MAGV, :NEW.MAHP, :NEW.HK, :NEW.NAM, :NEW.MACT);
+            END IF;
+            
+        ELSIF DELETING THEN
+            -- Kiểm tra khi DELETE
+            SELECT COUNT(*)
+            INTO l_count
+            FROM N09_HOCPHAN hp
+            JOIN N09_DONVI dv ON hp.MADV = dv.MADV
+            WHERE hp.MAHP = :OLD.MAHP
+              AND dv.TRGDV = SYS_CONTEXT('userenv', 'session_user');
+            
+            IF l_count = 0 THEN
+                RAISE_APPLICATION_ERROR(-20001, 'Không thể thực hiện thao tác DELETE vì học phần này không thuộc đơn vị của bạn.');
+            ELSE
+                DELETE FROM N09_PHANCONG
+                WHERE MAGV = :OLD.MAGV AND MAHP = :OLD.MAHP AND HK = :OLD.HK AND NAM = :OLD.NAM AND MACT = :OLD.MACT;
+            END IF;
+        END IF;  
+    END IF;    
 END;
 /
 
 GRANT INSERT, DELETE, UPDATE ON UV_N09_PHANCONG_VIEWBY_TRUONGDONVI TO N09_RL_TRUONG_DONVI;
+GRANT UPDATE ON N09_PHANCONG TO N09_RL_TRUONG_DONVI;
 /
 
--- -- Test
--- CREATE USER NV102 IDENTIFIED BY NV102;
--- GRANT CONNECT TO NV102;
--- /
--- CONN NV102/NV102;
--- SELECT * FROM C##ADMIN.UV_N09_PHANCONG_VIEWBY_TRUONGDONVI;
--- INSERT INTO C##ADMIN.UV_N09_PHANCONG_VIEWBY_TRUONGDONVI VALUES('NV205', 'HP002', 2, 2024, 'CLC');
+-- Test
+CREATE USER NV102 IDENTIFIED BY NV102;
+GRANT CONNECT TO NV102;
+GRANT N09_RL_TRUONG_DONVI TO NV102;
 /
 
+CONN NV102/NV102;
+SELECT * FROM C##ADMIN.UV_N09_PHANCONG_VIEWBY_TRUONGDONVI;
+-- INSERT KHÔNG thành công
+INSERT INTO C##ADMIN.UV_N09_PHANCONG_VIEWBY_TRUONGDONVI VALUES('NV205', 'HP002', 2, 2024, 'CLC');
+/
+CONN NV102/NV102;
+-- INSERT thành công
+INSERT INTO C##ADMIN.UV_N09_PHANCONG_VIEWBY_TRUONGDONVI VALUES('NV220', 'HP007', 1, 2024, 'CTTT');
+/
+
+CONN NV102/NV102;
+-- DELETE KHÔNG thành công
+DELETE FROM C##ADMIN.UV_N09_PHANCONG_VIEWBY_TRUONGDONVI WHERE MAGV = 'NV205' AND MAHP = 'HP005' AND HK = 2 AND NAM = 2024 AND MACT = 'CQ';
+/
+CONN NV102/NV102;
+-- DELETE thành công
+DELETE FROM C##ADMIN.UV_N09_PHANCONG_VIEWBY_TRUONGDONVI WHERE MAGV = 'NV220' AND MAHP = 'HP007' AND HK = 1 AND NAM = 2024 AND MACT = 'CTTT';
+/
+
+SELECT * FROM N09_PHANCONG;
+DELETE FROM C##ADMIN.N09_PHANCONG WHERE MAGV = 'NV220' AND MAHP = 'HP007' AND HK = 1 AND NAM = 2024 AND MACT = 'CTTT';
 
 
 /***************************************************************
@@ -435,7 +582,7 @@ CS#5: Người dùng có VAITRO là “Trưởng khoa” có quyền hạn:
 -- <NOTE>
 -- Vì Trưởng khoa Được quyền Xem (không giới hạn) dữ liệu trên toàn bộ lược đồ CSDL.
 -- Nên chỉ cấp các quyền trên TABLE khác SELECT cho Trưởng khoa.
--- <NOTE>
+-- </NOTE>
 --
 -- 1a.(cont). Có thể chỉnh sửa số điện thoại (ĐT) của chính mình (nếu số điện thoại có thay đổi).
 -- Tạo trigger khi UPDATE số điện thoại (DT) của chính mình
@@ -458,15 +605,34 @@ GRANT UPDATE (DT) ON N09_NHANSU TO N09_RL_TRUONG_KHOA;
 -- B. Lặp lại việc gán các quyền như quyền của Giảng viên
 -- Cần đổi tên View
 -----------------------------------------------------------------
--- <NOTE>
--- Vì Trưởng khoa Được quyền Xem (không giới hạn) dữ liệu trên toàn bộ lược đồ CSDL.
--- Nên chỉ cấp các quyền khác SELECT cho Trưởng khoa.
--- <NOTE>
---
+-- 2b. Xem dữ liệu phân công giảng dạy.
+CREATE OR REPLACE VIEW UV_N09_PHANCONG_VIEWBY_TRUONGKHOA
+AS
+    SELECT * FROM N09_PHANCONG;
+/
+
+GRANT SELECT ON UV_N09_PHANCONG_VIEWBY_TRUONGKHOA TO N09_RL_GIANGVIEN;
+/
+
+-- 2c. Xem dữ liệu trên quan hệ ĐANGKY.
+CREATE OR REPLACE VIEW UV_N09_DANGKY_VIEWBY_TRUONGKHOA
+AS
+    SELECT * FROM N09_DANGKY;
+/
+
+GRANT SELECT ON UV_N09_DANGKY_VIEWBY_TRUONGKHOA TO N09_RL_GIANGVIEN;
+/
+
 -- 2d. Cập nhật dữ liệu tại các trường liên quan điểm số (trong quan hệ ĐANGKY) của các
 -- sinh viên có tham gia lớp học phần mà giảng viên đó được phân công giảng dạy. 
 -- Các trường liên quan điểm số bao gồm: ĐIEMTH, ĐIEMQT, ĐIEMCK, ĐIEMTK.
-GRANT UPDATE (DIEMTH, DIEMQT, DIEMCK, DIEMTK) ON UV_N09_DANGKY_VIEWBY_GIANGVIEN TO N09_RL_TRUONG_KHOA;
+CREATE OR REPLACE VIEW UV_N09_DANGKY_VIEWBY_TRUONGKHOA
+AS
+    SELECT * FROM N09_DANGKY WHERE MAGV = SYS_CONTEXT ('userenv', 'session_user');
+/
+
+GRANT UPDATE (DIEMTH, DIEMQT, DIEMCK, DIEMTK) ON UV_N09_DANGKY_VIEWBY_TRUONGKHOA TO N09_RL_TRUONG_KHOA;
+GRANT UPDATE (DIEMTH, DIEMQT, DIEMCK, DIEMTK) ON N09_DANGKY TO N09_RL_TRUONG_KHOA;
 /
 
 -----------------------------------------------------------------
@@ -479,18 +645,27 @@ BEFORE INSERT OR DELETE OR UPDATE ON N09_PHANCONG
 FOR EACH ROW
 DECLARE
     l_count NUMBER;
+    l_role_count NUMBER;
 BEGIN
+    -- Kiểm tra nếu người dùng hiện tại là Trưởng khoa
     SELECT COUNT(*)
-    INTO l_count
-    FROM N09_HOCPHAN hp
-    JOIN N09_DONVI dv ON hp.MADV = dv.MADV
-    WHERE hp.MAHP = :NEW.MAHP
-    AND dv.TENDV = 'Van phong khoa';
-    
-    IF l_count > 0 THEN
-        NULL; -- Thực hiện hành động nếu điều kiện thỏa mãn
-    ELSE
-        RAISE_APPLICATION_ERROR(-20001, 'Không thể thực hiện thao tác vì học phần này không thuộc đơn vị Văn phòng khoa.');
+    INTO l_role_count
+    FROM N09_NHANSU
+    WHERE MANV = SYS_CONTEXT('userenv', 'session_user')
+      AND VAITRO = 'Truong khoa';
+
+    IF l_role_count > 0 THEN
+        -- Nếu là Trưởng khoa, kiểm tra nếu học phần thuộc đơn vị "Văn phòng khoa"
+        SELECT COUNT(*)
+        INTO l_count
+        FROM N09_HOCPHAN hp
+        JOIN N09_DONVI dv ON hp.MADV = dv.MADV
+        WHERE hp.MAHP = :NEW.MAHP
+          AND dv.TENDV = 'Van phong khoa';
+
+        IF l_count = 0 THEN
+            RAISE_APPLICATION_ERROR(-20001, 'Không thể thực hiện thao tác vì học phần này không thuộc đơn vị Văn phòng khoa.');
+        END IF;
     END IF;
 END;
 /
