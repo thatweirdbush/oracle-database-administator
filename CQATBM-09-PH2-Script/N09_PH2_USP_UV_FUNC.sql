@@ -11,6 +11,7 @@
 ----------------------------------------------------------------
 -- Script tạo các Role trong Database
 ------------------------------------------------------------------ 
+ALTER SESSION SET "_ORACLE_SCRIPT" = TRUE;
 CREATE ROLE N09_RL_NHANVIEN;
 CREATE ROLE N09_RL_GIANGVIEN;
 CREATE ROLE N09_RL_GIAOVU;
@@ -55,15 +56,17 @@ AS
 ----------------------------------------------------------------
 -- Stored Procedure lấy thông tin User hiện tại
 ----------------------------------------------------------------
-CREATE OR REPLACE PROCEDURE N09_GET_CURRENT_USER
+CREATE OR REPLACE PROCEDURE N09_GET_CURRENT_USER(
+    OUTPUT OUT SYS_REFCURSOR)
 AS
 BEGIN
-    EXECUTE IMMEDIATE 'SELECT USER FROM DUAL';
+    OPEN OUTPUT FOR SELECT USER FROM DUAL;
 END;
 /
 
-CONN HUYP/123;
-EXEC N09_GET_CURRENT_USER;
+-- Gán quyền thực thi thủ tục trên cho tất cả user
+GRANT EXECUTE ON N09_GET_CURRENT_USER TO PUBLIC;
+/
 
 
 ----------------------------------------------------------------
