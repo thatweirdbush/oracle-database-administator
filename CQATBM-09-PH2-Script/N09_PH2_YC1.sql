@@ -11,74 +11,8 @@
 /***************************************************************
 *  YÊU CẦU 1: CẤP QUYỀN TRUY CẬP
 ****************************************************************/
------------------------------------------------------------------
--- Stored Procedure tạo user cho tất cả nhân sự
------------------------------------------------------------------
-CREATE OR REPLACE PROCEDURE N09_CREATE_USER_NHANSU
-AS 
-    CURSOR CUR IS (SELECT MANV
-                    FROM N09_NHANSU
-                    WHERE MANV NOT IN (SELECT USERNAME FROM ALL_USERS)); 
-     STRSQL VARCHAR(2000); 
-     USR VARCHAR2(5); 
-BEGIN 
-     OPEN CUR; 
-     STRSQL := 'ALTER SESSION SET "_ORACLE_SCRIPT" = TRUE'; 
-     EXECUTE IMMEDIATE(STRSQL); 
-     LOOP 
-         FETCH CUR INTO USR; 
-         EXIT WHEN CUR%NOTFOUND; 
-         
-         STRSQL := 'CREATE USER '|| USR ||' IDENTIFIED BY '|| USR; 
-         EXECUTE IMMEDIATE(STRSQL); 
-         STRSQL := 'GRANT CONNECT TO ' || USR; 
-         EXECUTE IMMEDIATE(STRSQL); 
-     END LOOP; 
-     STRSQL := 'ALTER SESSION SET "_ORACLE_SCRIPT" = FALSE'; 
-     EXECUTE IMMEDIATE(STRSQL); 
-     CLOSE CUR; 
-END; 
-/
-
--- Thực thi Stored Procedure tạo user cho tất cả nhân sự
-EXEC N09_CREATE_USER_NHANSU;
-/
-
------------------------------------------------------------------
--- Stored Procedure tạo user cho tất cả sinh viên
------------------------------------------------------------------
-CREATE OR REPLACE PROCEDURE N09_CREATE_USER_SINHVIEN
-AS 
-    CURSOR CUR IS (SELECT MASV
-                    FROM N09_SINHVIEN
-                    WHERE MASV NOT IN (SELECT USERNAME FROM ALL_USERS)); 
-     STRSQL VARCHAR(2000); 
-     USR VARCHAR2(5); 
-BEGIN 
-     OPEN CUR; 
-     STRSQL := 'ALTER SESSION SET "_ORACLE_SCRIPT" = TRUE'; 
-     EXECUTE IMMEDIATE(STRSQL); 
-     LOOP 
-         FETCH CUR INTO USR; 
-         EXIT WHEN CUR%NOTFOUND; 
-         
-         STRSQL := 'CREATE USER '|| USR ||' IDENTIFIED BY '|| USR; 
-         EXECUTE IMMEDIATE(STRSQL); 
-         STRSQL := 'GRANT CONNECT TO ' || USR; 
-         EXECUTE IMMEDIATE(STRSQL); 
-     END LOOP; 
-     STRSQL := 'ALTER SESSION SET "_ORACLE_SCRIPT" = FALSE'; 
-     EXECUTE IMMEDIATE(STRSQL); 
-     CLOSE CUR; 
-END;
-/
-
--- Thực thi Stored Procedure tạo user cho tất cả sinh viên
-EXEC N09_CREATE_USER_SINHVIEN;
-/
-
-
-
+/*
+*/
 /***************************************************************
 CS#1: Người dùng có VAITRO là “Nhân viên cơ bản” có quyền truy cập dữ liệu:
     - Xem dòng dữ liệu của chính mình trong quan hệ NHANSU, có thể chỉnh sửa số điện
@@ -462,7 +396,11 @@ GRANT SELECT ON UV_N09_PHANCONG_VIEWBY_TRUONGDONVI TO N09_RL_TRUONG_DONVI;
 
 -- 4b. Thêm, Xóa, Cập nhật dữ liệu trên quan hệ PHANCONG, đối với các học phần được
 -- phụ trách chuyên môn bởi đơn vị mà mình làm trưởng
+--
 -- Tạo Trigger khi Insert, Delete, Update vào bảng PHANCONG
+-- <NOTE>
+-- Vì Trigger được cài lên View nên phải xử lý thao tác trên TABLE thật (N09_PHANCONG)
+-- </NOTE>
 CREATE OR REPLACE TRIGGER TR_N09_PHANCONG_BY_TRUONGDONVI
 INSTEAD OF INSERT OR DELETE OR UPDATE ON UV_N09_PHANCONG_VIEWBY_TRUONGDONVI
 FOR EACH ROW
@@ -533,36 +471,39 @@ END;
 /
 
 GRANT INSERT, DELETE, UPDATE ON UV_N09_PHANCONG_VIEWBY_TRUONGDONVI TO N09_RL_TRUONG_DONVI;
-GRANT UPDATE ON N09_PHANCONG TO N09_RL_TRUONG_DONVI;
 /
 
--- Test
-CREATE USER NV102 IDENTIFIED BY NV102;
-GRANT CONNECT TO NV102;
-GRANT N09_RL_TRUONG_DONVI TO NV102;
-/
+--  -- Test
+--  CREATE USER NV102 IDENTIFIED BY NV102;
+--  GRANT CONNECT TO NV102;
+--  GRANT N09_RL_TRUONG_DONVI TO NV102;
+--  /
 
-CONN NV102/NV102;
-SELECT * FROM C##ADMIN.UV_N09_PHANCONG_VIEWBY_TRUONGDONVI;
--- INSERT KHÔNG thành công
-INSERT INTO C##ADMIN.UV_N09_PHANCONG_VIEWBY_TRUONGDONVI VALUES('NV205', 'HP002', 2, 2024, 'CLC');
-/
-CONN NV102/NV102;
--- INSERT thành công
-INSERT INTO C##ADMIN.UV_N09_PHANCONG_VIEWBY_TRUONGDONVI VALUES('NV220', 'HP007', 1, 2024, 'CTTT');
-/
+--  CONN NV102/NV102;
+--  SELECT * FROM C##ADMIN.UV_N09_PHANCONG_VIEWBY_TRUONGDONVI;
+--  /
+--  -- INSERT KHÔNG thành công
+--  INSERT INTO C##ADMIN.UV_N09_PHANCONG_VIEWBY_TRUONGDONVI VALUES('NV205', 'HP002', 2, 2024, 'CLC');
+--  /
+--  CONN NV102/NV102;
+--  -- INSERT thành công
+--  INSERT INTO C##ADMIN.UV_N09_PHANCONG_VIEWBY_TRUONGDONVI VALUES('NV220', 'HP007', 1, 2024, 'CTTT');
+--  /
 
-CONN NV102/NV102;
--- DELETE KHÔNG thành công
-DELETE FROM C##ADMIN.UV_N09_PHANCONG_VIEWBY_TRUONGDONVI WHERE MAGV = 'NV205' AND MAHP = 'HP005' AND HK = 2 AND NAM = 2024 AND MACT = 'CQ';
-/
-CONN NV102/NV102;
--- DELETE thành công
-DELETE FROM C##ADMIN.UV_N09_PHANCONG_VIEWBY_TRUONGDONVI WHERE MAGV = 'NV220' AND MAHP = 'HP007' AND HK = 1 AND NAM = 2024 AND MACT = 'CTTT';
-/
+--  CONN NV102/NV102;
+--  -- DELETE KHÔNG thành công
+--  DELETE FROM C##ADMIN.UV_N09_PHANCONG_VIEWBY_TRUONGDONVI WHERE MAGV = 'NV202' AND MAHP = 'HP002' AND HK = 2 AND NAM = 2024 AND MACT = 'CLC';
+--  /
+--  CONN NV102/NV102;
+--  -- DELETE thành công
+--  DELETE FROM C##ADMIN.UV_N09_PHANCONG_VIEWBY_TRUONGDONVI WHERE MAGV = 'NV220' AND MAHP = 'HP007' AND HK = 1 AND NAM = 2024 AND MACT = 'CTTT';
+--  /
 
-SELECT * FROM N09_PHANCONG;
-DELETE FROM C##ADMIN.N09_PHANCONG WHERE MAGV = 'NV220' AND MAHP = 'HP007' AND HK = 1 AND NAM = 2024 AND MACT = 'CTTT';
+--  -- SELECT * FROM N09_PHANCONG;
+--  -- DELETE FROM C##ADMIN.N09_PHANCONG WHERE MAGV = 'NV220' AND MAHP = 'HP007' AND HK = 1 AND NAM = 2024 AND MACT = 'CTTT';
+--  -- /
+
+
 
 
 /***************************************************************

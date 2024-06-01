@@ -53,6 +53,218 @@ AS
 /
 
 
+
+-----------------------------------------------------------------
+-- Stored Procedure tạo user cho tất cả nhân sự
+-----------------------------------------------------------------
+CREATE OR REPLACE PROCEDURE N09_CREATE_USER_NHANSU
+AS 
+    CURSOR CUR IS (SELECT MANV
+                    FROM N09_NHANSU
+                    WHERE MANV NOT IN (SELECT USERNAME FROM ALL_USERS)); 
+     STRSQL VARCHAR(2000); 
+     USR VARCHAR2(5); 
+BEGIN 
+     OPEN CUR; 
+     STRSQL := 'ALTER SESSION SET "_ORACLE_SCRIPT" = TRUE'; 
+     EXECUTE IMMEDIATE(STRSQL); 
+     LOOP 
+         FETCH CUR INTO USR; 
+         EXIT WHEN CUR%NOTFOUND; 
+         
+         STRSQL := 'CREATE USER '|| USR ||' IDENTIFIED BY '|| USR; 
+         EXECUTE IMMEDIATE(STRSQL); 
+         STRSQL := 'GRANT CONNECT TO ' || USR; 
+         EXECUTE IMMEDIATE(STRSQL); 
+     END LOOP; 
+     STRSQL := 'ALTER SESSION SET "_ORACLE_SCRIPT" = FALSE'; 
+     EXECUTE IMMEDIATE(STRSQL); 
+     CLOSE CUR; 
+END; 
+/
+
+
+
+-----------------------------------------------------------------
+-- Stored Procedure tạo user cho tất cả sinh viên
+-----------------------------------------------------------------
+CREATE OR REPLACE PROCEDURE N09_CREATE_USER_SINHVIEN
+AS 
+    CURSOR CUR IS (SELECT MASV
+                    FROM N09_SINHVIEN
+                    WHERE MASV NOT IN (SELECT USERNAME FROM ALL_USERS)); 
+     STRSQL VARCHAR(2000); 
+     USR VARCHAR2(5); 
+BEGIN 
+     OPEN CUR; 
+     STRSQL := 'ALTER SESSION SET "_ORACLE_SCRIPT" = TRUE'; 
+     EXECUTE IMMEDIATE(STRSQL); 
+     LOOP 
+         FETCH CUR INTO USR; 
+         EXIT WHEN CUR%NOTFOUND; 
+         
+         STRSQL := 'CREATE USER '|| USR ||' IDENTIFIED BY '|| USR; 
+         EXECUTE IMMEDIATE(STRSQL); 
+         STRSQL := 'GRANT CONNECT TO ' || USR; 
+         EXECUTE IMMEDIATE(STRSQL); 
+     END LOOP; 
+     STRSQL := 'ALTER SESSION SET "_ORACLE_SCRIPT" = FALSE'; 
+     EXECUTE IMMEDIATE(STRSQL); 
+     CLOSE CUR; 
+END;
+/
+
+
+
+-----------------------------------------------------------------
+-- Stored Procedure xóa user cho tất cả nhân sự
+-----------------------------------------------------------------
+CREATE OR REPLACE PROCEDURE N09_DROP_USER_NHANSU
+AS 
+    CURSOR CUR IS (SELECT USERNAME
+                    FROM ALL_USERS
+                    WHERE USERNAME IN (SELECT MANV FROM N09_NHANSU)); 
+     STRSQL VARCHAR(2000); 
+     USR VARCHAR2(5);
+BEGIN
+    OPEN CUR; 
+    STRSQL := 'ALTER SESSION SET "_ORACLE_SCRIPT" = TRUE'; 
+    EXECUTE IMMEDIATE(STRSQL); 
+    LOOP 
+        FETCH CUR INTO USR; 
+        EXIT WHEN CUR%NOTFOUND; 
+        
+        STRSQL := 'DROP USER '|| USR ||' CASCADE'; 
+        EXECUTE IMMEDIATE(STRSQL); 
+    END LOOP; 
+    STRSQL := 'ALTER SESSION SET "_ORACLE_SCRIPT" = FALSE'; 
+    EXECUTE IMMEDIATE(STRSQL); 
+    CLOSE CUR; 
+END;
+/
+
+
+
+-----------------------------------------------------------------
+-- Stored Procedure xóa user cho tất cả sinh viên
+-----------------------------------------------------------------
+CREATE OR REPLACE PROCEDURE N09_DROP_USER_SINHVIEN
+AS 
+    CURSOR CUR IS (SELECT USERNAME
+                    FROM ALL_USERS
+                    WHERE USERNAME IN (SELECT MASV FROM N09_SINHVIEN)); 
+     STRSQL VARCHAR(2000); 
+     USR VARCHAR2(5);
+BEGIN
+    OPEN CUR; 
+    STRSQL := 'ALTER SESSION SET "_ORACLE_SCRIPT" = TRUE'; 
+    EXECUTE IMMEDIATE(STRSQL); 
+    LOOP 
+        FETCH CUR INTO USR; 
+        EXIT WHEN CUR%NOTFOUND; 
+        
+        STRSQL := 'DROP USER '|| USR ||' CASCADE'; 
+        EXECUTE IMMEDIATE(STRSQL); 
+    END LOOP; 
+    STRSQL := 'ALTER SESSION SET "_ORACLE_SCRIPT" = FALSE'; 
+    EXECUTE IMMEDIATE(STRSQL); 
+    CLOSE CUR; 
+END;
+/
+
+
+
+-----------------------------------------------------------------
+-- Stored Procedure gán Role cho tất cả nhân sự
+-----------------------------------------------------------------
+CREATE OR REPLACE PROCEDURE N09_GRANT_ROLE_NHANSU(
+    ROLENAME IN VARCHAR2,
+    STR_VAITRO IN VARCHAR2) 
+IS 
+     CURSOR CUR IS (SELECT MANV
+                     FROM N09_NHANSU
+                     WHERE MANV IN (SELECT USERNAME FROM ALL_USERS) AND VAITRO = STR_VAITRO
+                    ); 
+     STRSQL VARCHAR(2000); 
+     USR VARCHAR2(5); 
+BEGIN 
+     OPEN CUR; 
+     LOOP 
+         FETCH CUR INTO USR; 
+         EXIT WHEN CUR%NOTFOUND; 
+         
+         STRSQL := 'GRANT '|| ROLENAME ||' TO '|| USR; 
+         EXECUTE IMMEDIATE (STRSQL); 
+     END LOOP; 
+     CLOSE CUR; 
+END; 
+/
+
+
+
+-----------------------------------------------------------------
+-- Stored Procedure gán Role cho tất cả sinh viên
+-----------------------------------------------------------------
+CREATE OR REPLACE PROCEDURE N09_GRANT_ROLE_SINHVIEN(
+    ROLENAME IN VARCHAR2) 
+IS 
+     CURSOR CUR IS (SELECT MASV
+                     FROM N09_SINHVIEN
+                     WHERE MASV IN (SELECT USERNAME FROM ALL_USERS)
+                    ); 
+     STRSQL VARCHAR(2000); 
+     USR VARCHAR2(5); 
+BEGIN 
+     OPEN CUR; 
+     LOOP 
+         FETCH CUR INTO USR; 
+         EXIT WHEN CUR%NOTFOUND; 
+         
+         STRSQL := 'GRANT '|| ROLENAME ||' TO '|| USR; 
+         EXECUTE IMMEDIATE (STRSQL); 
+     END LOOP; 
+     CLOSE CUR; 
+END; 
+/
+
+
+
+-----------------------------------------------------------------
+-- Thực thi các Stored Procedure cần thiết 
+-----------------------------------------------------------------
+-- Thực thi Stored Procedure xóa user cho tất cả nhân sự
+EXEC N09_DROP_USER_NHANSU;
+/
+-- Thực thi Stored Procedure xóa user cho tất cả sinh viên
+EXEC N09_DROP_USER_SINHVIEN;
+/
+-- Thực thi Stored Procedure tạo user cho tất cả nhân sự
+EXEC N09_CREATE_USER_NHANSU;
+/
+-- Thực thi Stored Procedure tạo user cho tất cả sinh viên
+EXEC N09_CREATE_USER_SINHVIEN;
+/
+-- Thực thi Stored Procedure gán Role cho tất cả Nhân viên
+EXEC N09_GRANT_ROLE_NHANSU('N09_RL_NHANVIEN', 'Nhan vien');
+/
+-- Thực thi Stored Procedure gán Role cho tất cả Giảng viên
+EXEC N09_GRANT_ROLE_NHANSU('N09_RL_GIANGVIEN', 'Giang vien');
+/
+-- Thực thi Stored Procedure gán Role cho tất cả Giáo vụ
+EXEC N09_GRANT_ROLE_NHANSU('N09_RL_GIAOVU', 'Giao vu');
+/
+-- Thực thi Stored Procedure gán Role cho tất cả Trưởng đơn vị
+EXEC N09_GRANT_ROLE_NHANSU('N09_RL_TRUONG_DONVI', 'Truong don vi');
+/
+-- Thực thi Stored Procedure gán Role cho tất cả Trưởng khoa
+EXEC N09_GRANT_ROLE_NHANSU('N09_RL_TRUONG_KHOA', 'Truong khoa');
+/
+-- Thực thi Stored Procedure gán Role cho tất cả sinh viên
+EXEC N09_GRANT_ROLE_SINHVIEN('N09_RL_SINHVIEN');
+/
+
+
+
 ----------------------------------------------------------------
 -- Stored Procedure lấy thông tin User hiện tại
 ----------------------------------------------------------------
@@ -90,19 +302,21 @@ END;
 
 -- Gán quyền thực thi thủ tục trên cho tất cả user
 GRANT EXECUTE ON N09_SELECT_ANY_TABLE TO PUBLIC;
-
+/
 
 -- -- Test
- -- SELECT tất cả các dòng của Table N09_NHANVIEN
- CONN HUYP/123
- VARIABLE rc REFCURSOR;
-     EXECUTE SYS.N09_SELECT_ANY_TABLE(:rc, 'N09_BAOCAO');
- PRINT rc;
+--  -- SELECT tất cả các dòng của Table N09_NHANVIEN
+--  CONN HUYP/123
+--  VARIABLE rc REFCURSOR;
+--      EXECUTE SYS.N09_SELECT_ANY_TABLE(:rc, 'N09_BAOCAO');
+--  PRINT rc;
+-- /
 
 -- -- Không SELECT được dòng nào trong Table N09_NHANVIEN
 -- VARIABLE rc REFCURSOR;
 --     EXECUTE SYS.N09_SELECT_ANY_TABLE(:rc, 'N09_NHANVIEN', '1=0');
 -- PRINT rc;
+-- /
 
 
 
@@ -121,6 +335,7 @@ END;
 -- VARIABLE rc REFCURSOR;
 -- EXECUTE N09_SELECT_DBA_ROLES(:rc);
 -- PRINT rc;
+-- /
 
 
 
@@ -139,6 +354,7 @@ END;
 -- VARIABLE rc REFCURSOR;
 -- EXECUTE N09_SELECT_DBA_ROLE_PRIVS(:rc);
 -- PRINT rc;
+-- /
 
 
 
@@ -180,6 +396,7 @@ END;
 -- VARIABLE rc REFCURSOR;
 -- EXECUTE N09_SELECT_USER_OR_ROLE_PRIVS(:rc, 'HUYP');
 -- PRINT rc;
+-- /
 
 
 
@@ -204,11 +421,13 @@ END;
 
 -- Gán quyền thực thi thủ tục trên cho tất cả user
 GRANT EXECUTE ON N09_SELECT_USER_OR_ROLE_PRIVS_SIMPLIFY TO PUBLIC;
+/
 
 -- -- Test
 -- VARIABLE rc REFCURSOR;
 -- EXECUTE N09_SELECT_USER_OR_ROLE_PRIVS_SIMPLIFY(:rc, 'KH1');
 -- PRINT rc;
+-- /
 
 
 
@@ -225,9 +444,11 @@ BEGIN
 END;
 /
 
-VARIABLE rc REFCURSOR;
-    EXECUTE SYS.N09_SELECT_DBA_TABLES(:rc, 'N09_');
-PRINT rc;
+-- -- Test
+-- VARIABLE rc REFCURSOR;
+--     EXECUTE SYS.N09_SELECT_DBA_TABLES(:rc, 'N09_');
+-- PRINT rc;
+-- /
 
 
 
@@ -244,9 +465,11 @@ BEGIN
 END;
 /
 
-VARIABLE rc REFCURSOR;
-    EXECUTE SYS.N09_SELECT_TAB_COLUMNS(:rc, 'N09_NHANVIEN');
-PRINT rc;
+-- -- Test
+-- VARIABLE rc REFCURSOR;
+--     EXECUTE SYS.N09_SELECT_TAB_COLUMNS(:rc, 'N09_NHANVIEN');
+-- PRINT rc;
+-- /
 
 
 
