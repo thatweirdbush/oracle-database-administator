@@ -9,6 +9,17 @@
 
 
 ----------------------------------------------------------------
+-- Script tạo các Role trong Database
+------------------------------------------------------------------ 
+CREATE ROLE N09_RL_NHANVIEN;
+CREATE ROLE N09_RL_GIANGVIEN;
+CREATE ROLE N09_RL_GIAOVU;
+CREATE ROLE N09_RL_TRUONG_DONVI;
+CREATE ROLE N09_RL_TRUONG_KHOA;
+CREATE ROLE N09_RL_SINHVIEN;
+/
+
+----------------------------------------------------------------
 -- Script tạo View cho tất cả Table trong Database
 ----------------------------------------------------------------
 CREATE OR REPLACE VIEW UV_N09_NHANSU
