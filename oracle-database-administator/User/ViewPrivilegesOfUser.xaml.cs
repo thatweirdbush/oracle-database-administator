@@ -26,18 +26,18 @@ namespace oracle_database_administator.User
         OracleConnection conn = Database.Instance.Connection;
         Database Db = Database.Instance;
 
-        private UserInfo selectedUserInfo;
+        private User selectedUserInfo;
 
         public string currentUserID { get; set; }
 
         public string selectedUserName { get; set; }
 
-        public ViewPrivilegesOfUser(UserInfo userInfo)
+        public ViewPrivilegesOfUser(User userInfo)
         {
             InitializeComponent();
             selectedUserInfo = userInfo;
             selectedUserName = selectedUserInfo.UserName;
-            currentUserID = Database.Instance.CurrentUser;
+            currentUserID = Db.CurrentUser;
 
             DataContext = this;
         }

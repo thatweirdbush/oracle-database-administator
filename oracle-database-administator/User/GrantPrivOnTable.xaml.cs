@@ -26,13 +26,13 @@ namespace oracle_database_administator.User
 
         OracleConnection conn = Database.Instance.Connection;
         Database Db = Database.Instance;
-        private UserInfo selectedUserInfo;
+        private User selectedUserInfo;
 
         public string currentUserID { get; set; }
 
         public string selectedUserName { get; set; }
 
-        public GrantPrivOnTable(UserInfo userInfo)
+        public GrantPrivOnTable(User userInfo)
         {
             InitializeComponent();
             selectedUserInfo = userInfo;

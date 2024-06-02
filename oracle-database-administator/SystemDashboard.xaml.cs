@@ -76,8 +76,10 @@ namespace oracle_database_administator
         {
             if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
             {
-                // Disconnect from the server
+                // Disconnect from the server & reset the connection credentials
                 Db.Disconnect();
+                Db.ConnectionUsername = "";
+                Db.ConnectionPassword = "";
                 mainWindow.MainFrame.Navigate(new Dashboard());
             }
         }

@@ -183,14 +183,14 @@ namespace oracle_database_administator.User
             {
                 // Lấy dữ liệu từ dòng được chọn
                 DataRowView selectedUser = (DataRowView)UserDataGrid.SelectedItem;
-                UserInfo selectedUserInfo;
+                User selectedUserInfo;
                 if (dataGridChanged)
                 {
-                    selectedUserInfo = new UserInfo(selectedUser["USERNAME"].ToString());
+                    selectedUserInfo = new User(selectedUser["USERNAME"].ToString());
                 }
                 else
                 {
-                    selectedUserInfo = new UserInfo(selectedUser["GRANTEE"].ToString());
+                    selectedUserInfo = new User(selectedUser["GRANTEE"].ToString());
                 }
                 ViewPrivilegesOfUser privilegesPage = new ViewPrivilegesOfUser(selectedUserInfo);
                 NavigationService.Navigate(privilegesPage);

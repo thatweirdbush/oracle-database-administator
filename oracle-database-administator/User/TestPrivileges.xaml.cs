@@ -26,7 +26,7 @@ namespace oracle_database_administator.User
     {
         OracleConnection alternate_user_connection = Database.Instance.Connection;
         Database Db = Database.Instance;
-        private UserInfo selectedUserInfo;
+        private User selectedUserInfo;
         public string selectedUserName { get; set; }
         public string selectedPassWord { get; set; }
         public string currentUserID { get; set; }
@@ -37,7 +37,7 @@ namespace oracle_database_administator.User
         string insert_query = "";
         string condition = "";
 
-        public TestPrivileges(UserInfo userInfo, string password)
+        public TestPrivileges(User userInfo, string password)
         {
             InitializeComponent();
             selectedUserInfo = userInfo;
@@ -45,8 +45,8 @@ namespace oracle_database_administator.User
 
             // Create alternate connection
             // SYS connection still exists
-            alternate_user_connection = Database.Instance.AlternateConnection(selectedUserName, password);
-            currentUserID = Database.Instance.CurrentUser;
+            alternate_user_connection = Db.AlternateConnection(selectedUserName, password);
+            currentUserID = Db.CurrentUser;
             DataContext = this;
         }
 
@@ -111,7 +111,7 @@ namespace oracle_database_administator.User
         {
             if (alternate_user_connection != null)
             {
-                Database.Instance.Disconnect();
+                Db.Disconnect();
             }
             if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
             {
@@ -123,7 +123,7 @@ namespace oracle_database_administator.User
         {
             if (alternate_user_connection != null)
             {
-                Database.Instance.Disconnect();
+                Db.Disconnect();
             }
             if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
             {

@@ -125,11 +125,14 @@
     <Compile Include="Role\ViewRoleList.xaml.cs">
       <DependentUpon>ViewRoleList.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Teacher\TeacherDashboard.xaml.cs">
+      <DependentUpon>TeacherDashboard.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UniversityDashboard.xaml.cs">
       <DependentUpon>UniversityDashboard.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Staff\HomePageStaff.xaml.cs">
-      <DependentUpon>HomePageStaff.xaml</DependentUpon>
+    <Compile Include="Staff\StaffDashboard.xaml.cs">
+      <DependentUpon>StaffDashboard.xaml</DependentUpon>
     </Compile>
     <Compile Include="User\GrantPrivOnTable.xaml.cs">
       <DependentUpon>GrantPrivOnTable.xaml</DependentUpon>
@@ -137,7 +140,7 @@
     <Compile Include="User\TestPrivileges.xaml.cs">
       <DependentUpon>TestPrivileges.xaml</DependentUpon>
     </Compile>
-    <Compile Include="User\UserDAO.cs" />
+    <Compile Include="User\User.cs" />
     <Compile Include="User\ViewPrivilegesOfUser.xaml.cs">
       <DependentUpon>ViewPrivilegesOfUser.xaml</DependentUpon>
     </Compile>
@@ -187,11 +190,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Teacher\TeacherDashboard.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UniversityDashboard.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Staff\HomePageStaff.xaml">
+    <Page Include="Staff\StaffDashboard.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -298,7 +305,15 @@
     <Resource Include="images\graduate.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Staff\tick.png" />
+    <Folder Include="DepartmentHead\" />
+    <Folder Include="Ministry\" />
+    <Folder Include="UnitHead\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\tick.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\pascal-bernardon.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Text.Json.6.0.1\build\System.Text.Json.targets" Condition="Exists('..\packages\System.Text.Json.6.0.1\build\System.Text.Json.targets')" />

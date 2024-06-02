@@ -126,8 +126,6 @@ namespace oracle_database_administator
                 _connection.Close();
                 OracleConnection.ClearPool(_connection);
                 _connection = null;
-                ConnectionPassword = "";
-                ConnectionUsername = "";
             }
         }
 
@@ -228,7 +226,7 @@ namespace oracle_database_administator
 
 
         /**********************************************************
-        * Database's Stored Procedures - General
+        * Database's Stored Procedures - Phan He 1
         ***********************************************************/
         /// <summary>
         /// Return current user that connected to database
@@ -491,5 +489,14 @@ namespace oracle_database_administator
                 return 0;
             }
         }
+
+
+
+        /**********************************************************
+        * Database's Stored Procedures - Phan He 2
+        ***********************************************************/
+
+
+
     }
 }
