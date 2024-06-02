@@ -9,17 +9,17 @@ using System.Threading.Tasks;
 using System.Configuration;
 using System.Windows;
 using System.Data;
+using oracle_database_administator.User;
 
 namespace oracle_database_administator
 {    
-    public class Database : IDisposable
+    public class Database
     {
         /**********************************************************
         * Database's Connection
         ***********************************************************/
         private static Database _instance = null;
         private OracleConnection _connection = null;
-        private bool disposed = false;
         private bool dataGridChanged = true;
         private string username = "";
         private string password = "";
@@ -73,6 +73,50 @@ namespace oracle_database_administator
             }
         }
 
+        // Connect to server, using loop to handle when user close the window
+        public bool ConnectToServer()
+        {
+            // Nếu đã kết nối rồi thì không cần kết nối lại
+            if (ConnectionPassword != "")
+            {
+                _connection = Connection;
+                return true;
+            }
+
+            bool windowClosed = false;
+            while (!windowClosed)
+            {
+                PasswordWindow passwordWindow = new PasswordWindow();
+                bool? result = passwordWindow.ShowDialog();
+
+                // Xử lý trường hợp người dùng nhập mật khẩu
+                if (result == true)
+                {
+                    ConnectionUsername = passwordWindow.Username;
+                    ConnectionPassword = passwordWindow.Password;
+
+                    _connection = Connection;
+                    if (_connection != null)
+                    {
+                        Console.WriteLine("Connection opened successfully!");
+                        break;
+                    }
+                    else
+                    {
+                        ConnectionPassword = "";
+                        return false;
+                    }
+                }
+                else
+                {
+                    // Xử lý trường hợp người dùng đóng cửa sổ
+                    windowClosed = true;
+                    return false;
+                }
+            }
+            return true;
+        }
+
         // Disconnect current connection (Mainly used)
         public void Disconnect()
         {
@@ -82,39 +126,8 @@ namespace oracle_database_administator
                 _connection.Close();
                 OracleConnection.ClearPool(_connection);
                 _connection = null;
-            }
-        }
-
-        // Dispose current connection
-        private void DisposeConnection()
-        {
-            if (_connection != null)
-            {
-                _connection.Dispose();
-                _connection = null;
-            }
-        }
-
-        // Free managed resources
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        // Free unmanaged resources
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposed)
-            {
-                if (disposing)
-                {
-                    if (_connection != null)
-                    {
-                        DisposeConnection();
-                    }
-                }
-                disposed = true;
+                ConnectionPassword = "";
+                ConnectionUsername = "";
             }
         }
 
@@ -241,7 +254,6 @@ namespace oracle_database_administator
             }
         }
 
-
         /// <summary>
         /// Return a table when SELECT stored procedures with INPUT optional parameter
         /// </summary>
@@ -264,6 +276,7 @@ namespace oracle_database_administator
                     {
                         DataTable dataTable = new DataTable();
                         adapter.Fill(dataTable);
+
                         return dataTable.DefaultView;
                     }
                 }
@@ -478,20 +491,5 @@ namespace oracle_database_administator
                 return 0;
             }
         }
-
-
-
-
-
-        /**********************************************************
-        * Database's Stored Procedures - Roles
-        ***********************************************************/
-
-
-        /**********************************************************
-        * Database's Stored Procedures - Users
-        ***********************************************************/
-
-
     }
 }

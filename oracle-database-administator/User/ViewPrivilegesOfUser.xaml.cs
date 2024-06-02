@@ -50,7 +50,6 @@ namespace oracle_database_administator.User
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             UpdatePrivUserGrid();
-
         }
 
         private void HomeButton_Click(object sender, RoutedEventArgs e)
@@ -98,7 +97,7 @@ namespace oracle_database_administator.User
 
                 TestPrivileges testPrivileges = new TestPrivileges(selectedUserInfo, password);
 
-                if (!testPrivileges.currentUserID.Equals(""))
+                if (testPrivileges.currentUserID != null)
                 {
                     NavigationService.Navigate(testPrivileges);
                 }

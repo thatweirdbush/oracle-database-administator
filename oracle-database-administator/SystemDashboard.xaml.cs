@@ -25,66 +25,24 @@ namespace oracle_database_administator
     /// </summary>
     public partial class SystemDashboard : Page
     {  
-        OracleConnection conn;
+        OracleConnection conn = null;
+        Database Db = Database.Instance;
 
         public SystemDashboard()
         {
             InitializeComponent();
-        }
-
-        private bool ConnectToServer()
-        {
-            // Nếu đã kết nối rồi thì không cần kết nối lại
-            if (Database.Instance.ConnectionPassword != "")
-            {
-                conn = Database.Instance.Connection;
-                return true;
-            }
-
-            bool windowClosed = false;
-            while (!windowClosed)
-            {
-                PasswordWindow passwordWindow = new PasswordWindow();
-                bool? result = passwordWindow.ShowDialog();
-
-                // Xử lý trường hợp người dùng nhập mật khẩu
-                if (result == true)
-                {
-                    Database.Instance.ConnectionUsername = passwordWindow.Username;
-                    Database.Instance.ConnectionPassword = passwordWindow.Password;
-
-                    conn = Database.Instance.Connection;
-                    if (conn != null)
-                    {
-                        Console.WriteLine("Connection opened successfully!");
-                        break;
-                    }
-                    else
-                    {
-                        Database.Instance.ConnectionPassword = "";
-                        return false;
-                    }
-                }
-                else
-                {
-                    // Xử lý trường hợp người dùng đóng cửa sổ
-                    windowClosed = true;
-                    return false;
-                }
-            }
-            return true;
-        }
+        }       
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            ConnectToServer();
+            Db.ConnectToServer();
         }
 
         private void UserButton_Click(object sender, RoutedEventArgs e)
         {
             if (conn == null)
             {
-                if (ConnectToServer())
+                if (Db.ConnectToServer())
                 {
                     ViewUserList viewUserList = new ViewUserList();
                     NavigationService.Navigate(viewUserList);
@@ -101,7 +59,7 @@ namespace oracle_database_administator
         {
             if (conn == null)
             {
-                if (ConnectToServer())
+                if (Db.ConnectToServer())
                 {
                     ViewRoleList viewRoleList = new ViewRoleList();
                     NavigationService.Navigate(viewRoleList);
@@ -114,18 +72,12 @@ namespace oracle_database_administator
             }
         }
 
-        /// <summary>
-        /// Back to Dashboard and delete current connection
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
             if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
             {
-                Database.Instance.ConnectionPassword = "";
-                Database.Instance.ConnectionUsername = "";
-                Database.Instance.Disconnect();
+                // Disconnect from the server
+                Db.Disconnect();
                 mainWindow.MainFrame.Navigate(new Dashboard());
             }
         }
