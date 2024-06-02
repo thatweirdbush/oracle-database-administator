@@ -180,7 +180,7 @@
 
 
             <!-- button danh sách đơn vị -->
-            <Label x:Name="Label_DonVi" Content="DANH SÁCH ĐƠN VỊ" Visibility="Collapsed" HorizontalAlignment="Left" Margin="600,37,0,0" VerticalAlignment="Top" Foreground="#333" Background="{x:Null}" FlowDirection="RightToLeft">
+            <Label x:Name="Label_DonVi" Content="DANH SÁCH ĐƠN VỊ" Visibility="Collapsed" HorizontalAlignment="Left" Margin="448,41,0,0" VerticalAlignment="Top" Foreground="#333" Background="{x:Null}" FlowDirection="RightToLeft" Grid.ColumnSpan="2" Width="304">
                 <Label.Style>
                     <Style TargetType="Label">
                         <Setter Property="FontSize" Value="30"/>
