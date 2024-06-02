@@ -73,5 +73,27 @@ namespace oracle_database_administator.Staff
             TextBlock_SDT.IsHitTestVisible = true;
             TextBlock_SDT.Focusable = true;
         }
+
+        private void Table_DsHocPhan_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void Table_DonVi_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void Table_KeHoachMo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void Table_DsSinhVien_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+
     }
 }

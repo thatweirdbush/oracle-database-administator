@@ -1,4 +1,5 @@
 ﻿using oracle_database_administator.Role;
+using oracle_database_administator.Staff;
 using oracle_database_administator.User;
 using System;
 using System.Collections.Generic;
@@ -29,8 +30,8 @@ namespace oracle_database_administator
 
         private void SchoolButton_Click(object sender, RoutedEventArgs e)
         {
-            UniversityDashboard universityDashboard = new UniversityDashboard();
-            NavigationService.Navigate(universityDashboard);
+            HomePageStaff homePageStaff = new HomePageStaff();
+            NavigationService.Navigate(homePageStaff);
         }
 
         private void SystemButton_Click(object sender, RoutedEventArgs e)

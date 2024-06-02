@@ -105,7 +105,6 @@
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="DS SINH VIÊN"/>
             </StackPanel>
-
         </Button>
 
         <Grid  HorizontalAlignment="Center" Height="600" Margin="0,196,0,0" VerticalAlignment="Top" Width="1200">
@@ -163,10 +162,8 @@
                         <TextBlock Text="SĐT " FontWeight="Bold" FontSize="20"/>
                         <TextBlock x:Name="TextBlock_SDT" Text="{Binding DT, UpdateSourceTrigger=PropertyChanged}" FontSize="20" IsHitTestVisible="False" Focusable="False"/>
                         <Button x:Name="Btn_EditSDT" Click="EditSDT_Click" Margin="480,0,0,0">
-                            <Image Source="4226577.png" Width="20" Height="20">
-                                <Image.OpacityMask>
-                                    <ImageBrush ImageSource="/Staff/4226577.png"/>
-                                </Image.OpacityMask>
+                            <Image Source="/Staff/tick.png" Width="20" Height="20">
+
                             </Image>
                         </Button>
                     </StackPanel>
@@ -193,7 +190,7 @@
                     </Style>
                 </Label.Style>
             </Label>
-            <DataGrid x:Name="Table_DonVi" Visibility="Collapsed" Margin="290,136,290,136" AutoGenerateColumns="False" FontWeight="Medium" BorderBrush="{x:Null}" SelectionChanged="TableDataGrid_SelectionChanged" Background="{x:Null}" VerticalScrollBarVisibility="Hidden" GridLinesVisibility="None" Grid.ColumnSpan="3">
+            <DataGrid x:Name="Table_DonVi" Visibility="Collapsed" Margin="290,136,290,136" AutoGenerateColumns="False" FontWeight="Medium" BorderBrush="{x:Null}" SelectionChanged="Table_DonVi_SelectionChanged" Background="{x:Null}" VerticalScrollBarVisibility="Hidden" GridLinesVisibility="None" Grid.ColumnSpan="3">
                 <DataGrid.RowBackground>
                     <SolidColorBrush Color="#FFA3BDD2" Opacity="0.6"/>
                 </DataGrid.RowBackground>
@@ -294,7 +291,7 @@
                 </Hyperlink>
             </TextBlock>
 
-            <DataGrid x:Name="Table_DsHocPhan" Visibility="Collapsed" Margin="216,136,153,136" AutoGenerateColumns="False" FontWeight="Medium" BorderBrush="{x:Null}" SelectionChanged="TableDataGrid_SelectionChanged" Background="{x:Null}" VerticalScrollBarVisibility="Hidden" GridLinesVisibility="None" Grid.ColumnSpan="3">
+            <DataGrid x:Name="Table_DsHocPhan" Visibility="Collapsed" Margin="216,136,153,136" AutoGenerateColumns="False" FontWeight="Medium" BorderBrush="{x:Null}" SelectionChanged="Table_DsHocPhan_SelectionChanged" Background="{x:Null}" VerticalScrollBarVisibility="Hidden" GridLinesVisibility="None" Grid.ColumnSpan="3">
                 <DataGrid.RowBackground>
                     <SolidColorBrush Color="#FFA3BDD2" Opacity="0.6"/>
                 </DataGrid.RowBackground>
@@ -465,7 +462,7 @@
 
             <!-- Kế hoạch mở môn-->
 
-            <DataGrid x:Name="Table_KeHoachMo" Visibility="Collapsed" Margin="216,136,153,136" AutoGenerateColumns="False" FontWeight="Medium" BorderBrush="{x:Null}" SelectionChanged="TableDataGrid_SelectionChanged" Background="{x:Null}" VerticalScrollBarVisibility="Hidden" GridLinesVisibility="None" Grid.ColumnSpan="3">
+            <DataGrid x:Name="Table_KeHoachMo" Visibility="Collapsed" Margin="216,136,153,136" AutoGenerateColumns="False" FontWeight="Medium" BorderBrush="{x:Null}" SelectionChanged="Table_KeHoachMo_SelectionChanged" Background="{x:Null}" VerticalScrollBarVisibility="Hidden" GridLinesVisibility="None" Grid.ColumnSpan="3">
                 <DataGrid.RowBackground>
                     <SolidColorBrush Color="#FFA3BDD2" Opacity="0.6"/>
                 </DataGrid.RowBackground>
@@ -600,7 +597,7 @@
                 </Label.Style>
             </Label>
 
-            <DataGrid x:Name="Table_DsSinhVien" Visibility="Collapsed" Margin="216,136,153,136" AutoGenerateColumns="False" FontWeight="Medium" BorderBrush="{x:Null}" SelectionChanged="TableDataGrid_SelectionChanged" Background="{x:Null}" VerticalScrollBarVisibility="Hidden" GridLinesVisibility="None" Grid.ColumnSpan="3">
+            <DataGrid x:Name="Table_DsSinhVien" Visibility="Collapsed" Margin="216,136,153,136" AutoGenerateColumns="False" FontWeight="Medium" BorderBrush="{x:Null}" SelectionChanged="Table_DsSinhVien_SelectionChanged" Background="{x:Null}" VerticalScrollBarVisibility="Hidden" GridLinesVisibility="None" Grid.ColumnSpan="3">
                 <DataGrid.RowBackground>
                     <SolidColorBrush Color="#FFA3BDD2" Opacity="0.6"/>
                 </DataGrid.RowBackground>
