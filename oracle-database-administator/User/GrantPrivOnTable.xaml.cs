@@ -131,7 +131,7 @@ namespace oracle_database_administator.User
                 // If INSERT privilege is granted, automatically grant SELECT privilege on view with corresponding table name
                 if (privileges.Contains("INSERT"))
                 {
-                    Db.GrantPrivilege("SELECT", selectedUserName, null, $"{Database.DEFAULT_SCHEMA}{Database.DEFAULT_PREFIX_VIEW}{tableName}");
+                    Db.GrantPrivilege("SELECT", selectedUserName, null, $"{Database.SYS_SCHEMA}{Database.DEFAULT_PREFIX_VIEW}{tableName}");
                 }
 
                 // Show notification when grant privilege successfully

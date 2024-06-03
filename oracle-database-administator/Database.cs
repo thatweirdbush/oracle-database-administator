@@ -10,6 +10,7 @@ using System.Configuration;
 using System.Windows;
 using System.Data;
 using oracle_database_administator.User;
+using System.Reflection;
 
 namespace oracle_database_administator
 {    
@@ -190,12 +191,12 @@ namespace oracle_database_administator
         /**********************************************************
         * Define Application default schema & default tablespace prefix
         ***********************************************************/
-        static public string DEFAULT_SCHEMA = "SYS.";
+        static public string SYS_SCHEMA = "SYS.";
         static public string DEFAULT_PREFIX = "N09_";
         static public string DEFAULT_PREFIX_VIEW = "UV_";
 
         // Combine schema and prefix to create stored procedure & function name
-        static public string COMBINED_PREFIX = $"{DEFAULT_SCHEMA}{DEFAULT_PREFIX}";
+        static public string COMBINED_PREFIX = $"{SYS_SCHEMA}{DEFAULT_PREFIX}";
 
 
         /**********************************************************
@@ -236,7 +237,7 @@ namespace oracle_database_administator
         {
             try
             {
-                using (OracleCommand command = new OracleCommand(GET_CURRENT_USER, this.Connection))
+                using (OracleCommand command = new OracleCommand(GET_CURRENT_USER, Connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(outParameter, OracleDbType.RefCursor).Direction = ParameterDirection.Output;
@@ -261,7 +262,7 @@ namespace oracle_database_administator
         public DataView UpdateDataView(string procedureName, string inputValue = null)
         {
             try {
-                using (OracleCommand command = new OracleCommand(procedureName, this.Connection))
+                using (OracleCommand command = new OracleCommand(procedureName, Connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(outParameter, OracleDbType.RefCursor).Direction = ParameterDirection.Output;
@@ -295,7 +296,7 @@ namespace oracle_database_administator
         {
             try
             {
-                using (OracleCommand command = new OracleCommand(SELECT_ANY_TABLE, this.Connection))
+                using (OracleCommand command = new OracleCommand(SELECT_ANY_TABLE, Connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(outParameter, OracleDbType.RefCursor).Direction = ParameterDirection.Output;
@@ -334,7 +335,7 @@ namespace oracle_database_administator
         {
             try
             {
-                using (OracleCommand command = new OracleCommand($"{COMBINED_PREFIX}GRANT_PRIVILEGE", this.Connection))
+                using (OracleCommand command = new OracleCommand($"{COMBINED_PREFIX}GRANT_PRIVILEGE", Connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add("PRIVILEGE", OracleDbType.Varchar2).Value = privilege;
@@ -373,7 +374,7 @@ namespace oracle_database_administator
         {
             try
             {
-                using (OracleCommand command = new OracleCommand($"{COMBINED_PREFIX}REVOKE_PRIVILEGE", this.Connection))
+                using (OracleCommand command = new OracleCommand($"{COMBINED_PREFIX}REVOKE_PRIVILEGE", Connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add("PRIVILEGE", OracleDbType.Varchar2).Value = privilege;
@@ -406,7 +407,7 @@ namespace oracle_database_administator
         {
             try
             {
-                using (OracleCommand command = new OracleCommand($"{COMBINED_PREFIX}CREATE_USER", this.Connection))
+                using (OracleCommand command = new OracleCommand($"{COMBINED_PREFIX}CREATE_USER", Connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add("USERNAME", OracleDbType.Varchar2).Value = username;
@@ -430,7 +431,7 @@ namespace oracle_database_administator
         {
             try
             {
-                using (OracleCommand command = new OracleCommand($"{COMBINED_PREFIX}CREATE_ROLE", this.Connection))
+                using (OracleCommand command = new OracleCommand($"{COMBINED_PREFIX}CREATE_ROLE", Connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add("ROLE_NAME", OracleDbType.Varchar2).Value = roleName;
@@ -453,7 +454,7 @@ namespace oracle_database_administator
         {
             try
             {
-                using (OracleCommand command = new OracleCommand($"{COMBINED_PREFIX}DROP_USER", this.Connection))
+                using (OracleCommand command = new OracleCommand($"{COMBINED_PREFIX}DROP_USER", Connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add("USERNAME", OracleDbType.Varchar2).Value = userName;
@@ -476,7 +477,7 @@ namespace oracle_database_administator
         {
             try
             {
-                using (OracleCommand command = new OracleCommand($"{COMBINED_PREFIX}DROP_ROLE", this.Connection))
+                using (OracleCommand command = new OracleCommand($"{COMBINED_PREFIX}DROP_ROLE", Connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add("ROLE_NAME", OracleDbType.Varchar2).Value = roleName;
@@ -495,6 +496,77 @@ namespace oracle_database_administator
         /**********************************************************
         * Database's Stored Procedures - Phan He 2
         ***********************************************************/
+        static public string ADMIN_TABLE_PREFIX = $"C##ADMIN.UV_N09_";
+        public static string GET_SINGLE_LINE_DATA = $"C##ADMIN.N09_GET_SINGLE_LINE_DATA";
+
+        // Table's view name for each role - NHANSU
+        public string STAFFS_VIEWBY_STAFF= $"{ADMIN_TABLE_PREFIX}NHANSU_VIEWBY_NHANVIEN";
+        public string STAFFS_VIEWBY_TEACHER = $"{ADMIN_TABLE_PREFIX}NHANSU_VIEWBY_GIANGVIEN";
+        public string STAFFS_VIEWBY_MINISTRY= $"{ADMIN_TABLE_PREFIX}NHANSU_VIEWBY_GIAOVU";
+        public string STAFFS_VIEWBY_UNIT_HEAD = $"{ADMIN_TABLE_PREFIX}NHANSU_VIEWBY_TRUONGDONVI";
+        public string STAFFS_VIEWBY_DEPARTMENT_HEAD = $"{ADMIN_TABLE_PREFIX}NHANSU_VIEWBY_TRUONGKHOA";
+
+        // Table's view name for each role - PHANCONG
+        public string ASSIGNMENTS_VIEWBY_TEACHER= $"{ADMIN_TABLE_PREFIX}PHANCONG_VIEWBY_GIANGVIEN";
+        public string ASSIGNMENTS_VIEWBY_MINISTRY = $"{ADMIN_TABLE_PREFIX}PHANCONG_VIEWBY_GIAOVU";
+        public string ASSIGNMENTS_VIEWBY_UNIT_HEAD = $"{ADMIN_TABLE_PREFIX}PHANCONG_VIEWBY_TRUONGDONVI";
+        public string ASSIGNMENTS_VIEWBY_DEPARTMENT_HEAD = $"{ADMIN_TABLE_PREFIX}PHANCONG_VIEWBY_TRUONGKHOA";
+
+        // Table's view name for each role - DANGKY
+        public string REGISTRATIONS_VIEWBY_TEACHER = $"{ADMIN_TABLE_PREFIX}DANGKY_VIEWBY_GIANGVIEN";
+        public string REGISTRATIONS_VIEWBY_MINISTRY= $"{ADMIN_TABLE_PREFIX}DANGKY_VIEWBY_GIAOVU";
+        public string REGISTRATIONS_VIEWBY_UNIT_HEAD = $"{ADMIN_TABLE_PREFIX}DANGKY_VIEWBY_TRUONGDONVI";
+        public string REGISTRATIONS_VIEWBY_DEPARTMENT_HEAD = $"{ADMIN_TABLE_PREFIX}DANGKY_VIEWBY_TRUONGKHOA";
+
+        // Table's view name for EVERY role
+        public string STUDENTS = $"{ADMIN_TABLE_PREFIX}SINHVIEN";
+        public string UNIT = $"{ADMIN_TABLE_PREFIX}DONVI";
+        public string SUBJECTS = $"{ADMIN_TABLE_PREFIX}HOCPHAN";
+        public string COURSE_OPENING_PLAN = $"{ADMIN_TABLE_PREFIX}KHMO";
+
+
+
+        // Get data context for each role using stored procedure name, and parameter name and value (optional)
+        public T LoadDataContext<T>(string tableName, string parameterName = null, object parameterValue = null) where T : class, new()
+        {
+            try
+            {
+                using (OracleCommand cmd = new OracleCommand(GET_SINGLE_LINE_DATA, Connection))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add("STR_TABLE_NAME", OracleDbType.Varchar2).Value = tableName;
+                    if (parameterName != null)
+                        cmd.Parameters.Add(parameterName, OracleDbType.Varchar2).Value = parameterValue;
+
+                    using (OracleDataReader dr = cmd.ExecuteReader())
+                    {
+                        if (dr.Read())
+                        {
+                            T entity = new T();
+                            foreach (PropertyInfo prop in typeof(T).GetProperties())
+                            {
+                                if (!dr.IsDBNull(dr.GetOrdinal(prop.Name)))
+                                {
+                                    prop.SetValue(entity, dr[prop.Name]);
+                                }
+                            }
+                            dr.Close();
+                            return entity;
+                        }
+                        else
+                        {
+                            dr.Close();
+                            return null;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Load Data Context Error: {ex.Message}", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                return null;
+            }
+        }
 
 
 

@@ -374,6 +374,35 @@ GRANT EXECUTE ON N09_SELECT_ANY_TABLE TO PUBLIC;
 
 
 ----------------------------------------------------------------
+-- Stored Procedure SELECT chỉ trả về 1 dòng của Table
+----------------------------------------------------------------
+CREATE OR REPLACE PROCEDURE N09_GET_SINGLE_LINE_DATA(
+    OUTPUT OUT SYS_REFCURSOR,
+    STR_TABLE_NAME IN VARCHAR2,
+    STR_CONDITION IN VARCHAR2 DEFAULT NULL)
+AS
+BEGIN
+    IF STR_CONDITION IS NULL THEN
+        OPEN OUTPUT FOR 'SELECT * FROM ' || STR_TABLE_NAME || ' WHERE ROWNUM = 1';
+    ELSE
+        OPEN OUTPUT FOR 'SELECT * FROM ' || STR_TABLE_NAME || ' WHERE ' || STR_CONDITION || ' AND ROWNUM = 1';
+    END IF;
+END;
+/
+
+-- Gán quyền thực thi thủ tục trên cho tất cả user
+GRANT EXECUTE ON N09_GET_SINGLE_LINE_DATA TO PUBLIC;
+/
+
+-- -- Test
+-- VARIABLE rc REFCURSOR;
+--     EXECUTE SYS.N09_GET_SINGLE_LINE_DATA(:rc, 'N09_NHANVIEN');
+-- PRINT rc;
+-- /
+
+
+
+----------------------------------------------------------------
 -- Stored Procedure SELECT tất cả các Roles
 ----------------------------------------------------------------
 CREATE OR REPLACE PROCEDURE N09_SELECT_DBA_ROLES(

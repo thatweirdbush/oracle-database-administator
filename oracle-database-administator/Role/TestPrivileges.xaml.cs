@@ -148,7 +148,7 @@ namespace oracle_database_administator.Role
 
                     if (priv == "SELECT")
                     {
-                        ResultViewDataGrid.ItemsSource = Db.GetAnyTable($"{Database.DEFAULT_SCHEMA}{table_name}");
+                        ResultViewDataGrid.ItemsSource = Db.GetAnyTable($"{Database.SYS_SCHEMA}{table_name}");
                     }
                     else if (priv == "INSERT")
                     {
@@ -173,7 +173,7 @@ namespace oracle_database_administator.Role
                                     MessageBox.Show("Failed to execute \'Insert\'!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                                 }
                             }
-                            ResultViewDataGrid.ItemsSource = Db.GetAnyTable($"{Database.DEFAULT_SCHEMA}{Database.DEFAULT_PREFIX_VIEW}{table_name}");
+                            ResultViewDataGrid.ItemsSource = Db.GetAnyTable($"{Database.SYS_SCHEMA}{Database.DEFAULT_PREFIX_VIEW}{table_name}");
                         }
                     }
                     else if (priv == "UPDATE")
@@ -194,7 +194,7 @@ namespace oracle_database_administator.Role
                                 }
                             }
                         }
-                        ResultViewDataGrid.ItemsSource = Db.GetAnyTable($"{Database.DEFAULT_SCHEMA}{table_name}");
+                        ResultViewDataGrid.ItemsSource = Db.GetAnyTable($"{Database.SYS_SCHEMA}{table_name}");
                     }
                     else if (priv == "DELETE")
                     {
@@ -214,7 +214,7 @@ namespace oracle_database_administator.Role
                                 }
                             }
                         }
-                        ResultViewDataGrid.ItemsSource = Db.GetAnyTable($"{Database.DEFAULT_SCHEMA}{table_name}");
+                        ResultViewDataGrid.ItemsSource = Db.GetAnyTable($"{Database.SYS_SCHEMA}{table_name}");
                     }
                 }
             }
@@ -303,7 +303,7 @@ namespace oracle_database_administator.Role
                         /// after inserting, we can get select data later
                         /// <NOTE>
                         string false_condition = "1=0";
-                        ResultViewDataGrid.ItemsSource = Db.GetAnyTable($"{Database.DEFAULT_SCHEMA}{Database.DEFAULT_PREFIX_VIEW}{table_name}", false_condition);
+                        ResultViewDataGrid.ItemsSource = Db.GetAnyTable($"{Database.SYS_SCHEMA}{Database.DEFAULT_PREFIX_VIEW}{table_name}", false_condition);
                       
                         insert_query = "INSERT INTO SYS." + table_name + " (";
 
@@ -331,7 +331,7 @@ namespace oracle_database_administator.Role
                     }
                     else
                     {
-                        ResultViewDataGrid.ItemsSource = Db.GetAnyTable($"{Database.DEFAULT_SCHEMA}{table_name}");
+                        ResultViewDataGrid.ItemsSource = Db.GetAnyTable($"{Database.SYS_SCHEMA}{table_name}");
                     }
                 }
             }

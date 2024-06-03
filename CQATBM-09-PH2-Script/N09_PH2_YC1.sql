@@ -525,6 +525,12 @@ CS#5: Người dùng có VAITRO là “Trưởng khoa” có quyền hạn:
 -- Nên chỉ cấp các quyền trên TABLE khác SELECT cho Trưởng khoa.
 -- </NOTE>
 --
+-- 1a. Xem dòng dữ liệu của chính mình trong quan hệ NHANSU
+CREATE OR REPLACE VIEW UV_N09_NHANSU_VIEWBY_TRUONGKHOA
+AS
+    SELECT * FROM N09_NHANSU WHERE MANV = SYS_CONTEXT ('userenv', 'session_user');
+/
+
 -- 1a.(cont). Có thể chỉnh sửa số điện thoại (ĐT) của chính mình (nếu số điện thoại có thay đổi).
 -- Tạo trigger khi UPDATE số điện thoại (DT) của chính mình
 CREATE OR REPLACE TRIGGER TR_N09_NHANSU_UPDATE_SDT_BY_TRUONGKHOA

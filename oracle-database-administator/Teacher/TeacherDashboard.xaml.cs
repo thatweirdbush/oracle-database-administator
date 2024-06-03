@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Oracle.ManagedDataAccess.Client;
+using oracle_database_administator.Class;
 
 namespace oracle_database_administator.Teacher
 {
@@ -20,9 +22,22 @@ namespace oracle_database_administator.Teacher
     /// </summary>
     public partial class TeacherDashboard : Page
     {
+        //static private OracleConnection conn = Database.Instance.Connection;
+        //static Database Db = Database.Instance;
+        public string currentUserID { get; set; }
+        Personnel personnel = null;
+
         public TeacherDashboard()
         {
             InitializeComponent();
+            //currentUserID = Database.Instance.CurrentUser;
+            DataContext = this;
+        }
+
+        private void GetUserDataContext()
+        {
+            //personnel = Db.LoadDataContext<Personnel>(Db.STAFFS_VIEWBY_TEACHER);
+            //Grid_DisplayData.DataContext = personnel;
         }
 
         private void HideAllElements()
@@ -64,19 +79,22 @@ namespace oracle_database_administator.Teacher
         private void DSHocPhan_Click(object sender, RoutedEventArgs e)
         {
             Table_KeHoachMo.Visibility = Visibility.Hidden;
+            Table_PhanCong.Visibility = Visibility.Hidden;
             Table_DsHocPhan.Visibility = Visibility.Visible;
         }
 
         private void KeHoachMo_Click(object sender, RoutedEventArgs e)
         {
             Table_DsHocPhan.Visibility = Visibility.Hidden;
+            Table_PhanCong.Visibility = Visibility.Hidden;
             Table_KeHoachMo.Visibility = Visibility.Visible;
         }
 
         private void PhanCong_Click(object sender, RoutedEventArgs e)
         {
             Table_DsHocPhan.Visibility = Visibility.Hidden;
-            Table_KeHoachMo.Visibility = Visibility.Visible;
+            Table_KeHoachMo.Visibility = Visibility.Hidden;
+            Table_PhanCong.Visibility = Visibility.Visible;
         }
 
         private void DSSinhVien_Click(object sender, RoutedEventArgs e)
