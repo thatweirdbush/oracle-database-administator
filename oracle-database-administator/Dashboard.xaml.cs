@@ -1,4 +1,5 @@
-﻿using oracle_database_administator.Role;
+﻿using Oracle.ManagedDataAccess.Client;
+using oracle_database_administator.Role;
 using oracle_database_administator.Teacher;
 using oracle_database_administator.User;
 using System;
@@ -23,6 +24,9 @@ namespace oracle_database_administator
     /// </summary>
     public partial class Dashboard : Page
     {
+        OracleConnection conn = null;
+        Database Db = Database.Instance;
+
         public Dashboard()
         {
             InitializeComponent();
@@ -30,14 +34,36 @@ namespace oracle_database_administator
 
         private void SchoolButton_Click(object sender, RoutedEventArgs e)
         {
-            TeacherDashboard teacherDashboard = new TeacherDashboard();
-            NavigationService.Navigate(teacherDashboard);
+            if (conn == null)
+            {
+                if (Db.ConnectToServer())
+                {
+                    TeacherDashboard teacherDashboard = new TeacherDashboard();
+                    NavigationService.Navigate(teacherDashboard);
+                }
+            }
+            else
+            {
+                TeacherDashboard teacherDashboard = new TeacherDashboard();
+                NavigationService.Navigate(teacherDashboard);
+            }
         }
 
         private void SystemButton_Click(object sender, RoutedEventArgs e)
         {
-            SystemDashboard systemDashboard = new SystemDashboard();
-            NavigationService.Navigate(systemDashboard);
+            if (conn == null)
+            {
+                if (Db.ConnectToServer())
+                {
+                    SystemDashboard systemDashboard = new SystemDashboard();
+                    NavigationService.Navigate(systemDashboard);
+                }
+            }
+            else
+            {
+                SystemDashboard systemDashboard = new SystemDashboard();
+                NavigationService.Navigate(systemDashboard);
+            }
         }
     }
 }

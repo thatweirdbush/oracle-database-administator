@@ -22,36 +22,44 @@ namespace oracle_database_administator.Teacher
     /// </summary>
     public partial class TeacherDashboard : Page
     {
-        //static private OracleConnection conn = Database.Instance.Connection;
-        //static Database Db = Database.Instance;
-        public string currentUserID { get; set; }
+        private OracleConnection conn = Database.Instance.Connection;
+        private Database Db = Database.Instance;
         Personnel personnel = null;
 
         public TeacherDashboard()
         {
             InitializeComponent();
-            //currentUserID = Database.Instance.CurrentUser;
             DataContext = this;
         }
 
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            GetUserDataContext();
+        }
+
+
         private void GetUserDataContext()
         {
-            //personnel = Db.LoadDataContext<Personnel>(Db.STAFFS_VIEWBY_TEACHER);
-            //Grid_DisplayData.DataContext = personnel;
+            personnel = Db.LoadDataContext<Personnel>(Db.STAFFS_VIEWBY_TEACHER);
+            Grid_DisplayData.DataContext = personnel;
         }
 
         private void HideAllElements()
         {
-            Grid_UserInfo.Visibility = Visibility.Hidden;
-            Grid_Unit.Visibility = Visibility.Hidden;
-            Grid_AcademicPlan.Visibility = Visibility.Hidden;
-            Grid_StudentList.Visibility = Visibility.Hidden;
+            Grid_UserInfo.Visibility = Visibility.Collapsed;
+            Grid_Unit.Visibility = Visibility.Collapsed;
+            Grid_AcademicPlan.Visibility = Visibility.Collapsed;
+            Grid_StudentList.Visibility = Visibility.Collapsed;
         }
 
         private void HomeButton_Click(object sender, RoutedEventArgs e)
         {
             if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
             {
+                // Disconnect from the server & reset the connection credentials
+                Db.Disconnect();
+                Db.ConnectionUsername = "";
+                Db.ConnectionPassword = "";
                 mainWindow.MainFrame.Navigate(new Dashboard());
             }
         }
@@ -66,41 +74,47 @@ namespace oracle_database_administator.Teacher
         {
             HideAllElements();
             Grid_Unit.Visibility = Visibility.Visible;
+            Table_DonVi.ItemsSource = Db.GetAnyTable(Db.UNITS);
         }
 
         private void KHHocTap_Click(object sender, RoutedEventArgs e)
         {
             HideAllElements();
             Grid_AcademicPlan.Visibility = Visibility.Visible;
-            Table_KeHoachMo.Visibility = Visibility.Hidden;
+            Table_KeHoachMo.Visibility = Visibility.Collapsed;
             Table_DsHocPhan.Visibility = Visibility.Visible;
+            Table_DsHocPhan.ItemsSource = Db.GetAnyTable(Db.SUBJECTS);
         }
 
         private void DSHocPhan_Click(object sender, RoutedEventArgs e)
         {
-            Table_KeHoachMo.Visibility = Visibility.Hidden;
-            Table_PhanCong.Visibility = Visibility.Hidden;
+            Table_KeHoachMo.Visibility = Visibility.Collapsed;
+            Table_PhanCong.Visibility = Visibility.Collapsed;
             Table_DsHocPhan.Visibility = Visibility.Visible;
+            Table_DsHocPhan.ItemsSource = Db.GetAnyTable(Db.SUBJECTS);
         }
 
         private void KeHoachMo_Click(object sender, RoutedEventArgs e)
         {
-            Table_DsHocPhan.Visibility = Visibility.Hidden;
-            Table_PhanCong.Visibility = Visibility.Hidden;
+            Table_DsHocPhan.Visibility = Visibility.Collapsed;
+            Table_PhanCong.Visibility = Visibility.Collapsed;
             Table_KeHoachMo.Visibility = Visibility.Visible;
+            Table_KeHoachMo.ItemsSource = Db.GetAnyTable(Db.COURSE_OPENING_PLANS);
         }
 
         private void PhanCong_Click(object sender, RoutedEventArgs e)
         {
-            Table_DsHocPhan.Visibility = Visibility.Hidden;
-            Table_KeHoachMo.Visibility = Visibility.Hidden;
+            Table_DsHocPhan.Visibility = Visibility.Collapsed;
+            Table_KeHoachMo.Visibility = Visibility.Collapsed;
             Table_PhanCong.Visibility = Visibility.Visible;
+            Table_PhanCong.ItemsSource = Db.GetAnyTable(Db.ASSIGNMENTS_VIEWBY_TEACHER);
         }
 
         private void DSSinhVien_Click(object sender, RoutedEventArgs e)
         {
             HideAllElements();
             Grid_StudentList.Visibility = Visibility.Visible;
+            Table_DsSinhVien.ItemsSource = Db.GetAnyTable(Db.STUDENTS);
         }
 
         private void EditSDT_Click(object sender, RoutedEventArgs e)

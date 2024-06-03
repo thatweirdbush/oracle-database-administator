@@ -78,7 +78,7 @@ namespace oracle_database_administator
         public bool ConnectToServer()
         {
             // Nếu đã kết nối rồi thì không cần kết nối lại
-            if (ConnectionPassword != "")
+            if (_connection != null || ConnectionPassword != "")
             {
                 _connection = Connection;
                 return true;
@@ -520,9 +520,9 @@ namespace oracle_database_administator
 
         // Table's view name for EVERY role
         public string STUDENTS = $"{ADMIN_TABLE_PREFIX}SINHVIEN";
-        public string UNIT = $"{ADMIN_TABLE_PREFIX}DONVI";
+        public string UNITS = $"{ADMIN_TABLE_PREFIX}DONVI";
         public string SUBJECTS = $"{ADMIN_TABLE_PREFIX}HOCPHAN";
-        public string COURSE_OPENING_PLAN = $"{ADMIN_TABLE_PREFIX}KHMO";
+        public string COURSE_OPENING_PLANS = $"{ADMIN_TABLE_PREFIX}KHMO";
 
 
 
@@ -534,6 +534,7 @@ namespace oracle_database_administator
                 using (OracleCommand cmd = new OracleCommand(GET_SINGLE_LINE_DATA, Connection))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add(outParameter, OracleDbType.RefCursor).Direction = ParameterDirection.Output;
                     cmd.Parameters.Add("STR_TABLE_NAME", OracleDbType.Varchar2).Value = tableName;
                     if (parameterName != null)
                         cmd.Parameters.Add(parameterName, OracleDbType.Varchar2).Value = parameterValue;

@@ -11,43 +11,43 @@ namespace oracle_database_administator.Class
 {
     public class Personnel
     {
-        public string PersonnelID { get; set; }
-        public string Name { get; set; }
-        public string Gender { get; set; }
-        public DateTime? Birth { get; set; }
-        public int Allowance { get; set; }
-        public string PhoneNo { get; set; }
-        public string Role { get; set; }
-        public string UnitID { get; set; }
+        public string MANV { get; set; }
+        public string HOTEN { get; set; }
+        public string PHAI { get; set; }
+        public DateTime? NGSINH { get; set; }
+        public Int64 PHUCAP { get; set; }
+        public string DT { get; set; }
+        public string VAITRO { get; set; }
+        public string MADV { get; set; }
 
 
-        // Constructor create object Personnel from OracleDataReader
-        public Personnel(OracleDataReader dr)
-        {
-            PersonnelID = dr["Mã Nhân Viên"].ToString();
-            Name = dr["Họ Tên"].ToString();
-            Gender = dr["Phái"].ToString();
-            Birth = dr["Ngày Sinh"] as DateTime?;
-            Allowance = Convert.ToInt32(dr["Phụ Cấp"]);
-            PhoneNo = dr["Điện Thoại"].ToString();
-            Role = dr["Vai Trò"].ToString();
-            UnitID = dr["Mã Đơn Vị"].ToString();
-        }
+        //// Constructor create object Personnel from OracleDataReader
+        //public Personnel(OracleDataReader dr)
+        //{
+        //    PersonnelID = dr["Mã Nhân Viên"].ToString();
+        //    Name = dr["Họ Tên"].ToString();
+        //    Gender = dr["Phái"].ToString();
+        //    Birth = dr["Ngày Sinh"] as DateTime?;
+        //    Allowance = Convert.ToInt32(dr["Phụ Cấp"]);
+        //    PhoneNo = dr["Điện Thoại"].ToString();
+        //    Role = dr["Vai Trò"].ToString();
+        //    UnitID = dr["Mã Đơn Vị"].ToString();
+        //}
 
         // Default Constructor
         public Personnel() { }
 
-        // Copy constructor
-        public Personnel(Personnel other)
-        {
-            PersonnelID = other.PersonnelID;
-            Name = other.Name;
-            Gender = other.Gender;
-            Birth = other.Birth;
-            Allowance = other.Allowance;
-            PhoneNo = other.PhoneNo;
-            Role = other.Role;
-            UnitID = other.UnitID;
-        }      
+        //// Copy constructor
+        //public Personnel(Personnel other)
+        //{
+        //    PersonnelID = other.PersonnelID;
+        //    Name = other.Name;
+        //    Gender = other.Gender;
+        //    Birth = other.Birth;
+        //    Allowance = other.Allowance;
+        //    PhoneNo = other.PhoneNo;
+        //    Role = other.Role;
+        //    UnitID = other.UnitID;
+        //}      
     }
 }

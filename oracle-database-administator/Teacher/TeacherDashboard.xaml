@@ -6,6 +6,7 @@
       xmlns:local="clr-namespace:oracle_database_administator.Teacher"
       mc:Ignorable="d" 
       d:DesignHeight="800" d:DesignWidth="1200"
+      Loaded="Page_Loaded"
       Title="TeacherDashboard">
     <Page.Background>
         <ImageBrush ImageSource="/images/background.jpg"/>
@@ -152,10 +153,8 @@
 
                     <!-- Profile Key Data Grid - Tên & Vai trò -->
                     <Grid Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top" >
-                        <Label x:Name="Label_Fullname" Content="User name here" HorizontalAlignment="Center" VerticalAlignment="Top" Foreground="#333" HorizontalContentAlignment="Center" FontSize="30" FontWeight="Bold"/>
-                        <!--<Label x:Name="Label_Fullname" Content="{Binding HOTEN}" HorizontalAlignment="Center" VerticalAlignment="Top" Foreground="#333" HorizontalContentAlignment="Center" FontSize="30" FontWeight="Bold"/>-->
-                        <Label x:Name="Label_Rolename" Content="Role name here" HorizontalAlignment="Center" VerticalAlignment="Top" Foreground="#333" HorizontalContentAlignment="Center" FontSize="24" FontWeight="Bold" Margin="0,50,0,0"/>
-                        <!--<Label x:Name="Label_Rolename" Content="{Binding VAITRO}" HorizontalAlignment="Center" VerticalAlignment="Top" Foreground="#333" HorizontalContentAlignment="Center" FontSize="24" FontWeight="Bold" Margin="0,50,0,0"/>-->
+                        <Label x:Name="Label_Fullname" Content="{Binding HOTEN}" HorizontalAlignment="Center" VerticalAlignment="Top" Foreground="#333" HorizontalContentAlignment="Center" FontSize="30" FontWeight="Bold"/>
+                        <Label x:Name="Label_Rolename" Content="{Binding VAITRO}" HorizontalAlignment="Center" VerticalAlignment="Top" Foreground="#333" HorizontalContentAlignment="Center" FontSize="24" FontWeight="Bold" Margin="0,50,0,0"/>
                     </Grid>
                 </Grid>
 
@@ -196,24 +195,19 @@
                         <!-- StackPanel - Binding Data-->
                         <StackPanel Grid.Column="1" Orientation="Vertical">
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
-                                <TextBlock Text="Mã nhân viên " FontWeight="SemiBold" FontSize="20"/>
                                 <TextBlock Text="{Binding MANV}" FontWeight="SemiBold" FontSize="20"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
-                                <TextBlock Text="Phái " FontWeight="SemiBold" FontSize="20"/>
                                 <TextBlock Text="{Binding PHAI}" FontWeight="SemiBold" FontSize="20"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
-                                <TextBlock Text="Ngày sinh " FontWeight="SemiBold" FontSize="20"/>
                                 <TextBlock Text="{Binding NGSINH}" FontWeight="SemiBold" FontSize="20"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
-                                <TextBlock Text="Phụ cấp " FontWeight="SemiBold" FontSize="20"/>
                                 <TextBlock Text="{Binding PHUCAP}" FontWeight="SemiBold" FontSize="20"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
-                                <TextBlock x:Name="TextBlock_SDT" Text="Số điện thoại" FontWeight="SemiBold" FontSize="20"/>
-                                <TextBlock Text="{Binding DT, UpdateSourceTrigger=PropertyChanged}" FontWeight="SemiBold" FontSize="20" IsHitTestVisible="False" Focusable="False"/>
+                                <TextBlock x:Name="TextBlock_SDT" Text="{Binding DT, UpdateSourceTrigger=PropertyChanged}" FontWeight="SemiBold" FontSize="20" IsHitTestVisible="False" Focusable="False"/>
                                 <Button Click="EditSDT_Click" Margin="10,0,0,0" BorderBrush="{x:Null}" Width="28" Height="28" Background="{x:Null}">
                                     <StackPanel Orientation="Horizontal">
                                         <Image Source="/images/tick.png"/>
@@ -221,7 +215,6 @@
                                 </Button>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                                <TextBlock Text="Đơn vị " FontWeight="SemiBold" FontSize="20"/>
                                 <TextBlock Text="{Binding MADV}" FontWeight="SemiBold" FontSize="20"/>
                             </StackPanel>
                         </StackPanel>
@@ -247,7 +240,7 @@
                 <Label Grid.Column="1" x:Name="Label_DonVi" Content="DANH SÁCH ĐƠN VỊ" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#333" FontSize="30" FontWeight="Bold"/>
 
                 <!-- DataGrid - Thông tin Đơn vị-->
-                <DataGrid Grid.Row="1" Grid.Column="1" x:Name="Table_DonVi" ItemsSource="{Binding YourData}" AutoGenerateColumns="True" FontWeight="Medium" BorderBrush="{x:Null}" Background="{x:Null}" VerticalScrollBarVisibility="Hidden" GridLinesVisibility="None" SelectionChanged="Table_DonVi_SelectionChanged">
+                <DataGrid Grid.Row="1" Grid.Column="1" x:Name="Table_DonVi" ColumnWidth="*" ItemsSource="{Binding YourData}" AutoGenerateColumns="True" FontWeight="Medium" BorderBrush="{x:Null}" Background="{x:Null}" VerticalScrollBarVisibility="Hidden" GridLinesVisibility="None" SelectionChanged="Table_DonVi_SelectionChanged">
                     <DataGrid.RowBackground>
                         <SolidColorBrush Color="#FFA3BDD2" Opacity="0.6"/>
                     </DataGrid.RowBackground>
@@ -263,6 +256,12 @@
                             <Setter Property="Background" Value="#FF173D7B"/>
                         </Style>
                     </DataGrid.ColumnHeaderStyle>
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="Height" Value="40"/>
+                            <Setter Property="FontSize" Value="14"/>
+                        </Style>
+                    </DataGrid.RowStyle>
                 </DataGrid>
             </Grid>
 
@@ -311,7 +310,7 @@
                 </Grid>
 
                 <!-- Default DataGrid - Danh sách học phần -->
-                <DataGrid Grid.Row="1" Grid.Column="1" x:Name="Table_DsHocPhan" ItemsSource="{Binding YourData}" AutoGenerateColumns="True" FontWeight="Medium" BorderBrush="{x:Null}" Background="{x:Null}" VerticalScrollBarVisibility="Hidden" GridLinesVisibility="None" SelectionChanged="Table_DsHocPhan_SelectionChanged">
+                <DataGrid Grid.Row="1" Grid.Column="1" x:Name="Table_DsHocPhan" ColumnWidth="*" ItemsSource="{Binding YourData}" AutoGenerateColumns="True" FontWeight="Medium" BorderBrush="{x:Null}" Background="{x:Null}" VerticalScrollBarVisibility="Hidden" GridLinesVisibility="None" SelectionChanged="Table_DsHocPhan_SelectionChanged">
                     <DataGrid.RowBackground>
                         <SolidColorBrush Color="#FFA3BDD2" Opacity="0.6"/>
                     </DataGrid.RowBackground>
@@ -327,10 +326,16 @@
                             <Setter Property="Background" Value="#FF173D7B"/>
                         </Style>
                     </DataGrid.ColumnHeaderStyle>
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="Height" Value="40"/>
+                            <Setter Property="FontSize" Value="14"/>
+                        </Style>
+                    </DataGrid.RowStyle>
                 </DataGrid>
 
                 <!-- DataGrid - Kế hoạch mở môn-->
-                <DataGrid Grid.Row="1" Grid.Column="1" x:Name="Table_KeHoachMo" Visibility="Collapsed" ItemsSource="{Binding YourData}" AutoGenerateColumns="True" FontWeight="Medium" BorderBrush="{x:Null}" Background="{x:Null}" VerticalScrollBarVisibility="Hidden" GridLinesVisibility="None" SelectionChanged="Table_KeHoachMo_SelectionChanged">
+                <DataGrid Grid.Row="1" Grid.Column="1" x:Name="Table_KeHoachMo" ColumnWidth="*" Visibility="Collapsed" ItemsSource="{Binding YourData}" AutoGenerateColumns="True" FontWeight="Medium" BorderBrush="{x:Null}" Background="{x:Null}" VerticalScrollBarVisibility="Hidden" GridLinesVisibility="None" SelectionChanged="Table_KeHoachMo_SelectionChanged">
                     <DataGrid.RowBackground>
                         <SolidColorBrush Color="#FFA3BDD2" Opacity="0.6"/>
                     </DataGrid.RowBackground>
@@ -346,10 +351,16 @@
                             <Setter Property="Background" Value="#FF173D7B"/>
                         </Style>
                     </DataGrid.ColumnHeaderStyle>
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="Height" Value="40"/>
+                            <Setter Property="FontSize" Value="14"/>
+                        </Style>
+                    </DataGrid.RowStyle>
                 </DataGrid>
 
                 <!-- DataGrid - Phân công Giảng dạy-->
-                <DataGrid Grid.Row="1" Grid.Column="1" x:Name="Table_PhanCong" Visibility="Collapsed" ItemsSource="{Binding YourData}" AutoGenerateColumns="True" FontWeight="Medium" BorderBrush="{x:Null}" Background="{x:Null}" VerticalScrollBarVisibility="Hidden" GridLinesVisibility="None" SelectionChanged="Table_PhanCong_SelectionChanged">
+                <DataGrid Grid.Row="1" Grid.Column="1" x:Name="Table_PhanCong" ColumnWidth="*" Visibility="Collapsed" ItemsSource="{Binding YourData}" AutoGenerateColumns="True" FontWeight="Medium" BorderBrush="{x:Null}" Background="{x:Null}" VerticalScrollBarVisibility="Hidden" GridLinesVisibility="None" SelectionChanged="Table_PhanCong_SelectionChanged">
                     <DataGrid.RowBackground>
                         <SolidColorBrush Color="#FFA3BDD2" Opacity="0.6"/>
                     </DataGrid.RowBackground>
@@ -365,6 +376,12 @@
                             <Setter Property="Background" Value="#FF173D7B"/>
                         </Style>
                     </DataGrid.ColumnHeaderStyle>
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="Height" Value="40"/>
+                            <Setter Property="FontSize" Value="14"/>
+                        </Style>
+                    </DataGrid.RowStyle>
                 </DataGrid>
             </Grid>
 
@@ -386,7 +403,7 @@
                 <Label Grid.Column="1" x:Name="Label_DsSinhVien" Content="DANH SÁCH SINH VIÊN" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#333" FontSize="30" FontWeight="Bold"/>
 
                 <!-- DataGrid - Danh sách sinh viên -->
-                <DataGrid Grid.Row="1" Grid.Column="1" x:Name="Table_DsSinhVien" ItemsSource="{Binding YourData}" AutoGenerateColumns="True" FontWeight="Medium" BorderBrush="{x:Null}" Background="{x:Null}" VerticalScrollBarVisibility="Hidden" GridLinesVisibility="None" SelectionChanged="Table_DsSinhVien_SelectionChanged">
+                <DataGrid Grid.Row="1" Grid.Column="1" x:Name="Table_DsSinhVien" ColumnWidth="*" ItemsSource="{Binding YourData}" AutoGenerateColumns="True" FontWeight="Medium" BorderBrush="{x:Null}" Background="{x:Null}" VerticalScrollBarVisibility="Hidden" GridLinesVisibility="None" SelectionChanged="Table_DsSinhVien_SelectionChanged">
                     <DataGrid.RowBackground>
                         <SolidColorBrush Color="#FFA3BDD2" Opacity="0.6"/>
                     </DataGrid.RowBackground>
@@ -402,6 +419,12 @@
                             <Setter Property="Background" Value="#FF173D7B"/>
                         </Style>
                     </DataGrid.ColumnHeaderStyle>
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="Height" Value="40"/>
+                            <Setter Property="FontSize" Value="14"/>
+                        </Style>
+                    </DataGrid.RowStyle>
                 </DataGrid>
             </Grid>
         </Grid>

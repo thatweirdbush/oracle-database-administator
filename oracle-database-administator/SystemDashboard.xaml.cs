@@ -24,9 +24,9 @@ namespace oracle_database_administator
     /// Interaction logic for SystemDashboard.xaml
     /// </summary>
     public partial class SystemDashboard : Page
-    {  
-        OracleConnection conn = null;
-        Database Db = Database.Instance;
+    {
+        private OracleConnection conn = Database.Instance.Connection;
+        private Database Db = Database.Instance;
 
         public SystemDashboard()
         {
@@ -35,41 +35,45 @@ namespace oracle_database_administator
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            Db.ConnectToServer();
+            //Db.ConnectToServer();
         }
 
         private void UserButton_Click(object sender, RoutedEventArgs e)
         {
-            if (conn == null)
-            {
-                if (Db.ConnectToServer())
-                {
-                    ViewUserList viewUserList = new ViewUserList();
-                    NavigationService.Navigate(viewUserList);
-                }
-            }
-            else
-            {
-                ViewUserList viewUserList = new ViewUserList();
-                NavigationService.Navigate(viewUserList);
-            }
+            //if (conn == null)
+            //{
+            //    if (Db.ConnectToServer())
+            //    {
+            //        ViewUserList viewUserList = new ViewUserList();
+            //        NavigationService.Navigate(viewUserList);
+            //    }
+            //}
+            //else
+            //{
+            //    ViewUserList viewUserList = new ViewUserList();
+            //    NavigationService.Navigate(viewUserList);
+            //}
+            ViewUserList viewUserList = new ViewUserList();
+            NavigationService.Navigate(viewUserList);
         }
 
         private void RoleButton_Click(object sender, RoutedEventArgs e)
         {
-            if (conn == null)
-            {
-                if (Db.ConnectToServer())
-                {
-                    ViewRoleList viewRoleList = new ViewRoleList();
-                    NavigationService.Navigate(viewRoleList);
-                }
-            }
-            else
-            {
-                ViewRoleList viewRoleList = new ViewRoleList();
-                NavigationService.Navigate(viewRoleList);
-            }
+            //if (conn == null)
+            //{
+            //    if (Db.ConnectToServer())
+            //    {
+            //        ViewRoleList viewRoleList = new ViewRoleList();
+            //        NavigationService.Navigate(viewRoleList);
+            //    }
+            //}
+            //else
+            //{
+            //    ViewRoleList viewRoleList = new ViewRoleList();
+            //    NavigationService.Navigate(viewRoleList);
+            //}
+            ViewRoleList viewRoleList = new ViewRoleList();
+            NavigationService.Navigate(viewRoleList);
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
