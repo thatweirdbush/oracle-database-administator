@@ -23,33 +23,86 @@ CREATE ROLE N09_RL_SINHVIEN;
 ----------------------------------------------------------------
 -- Script tạo View cho tất cả Table trong Database
 ----------------------------------------------------------------
-CREATE OR REPLACE VIEW UV_N09_NHANSU
-AS
-    SELECT * FROM N09_NHANSU;
-    
-CREATE OR REPLACE VIEW UV_N09_SINHVIEN
-AS
-    SELECT * FROM N09_SINHVIEN;
-    
-CREATE OR REPLACE VIEW UV_N09_DONVI
-AS
-    SELECT * FROM N09_DONVI;
-    
-CREATE OR REPLACE VIEW UV_N09_HOCPHAN
-AS
-    SELECT * FROM N09_HOCPHAN;
-    
-CREATE OR REPLACE VIEW UV_N09_KHMO
-AS
-    SELECT * FROM N09_KHMO;
-        
-CREATE OR REPLACE VIEW UV_N09_PHANCONG
-AS
-    SELECT * FROM N09_PHANCONG;    
-    
-CREATE OR REPLACE VIEW UV_N09_DANGKY
-AS
-    SELECT * FROM N09_DANGKY;    
+CREATE OR REPLACE VIEW UV_N09_NHANSU AS
+SELECT 
+    MANV AS "Mã Nhân Viên",
+    HOTEN AS "Họ Tên",
+    PHAI AS "Phái",
+    NGSINH AS "Ngày Sinh",
+    PHUCAP AS "Phụ Cấp",
+    DT AS "Điện Thoại",
+    VAITRO AS "Vai Trò",
+    MADV AS "Mã Đơn Vị"
+FROM N09_NHANSU;
+/
+
+CREATE OR REPLACE VIEW UV_N09_SINHVIEN AS
+SELECT 
+    MASV AS "Mã Sinh Viên",
+    HOTEN AS "Họ Tên",
+    PHAI AS "Phái",
+    NGSINH AS "Ngày Sinh",
+    DIACHI AS "Địa Chỉ",
+    DT AS "Điện Thoại",
+    MACT AS "Mã Chương Trình",
+    MANGANH AS "Mã Ngành",
+    SOTCTL AS "Số Tín Chỉ",
+    DTBTL AS "Điểm TB"
+FROM N09_SINHVIEN;
+/
+
+CREATE OR REPLACE VIEW UV_N09_DONVI AS
+SELECT 
+    MADV AS "Mã Đơn Vị",
+    TENDV AS "Tên Đơn Vị",
+    TRGDV AS "Trưởng Đơn Vị"
+FROM N09_DONVI;
+/
+
+CREATE OR REPLACE VIEW UV_N09_HOCPHAN AS
+SELECT 
+    MAHP AS "Mã Học Phần",
+    TENHP AS "Tên Học Phần",
+    SOTC AS "Số Tín Chỉ",
+    STLT AS "Số Tiết LT",
+    STTH AS "Số Tiết TH",
+    SOSVTD AS "Số SV Tối Đa",
+    MADV AS "Mã Đơn Vị"
+FROM N09_HOCPHAN;
+/
+
+CREATE OR REPLACE VIEW UV_N09_KHMO AS
+SELECT 
+    MAHP AS "Mã Học Phần",
+    HK AS "Học Kỳ",
+    NAM AS "Năm",
+    MACT AS "Mã Chương Trình"
+FROM N09_KHMO;
+/
+
+CREATE OR REPLACE VIEW UV_N09_PHANCONG AS
+SELECT 
+    MAGV AS "Mã Giảng Viên",
+    MAHP AS "Mã Học Phần",
+    HK AS "Học Kỳ",
+    NAM AS "Năm Học",
+    MACT AS "Mã Chương Trình"
+FROM N09_PHANCONG;
+/
+
+CREATE OR REPLACE VIEW UV_N09_DANGKY AS
+SELECT 
+    MASV AS "Mã Sinh Viên",
+    MAGV AS "Mã Giảng Viên",
+    MAHP AS "Mã Học Phần",
+    HK AS "Học Kỳ",
+    NAM AS "Năm",
+    MACT AS "Mã Chương Trình",
+    DIEMTH AS "Điểm Thi",
+    DIEMQT AS "Điểm Quá Trình",
+    DIEMCK AS "Điểm Cuối Kỳ",
+    DIEMTK AS "Điểm Tổng Kết"
+FROM N09_DANGKY;
 /
 
 

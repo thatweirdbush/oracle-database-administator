@@ -23,18 +23,11 @@
             <ColumnDefinition Width="40" />
         </Grid.ColumnDefinitions>
 
-        <Image Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" Height="80" Margin="0,20,0,0" VerticalAlignment="Top" Width="80" Source="/images/cloud-database.png"/>
-        <Label Grid.Row="0" Grid.Column="1" Content="TRƯỜNG ĐẠI HỌC X" FontFamily="Segoe UI Black" FontSize="32" HorizontalAlignment="Left" Height="43" Margin="90,20,0,0" VerticalAlignment="Top" Width="800" Foreground="#FF190E64" FontWeight="Bold" Padding="0,0,0,0"/>
-        <Label Grid.Row="0" Grid.Column="1" Content="Hệ Thống Quản Lý Nội Bộ" FontSize="20" HorizontalAlignment="Left" Height="27" VerticalAlignment="Top" Width="315" Margin="90,68,0,0" Padding="0,0,0,0" FontWeight="Bold">
-            <Label.Foreground>
-                <SolidColorBrush Color="#FFFF5C0F" Opacity="1"/>
-            </Label.Foreground>
-            <Label.Background>
-                <SolidColorBrush/>
-            </Label.Background>
-        </Label>
+        <Image Grid.Column="1" HorizontalAlignment="Left" Height="80" Margin="0,20,0,0" VerticalAlignment="Top" Width="80" Source="/images/cloud-database.png"/>
+        <Label Grid.Column="1" Content="TRƯỜNG ĐẠI HỌC X" FontFamily="Segoe UI Black" FontSize="32" HorizontalAlignment="Left" Height="43" Margin="90,20,0,0" VerticalAlignment="Top" Width="800" Foreground="#FF190E64" FontWeight="Bold" Padding="0,0,0,0"/>
+        <Label Grid.Column="1" Content="Hệ Thống Quản Lý Nội Bộ" FontSize="20" HorizontalAlignment="Left" Height="27" VerticalAlignment="Top" Width="315" Margin="90,68,0,0" Padding="0,0,0,0" FontWeight="Bold" Foreground="#FFFF5C0F"/>
 
-        <Button Grid.Row="0" Grid.Column="1" x:Name="Logout" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="22" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="50" Width="160" Click="HomeButton_Click" RenderTransformOrigin="-2.052,5.949" Margin="0,40,0,0" HorizontalAlignment="Right" VerticalAlignment="Top" >
+        <Button Grid.Row="0" Grid.Column="1" x:Name="Logout" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="22" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="50" Width="160" Click="HomeButton_Click" RenderTransformOrigin="-2.052,5.949" Margin="0,40,0,0" HorizontalAlignment="Right" VerticalAlignment="Top" Cursor="Hand" >
             <StackPanel Orientation="Horizontal">
                 <Image Source="/images/back-icon.png" Width="25" Height="25" Margin="0,0,5,0" />
                 <TextBlock Text="Đăng xuất" VerticalAlignment="Center"/>
@@ -50,10 +43,9 @@
             <Button.Effect>
                 <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
             </Button.Effect>
-
         </Button>
 
-        <Button Grid.Row="0" Grid.Column="1" x:Name="Info" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="22" BorderThickness="0" Height="50" Width="200" Click="TTCN_Click" VerticalAlignment="Bottom" RenderTransformOrigin="-2.052,5.949" Margin="0,105,0,0" HorizontalAlignment="Left" >
+        <Button Grid.Column="1" x:Name="Info" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="22" BorderThickness="0" Height="50" Width="200" Click="TTCN_Click" VerticalAlignment="Bottom" RenderTransformOrigin="-2.052,5.949" Margin="0,105,0,0" HorizontalAlignment="Left" Cursor="Hand" >
             <Button.Resources>
                 <Style TargetType="{x:Type Border}">
                     <Setter Property="CornerRadius" Value="24,24,0,0"/>
@@ -66,11 +58,11 @@
                 <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
             </Button.Effect>
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="TTCN"/>
+                <TextBlock Text="Thông tin Cá nhân" FontSize="18" FontFamily="Segoe UI Semibold"/>
             </StackPanel>
         </Button>
 
-        <Button Grid.Row="0" Grid.Column="1" x:Name="DsDonVi" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="22" BorderThickness="0" Height="50" Width="200" Click="TTDonVi_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom" RenderTransformOrigin="-2.052,5.949" Margin="200,105,0,0" >
+        <Button Grid.Column="1" x:Name="DsDonVi" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="22" BorderThickness="0" Height="50" Width="200" Click="TTDonVi_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom" RenderTransformOrigin="-2.052,5.949" Margin="200,105,0,0" Cursor="Hand" >
             <Button.Resources>
                 <Style TargetType="{x:Type Border}">
                     <Setter Property="CornerRadius" Value="24,24,0,0"/>
@@ -83,11 +75,11 @@
                 <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
             </Button.Effect>
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="TT ĐƠN VỊ"/>
+                <TextBlock Text="Thông tin Đơn vị" FontSize="18"/>
             </StackPanel>
 
         </Button>
-        <Button Grid.Row="0" Grid.Column="1" x:Name="KHHocTap" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="22" BorderThickness="0" Height="50" Width="200" Click="KHHocTap_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom" RenderTransformOrigin="-2.052,5.949" Margin="400,105,0,0" >
+        <Button Grid.Column="1" x:Name="KHHocTap" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="22" BorderThickness="0" Height="50" Width="200" Click="KHHocTap_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom" RenderTransformOrigin="-2.052,5.949" Margin="400,105,0,0" Cursor="Hand" >
             <Button.Resources>
                 <Style TargetType="{x:Type Border}">
                     <Setter Property="CornerRadius" Value="24,24,0,0"/>
@@ -100,11 +92,11 @@
                 <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
             </Button.Effect>
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="KH HỌC TẬP"/>
+                <TextBlock Text="Kế hoạch Học tập" FontSize="18"/>
             </StackPanel>
 
         </Button>
-        <Button Grid.Row="0" Grid.Column="1" x:Name="DsSinhVien" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="22" BorderThickness="0" Height="50" Width="200" Click="DSSinhVien_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom" RenderTransformOrigin="-2.052,5.949" Margin="600,105,0,0" >
+        <Button Grid.Column="1" x:Name="DsSinhVien" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="22" BorderThickness="0" Height="50" Width="200" Click="DSSinhVien_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom" RenderTransformOrigin="-2.052,5.949" Margin="600,105,0,0" Cursor="Hand" >
             <Button.Resources>
                 <Style TargetType="{x:Type Border}">
                     <Setter Property="CornerRadius" Value="24,24,0,0"/>
@@ -117,11 +109,12 @@
                 <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
             </Button.Effect>
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="DS SINH VIÊN"/>
+                <TextBlock Text="Danh sách Sinh viên" FontSize="18"/>
             </StackPanel>
         </Button>
 
-        <Grid Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <!-- Main Grid - Dành để hiển thị dữ liệu khác nhau khi nhấn các Button -->
+        <Grid x:Name="Grid_DisplayData" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             <Grid.Resources>
                 <Style TargetType="{x:Type Border}">
                     <Setter Property="CornerRadius" Value="10"/>
@@ -132,705 +125,286 @@
             <Grid.Background>
                 <SolidColorBrush Color="#FFD4EBFF" Opacity="0.8"/>
             </Grid.Background>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="641*"/>
-                <ColumnDefinition Width="205*"/>
-                <ColumnDefinition Width="354*"/>
-            </Grid.ColumnDefinitions>
 
-            <!--<Border Grid.ColumnSpan="3">
-            </Border>-->
+            <!-- Default Grid - Thông tin cá nhân -->
+            <Grid x:Name="Grid_UserInfo" Visibility="Visible">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
 
-            <!-- Button thông tin cá nhân -->
-            <Label x:Name="Label_TTCN" Content="THÔNG TIN CÁ NHÂN" Visibility="Collapsed" HorizontalAlignment="Left" Margin="436,37,0,0" VerticalAlignment="Top" Foreground="#333" Background="{x:Null}" FlowDirection="RightToLeft" Grid.ColumnSpan="2" Width="328">
-                <Label.Style>
-                    <Style TargetType="Label">
-                        <Setter Property="FontSize" Value="30"/>
-                        <Setter Property="FontFamily" Value="Segoe UI"/>
-                        <Setter Property="FontWeight" Value="Bold"/>
-                        <Setter Property="FontStyle" Value="Normal"/>
-                    </Style>
-                </Label.Style>
-            </Label>
+                <!-- Left Grid -->
+                <Grid x:Name="Grid_Left_ProfileInfo" Grid.Column="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="3*"/>
+                        <RowDefinition Height="5*" />
+                    </Grid.RowDefinitions>
 
-            <Grid x:Name="DataGrid_TTCN" Visibility="Collapsed" Grid.ColumnSpan="3" Margin="320,136,310,178">
-                <StackPanel Orientation="Vertical" Margin="10">
-                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                        <TextBlock Text="Mã NV " FontWeight="Bold" FontSize="20"/>
-                        <TextBlock Text="{Binding MANV}" FontSize="20"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                        <TextBlock Text="Họ tên " FontWeight="Bold" FontSize="20"/>
-                        <TextBlock Text="{Binding HOTEN}" FontSize="20"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                        <TextBlock Text="Phái " FontWeight="Bold" FontSize="20"/>
-                        <TextBlock Text="{Binding PHAI}" FontSize="20"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                        <TextBlock Text="Ngày sinh " FontWeight="Bold" FontSize="20"/>
-                        <TextBlock Text="{Binding NGSINH}" FontSize="20"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                        <TextBlock Text="Phụ cấp " FontWeight="Bold" FontSize="20"/>
-                        <TextBlock Text="{Binding PHUCAP}" FontSize="20"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                        <TextBlock Text="SĐT " FontWeight="Bold" FontSize="20"/>
-                        <TextBlock x:Name="TextBlock_SDT" Text="{Binding DT, UpdateSourceTrigger=PropertyChanged}" FontSize="20" IsHitTestVisible="False" Focusable="False"/>
-                        <Button x:Name="Btn_EditSDT" Click="EditSDT_Click" Margin="480,0,0,0">
-                            <Image Source="/images/tick.png" Width="20" Height="20">
+                    <!-- Profile Picture Grid - Avatar -->
+                    <Grid HorizontalAlignment="Center" VerticalAlignment="Bottom">
+                        <Ellipse Fill="White" Width="180" Height="180"/>
+                        <Ellipse Stroke="White" Width="180" Height="180" StrokeThickness="4" Cursor="Hand" Focusable="True">
+                            <Ellipse.Fill>
+                                <ImageBrush ImageSource="/images/user-icon-512px.png" Stretch="UniformToFill"/>
+                            </Ellipse.Fill>
+                        </Ellipse>
+                    </Grid>
 
-                            </Image>
-                        </Button>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                        <TextBlock Text="Vai trò " FontWeight="Bold" FontSize="20"/>
-                        <TextBlock Text="{Binding VAITRO}" FontSize="20"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                        <TextBlock Text="Đơn vị " FontWeight="Bold" FontSize="20"/>
-                        <TextBlock Text="{Binding MADV}" FontSize="20"/>
-                    </StackPanel>
-                </StackPanel>
+                    <!-- Profile Key Data Grid - Tên & Vai trò -->
+                    <Grid Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top" >
+                        <Label x:Name="Label_Fullname" Content="User name here" HorizontalAlignment="Center" VerticalAlignment="Top" Foreground="#333" HorizontalContentAlignment="Center" FontSize="30" FontWeight="Bold"/>
+                        <!--<Label x:Name="Label_Fullname" Content="{Binding HOTEN}" HorizontalAlignment="Center" VerticalAlignment="Top" Foreground="#333" HorizontalContentAlignment="Center" FontSize="30" FontWeight="Bold"/>-->
+                        <Label x:Name="Label_Rolename" Content="Role name here" HorizontalAlignment="Center" VerticalAlignment="Top" Foreground="#333" HorizontalContentAlignment="Center" FontSize="24" FontWeight="Bold" Margin="0,50,0,0"/>
+                        <!--<Label x:Name="Label_Rolename" Content="{Binding VAITRO}" HorizontalAlignment="Center" VerticalAlignment="Top" Foreground="#333" HorizontalContentAlignment="Center" FontSize="24" FontWeight="Bold" Margin="0,50,0,0"/>-->
+                    </Grid>
+                </Grid>
+
+                <!-- Right Grid -->
+                <Grid x:Name="Grid_Right_ProfileInfo" Grid.Column="1">
+                    <!-- Label - Thông tin Cá nhân-->
+                    <Label Grid.Column="1" x:Name="Label_TTCN" Content="THÔNG TIN CÁ NHÂN" HorizontalAlignment="Left" Margin="20,40,0,0" VerticalAlignment="Top" Foreground="#333" Background="{x:Null}" Grid.ColumnSpan="2" Width="328" Padding="0,0,0,0" FontSize="30" FontWeight="Bold"/>
+
+                    <!-- Grid - Thông tin Cá nhân-->
+                    <Grid Grid.Column="1" x:Name="Grid_TTCN" Margin="0,120,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="3*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- StackPanel - Label-->
+                        <StackPanel Orientation="Vertical" Margin="20,0,0,0">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Mã nhân viên " FontWeight="Bold" FontSize="20"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                                <TextBlock Text="Phái " FontWeight="Bold" FontSize="20"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                                <TextBlock Text="Ngày sinh " FontWeight="Bold" FontSize="20"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                                <TextBlock Text="Phụ cấp " FontWeight="Bold" FontSize="20"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                                <TextBlock Text="Số điện thoại " FontWeight="Bold" FontSize="20"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                <TextBlock Text="Đơn vị " FontWeight="Bold" FontSize="20"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <!-- StackPanel - Binding Data-->
+                        <StackPanel Grid.Column="1" Orientation="Vertical">
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
+                                <TextBlock Text="Mã nhân viên " FontWeight="SemiBold" FontSize="20"/>
+                                <TextBlock Text="{Binding MANV}" FontWeight="SemiBold" FontSize="20"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                                <TextBlock Text="Phái " FontWeight="SemiBold" FontSize="20"/>
+                                <TextBlock Text="{Binding PHAI}" FontWeight="SemiBold" FontSize="20"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                                <TextBlock Text="Ngày sinh " FontWeight="SemiBold" FontSize="20"/>
+                                <TextBlock Text="{Binding NGSINH}" FontWeight="SemiBold" FontSize="20"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                                <TextBlock Text="Phụ cấp " FontWeight="SemiBold" FontSize="20"/>
+                                <TextBlock Text="{Binding PHUCAP}" FontWeight="SemiBold" FontSize="20"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                                <TextBlock x:Name="TextBlock_SDT" Text="Số điện thoại" FontWeight="SemiBold" FontSize="20"/>
+                                <TextBlock Text="{Binding DT, UpdateSourceTrigger=PropertyChanged}" FontWeight="SemiBold" FontSize="20" IsHitTestVisible="False" Focusable="False"/>
+                                <Button Click="EditSDT_Click" Margin="10,0,0,0" BorderBrush="{x:Null}" Width="28" Height="28" Background="{x:Null}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="/images/tick.png"/>
+                                    </StackPanel>
+                                </Button>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                <TextBlock Text="Đơn vị " FontWeight="SemiBold" FontSize="20"/>
+                                <TextBlock Text="{Binding MADV}" FontWeight="SemiBold" FontSize="20"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
             </Grid>
 
+            <!-- Grid Danh sách đơn vị -->
+            <Grid x:Name="Grid_Unit" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="4*" />
+                    <RowDefinition Height="20*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
 
-            <!-- button danh sách đơn vị -->
-            <Label x:Name="Label_DonVi" Content="DANH SÁCH ĐƠN VỊ" Visibility="Collapsed" HorizontalAlignment="Left" Margin="448,41,0,0" VerticalAlignment="Top" Foreground="#333" Background="{x:Null}" FlowDirection="RightToLeft" Grid.ColumnSpan="2" Width="304">
-                <Label.Style>
-                    <Style TargetType="Label">
-                        <Setter Property="FontSize" Value="30"/>
-                        <Setter Property="FontFamily" Value="Segoe UI"/>
-                        <Setter Property="FontWeight" Value="Bold"/>
-                        <Setter Property="FontStyle" Value="Normal"/>
-                    </Style>
-                </Label.Style>
-            </Label>
-            <DataGrid x:Name="Table_DonVi" Visibility="Collapsed" Margin="290,136,290,136" AutoGenerateColumns="False" FontWeight="Medium" BorderBrush="{x:Null}" SelectionChanged="Table_DonVi_SelectionChanged" Background="{x:Null}" VerticalScrollBarVisibility="Hidden" GridLinesVisibility="None" Grid.ColumnSpan="3">
-                <DataGrid.RowBackground>
-                    <SolidColorBrush Color="#FFA3BDD2" Opacity="0.6"/>
-                </DataGrid.RowBackground>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="20*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
 
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Mã đơn vị" Binding="{Binding MADV}" Width="*">
-                        <DataGridTextColumn.HeaderStyle>
-                            <Style TargetType="DataGridColumnHeader">
-                                <Setter Property="ContentTemplate">
-                                    <Setter.Value>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding}" FontFamily="Segoe UI" FontSize="16" Foreground="AliceBlue" Background="#FF173D7B" Padding="5"/>
-                                        </DataTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                                <Setter Property="Background" Value="#FF173D7B"/>
-                            </Style>
-                        </DataGridTextColumn.HeaderStyle>
+                <!-- Label - Danh sách Đơn vị -->
+                <Label Grid.Column="1" x:Name="Label_DonVi" Content="DANH SÁCH ĐƠN VỊ" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#333" FontSize="30" FontWeight="Bold"/>
 
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="{x:Type TextBlock}">
-                                <Setter Property="TextBlock.TextWrapping" Value="Wrap"/>
-                                <Setter Property="FontFamily" Value="Segoe UI"/>
-                                <Setter Property="FontSize" Value="14"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
+                <!-- DataGrid - Thông tin Đơn vị-->
+                <DataGrid Grid.Row="1" Grid.Column="1" x:Name="Table_DonVi" ItemsSource="{Binding YourData}" AutoGenerateColumns="True" FontWeight="Medium" BorderBrush="{x:Null}" Background="{x:Null}" VerticalScrollBarVisibility="Hidden" GridLinesVisibility="None" SelectionChanged="Table_DonVi_SelectionChanged">
+                    <DataGrid.RowBackground>
+                        <SolidColorBrush Color="#FFA3BDD2" Opacity="0.6"/>
+                    </DataGrid.RowBackground>
+                    <DataGrid.ColumnHeaderStyle>
+                        <Style TargetType="{x:Type DataGridColumnHeader}">
+                            <Setter Property="ContentTemplate">
+                                <Setter.Value>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding}" FontFamily="Segoe UI" FontSize="16" Foreground="AliceBlue" Background="#FF173D7B" Padding="5"/>
+                                    </DataTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="Background" Value="#FF173D7B"/>
+                        </Style>
+                    </DataGrid.ColumnHeaderStyle>
+                </DataGrid>
+            </Grid>
 
-                    <DataGridTextColumn Header="Tên đơn vị" Binding="{Binding TENDV}" Width="*">
-                        <DataGridTextColumn.HeaderStyle>
-                            <Style TargetType="DataGridColumnHeader">
-                                <Setter Property="ContentTemplate">
-                                    <Setter.Value>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding}" FontFamily="Segoe UI" FontSize="16" Foreground="AliceBlue" Background="#FF173D7B" Padding="5"/>
-                                        </DataTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                                <Setter Property="Background" Value="#FF173D7B"/>
-                            </Style>
-                        </DataGridTextColumn.HeaderStyle>
+            <!-- Grid Kế hoạch học tập -->
+            <Grid x:Name="Grid_AcademicPlan" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="4*" />
+                    <RowDefinition Height="20*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
 
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="{x:Type TextBlock}">
-                                <Setter Property="TextBlock.TextWrapping" Value="Wrap"/>
-                                <Setter Property="FontFamily" Value="Segoe UI"/>
-                                <Setter Property="FontSize" Value="14"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="20*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
 
-                    <DataGridTextColumn Header="Trưởng đơn vị" Binding="{Binding TRGDV}" Width="*">
-                        <DataGridTextColumn.HeaderStyle>
-                            <Style TargetType="DataGridColumnHeader">
-                                <Setter Property="ContentTemplate">
-                                    <Setter.Value>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding}" FontFamily="Segoe UI" FontSize="16" Foreground="AliceBlue" Background="#FF173D7B" Padding="5"/>
-                                        </DataTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                                <Setter Property="Background" Value="#FF173D7B"/>
-                            </Style>
-                        </DataGridTextColumn.HeaderStyle>
+                <Grid x:Name="Grid_Header" Grid.Column="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
 
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="{x:Type TextBlock}">
-                                <Setter Property="TextBlock.TextWrapping" Value="Wrap"/>
-                                <Setter Property="FontFamily" Value="Segoe UI"/>
-                                <Setter Property="FontSize" Value="14"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-                </DataGrid.Columns>
-            </DataGrid>
+                    <!-- Label - Kế hoạch Học tập -->
+                    <Label Grid.Column="0" x:Name="Label_KHHT" Content="KẾ HOẠCH HỌC TẬP" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="#333" Background="{x:Null}" FlowDirection="RightToLeft" FontSize="30" FontWeight="Bold"/>
 
-            <!-- button kế hoạch học tập -->
-            <Label x:Name="Label_KHHT" Content="KẾ HOẠCH HỌC TẬP" Visibility="Collapsed" HorizontalAlignment="Left" Margin="450,35,0,0" VerticalAlignment="Top" Foreground="#333" Background="{x:Null}" FlowDirection="RightToLeft" Grid.ColumnSpan="2" Width="300">
-                <Label.Style>
-                    <Style TargetType="Label">
-                        <Setter Property="FontSize" Value="30"/>
-                        <Setter Property="FontFamily" Value="Segoe UI"/>
-                        <Setter Property="FontWeight" Value="Bold"/>
-                        <Setter Property="FontStyle" Value="Normal"/>
-                    </Style>
-                </Label.Style>
-            </Label>
+                    <!-- Default TextBlock - Danh sách học phần -->
+                    <TextBlock Grid.Column="1" x:Name="TextBlock_DSHocPhan" HorizontalAlignment="Left" VerticalAlignment="Center" FontFamily="Segoe UI Semibold" FontSize="22" Foreground="#333" TextDecorations="Underline">
+                    <Hyperlink Click="DSHocPhan_Click" Foreground="#333" FontSize="22" TextDecorations="None">
+                        Danh sách Học phần
+                    </Hyperlink>
+                    </TextBlock>
 
-            <TextBlock x:Name="TextBlock_DSHocPhan" Visibility="Collapsed" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="320,90,0,0" FontFamily="Segoe UI Semibold" FontSize="22" Foreground="#333">
-                <Hyperlink Click="DSHocPhan_Click" Foreground="#333" FontSize="22" TextDecorations="None">
-                    Danh sách học phần
-                </Hyperlink>
-            </TextBlock>
+                    <TextBlock Grid.Column="1" x:Name="TextBlock_KeHoachMo" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Segoe UI Semibold" FontSize="22" Foreground="#FF190E64" TextDecorations="Underline">
+                    <Hyperlink Click="KeHoachMo_Click" Foreground="#333" FontSize="22" TextDecorations="None">
+                        Kế hoạch Mở môn
+                    </Hyperlink>
+                    </TextBlock>
 
-            <TextBlock x:Name="TextBlock_KeHoachMo" Visibility="Collapsed" VerticalAlignment="Top" Margin="23,90,0,0" FontFamily="Segoe UI Semibold" FontSize="22" Foreground="#FF190E64" Grid.Column="1">
-                <Hyperlink Click="KeHoachMo_Click" Foreground="#333" FontSize="22" TextDecorations="None">
-                    Kế hoạch mở môn
-                </Hyperlink>
-            </TextBlock>
+                    <TextBlock Grid.Column="1" x:Name="TextBlock_PhanCongGiangDay" HorizontalAlignment="Right" VerticalAlignment="Center" FontFamily="Segoe UI Semibold" FontSize="22" Foreground="#FF190E64" TextDecorations="Underline">
+                    <Hyperlink Click="PhanCong_Click" Foreground="#333" FontSize="22" TextDecorations="None">
+                        Phân công Giảng dạy
+                    </Hyperlink>
+                    </TextBlock>
 
-            <DataGrid x:Name="Table_DsHocPhan" Visibility="Collapsed" Margin="216,136,153,136" AutoGenerateColumns="False" FontWeight="Medium" BorderBrush="{x:Null}" SelectionChanged="Table_DsHocPhan_SelectionChanged" Background="{x:Null}" VerticalScrollBarVisibility="Hidden" GridLinesVisibility="None" Grid.ColumnSpan="3">
-                <DataGrid.RowBackground>
-                    <SolidColorBrush Color="#FFA3BDD2" Opacity="0.6"/>
-                </DataGrid.RowBackground>
+                </Grid>
 
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Mã HP" Binding="{Binding MAHP}" Width="*">
-                        <DataGridTextColumn.HeaderStyle>
-                            <Style TargetType="DataGridColumnHeader">
-                                <Setter Property="ContentTemplate">
-                                    <Setter.Value>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding}" FontFamily="Segoe UI" FontSize="16" Foreground="AliceBlue" Background="#FF173D7B" Padding="5"/>
-                                        </DataTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                                <Setter Property="Background" Value="#FF173D7B"/>
-                            </Style>
-                        </DataGridTextColumn.HeaderStyle>
+                <!-- Default DataGrid - Danh sách học phần -->
+                <DataGrid Grid.Row="1" Grid.Column="1" x:Name="Table_DsHocPhan" ItemsSource="{Binding YourData}" AutoGenerateColumns="True" FontWeight="Medium" BorderBrush="{x:Null}" Background="{x:Null}" VerticalScrollBarVisibility="Hidden" GridLinesVisibility="None" SelectionChanged="Table_DsHocPhan_SelectionChanged">
+                    <DataGrid.RowBackground>
+                        <SolidColorBrush Color="#FFA3BDD2" Opacity="0.6"/>
+                    </DataGrid.RowBackground>
+                    <DataGrid.ColumnHeaderStyle>
+                        <Style TargetType="{x:Type DataGridColumnHeader}">
+                            <Setter Property="ContentTemplate">
+                                <Setter.Value>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding}" FontFamily="Segoe UI" FontSize="16" Foreground="AliceBlue" Background="#FF173D7B" Padding="5"/>
+                                    </DataTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="Background" Value="#FF173D7B"/>
+                        </Style>
+                    </DataGrid.ColumnHeaderStyle>
+                </DataGrid>
 
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="{x:Type TextBlock}">
-                                <Setter Property="TextBlock.TextWrapping" Value="Wrap"/>
-                                <Setter Property="FontFamily" Value="Segoe UI"/>
-                                <Setter Property="FontSize" Value="14"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
+                <!-- DataGrid - Kế hoạch mở môn-->
+                <DataGrid Grid.Row="1" Grid.Column="1" x:Name="Table_KeHoachMo" Visibility="Collapsed" ItemsSource="{Binding YourData}" AutoGenerateColumns="True" FontWeight="Medium" BorderBrush="{x:Null}" Background="{x:Null}" VerticalScrollBarVisibility="Hidden" GridLinesVisibility="None" SelectionChanged="Table_KeHoachMo_SelectionChanged">
+                    <DataGrid.RowBackground>
+                        <SolidColorBrush Color="#FFA3BDD2" Opacity="0.6"/>
+                    </DataGrid.RowBackground>
+                    <DataGrid.ColumnHeaderStyle>
+                        <Style TargetType="{x:Type DataGridColumnHeader}">
+                            <Setter Property="ContentTemplate">
+                                <Setter.Value>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding}" FontFamily="Segoe UI" FontSize="16" Foreground="AliceBlue" Background="#FF173D7B" Padding="5"/>
+                                    </DataTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="Background" Value="#FF173D7B"/>
+                        </Style>
+                    </DataGrid.ColumnHeaderStyle>
+                </DataGrid>
 
-                    <DataGridTextColumn Header="Tên HP" Binding="{Binding TENHP}" Width="*">
-                        <DataGridTextColumn.HeaderStyle>
-                            <Style TargetType="DataGridColumnHeader">
-                                <Setter Property="ContentTemplate">
-                                    <Setter.Value>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding}" FontFamily="Segoe UI" FontSize="16" Foreground="AliceBlue" Background="#FF173D7B" Padding="5"/>
-                                        </DataTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                                <Setter Property="Background" Value="#FF173D7B"/>
-                            </Style>
-                        </DataGridTextColumn.HeaderStyle>
+                <!-- DataGrid - Phân công Giảng dạy-->
+                <DataGrid Grid.Row="1" Grid.Column="1" x:Name="Table_PhanCong" Visibility="Collapsed" ItemsSource="{Binding YourData}" AutoGenerateColumns="True" FontWeight="Medium" BorderBrush="{x:Null}" Background="{x:Null}" VerticalScrollBarVisibility="Hidden" GridLinesVisibility="None" SelectionChanged="Table_PhanCong_SelectionChanged">
+                    <DataGrid.RowBackground>
+                        <SolidColorBrush Color="#FFA3BDD2" Opacity="0.6"/>
+                    </DataGrid.RowBackground>
+                    <DataGrid.ColumnHeaderStyle>
+                        <Style TargetType="{x:Type DataGridColumnHeader}">
+                            <Setter Property="ContentTemplate">
+                                <Setter.Value>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding}" FontFamily="Segoe UI" FontSize="16" Foreground="AliceBlue" Background="#FF173D7B" Padding="5"/>
+                                    </DataTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="Background" Value="#FF173D7B"/>
+                        </Style>
+                    </DataGrid.ColumnHeaderStyle>
+                </DataGrid>
+            </Grid>
 
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="{x:Type TextBlock}">
-                                <Setter Property="TextBlock.TextWrapping" Value="Wrap"/>
-                                <Setter Property="FontFamily" Value="Segoe UI"/>
-                                <Setter Property="FontSize" Value="14"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
+            <!-- Grid Danh sách sinh viên -->
+            <Grid x:Name="Grid_StudentList" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="4*" />
+                    <RowDefinition Height="20*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
 
-                    <DataGridTextColumn Header="TC" Binding="{Binding SOTC}" Width="*">
-                        <DataGridTextColumn.HeaderStyle>
-                            <Style TargetType="DataGridColumnHeader">
-                                <Setter Property="ContentTemplate">
-                                    <Setter.Value>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding}" FontFamily="Segoe UI" FontSize="16" Foreground="AliceBlue" Background="#FF173D7B" Padding="5"/>
-                                        </DataTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                                <Setter Property="Background" Value="#FF173D7B"/>
-                            </Style>
-                        </DataGridTextColumn.HeaderStyle>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="20*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
 
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="{x:Type TextBlock}">
-                                <Setter Property="TextBlock.TextWrapping" Value="Wrap"/>
-                                <Setter Property="FontFamily" Value="Segoe UI"/>
-                                <Setter Property="FontSize" Value="14"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
+                <!-- Label - Danh sách sinh viên -->
+                <Label Grid.Column="1" x:Name="Label_DsSinhVien" Content="DANH SÁCH SINH VIÊN" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#333" FontSize="30" FontWeight="Bold"/>
 
-                    <DataGridTextColumn Header="LT" Binding="{Binding STLT}" Width="*">
-                        <DataGridTextColumn.HeaderStyle>
-                            <Style TargetType="DataGridColumnHeader">
-                                <Setter Property="ContentTemplate">
-                                    <Setter.Value>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding}" FontFamily="Segoe UI" FontSize="16" Foreground="AliceBlue" Background="#FF173D7B" Padding="5"/>
-                                        </DataTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                                <Setter Property="Background" Value="#FF173D7B"/>
-                            </Style>
-                        </DataGridTextColumn.HeaderStyle>
-
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="{x:Type TextBlock}">
-                                <Setter Property="TextBlock.TextWrapping" Value="Wrap"/>
-                                <Setter Property="FontFamily" Value="Segoe UI"/>
-                                <Setter Property="FontSize" Value="14"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-
-                    <DataGridTextColumn Header="TH" Binding="{Binding STTH}" Width="*">
-                        <DataGridTextColumn.HeaderStyle>
-                            <Style TargetType="DataGridColumnHeader">
-                                <Setter Property="ContentTemplate">
-                                    <Setter.Value>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding}" FontFamily="Segoe UI" FontSize="16" Foreground="AliceBlue" Background="#FF173D7B" Padding="5"/>
-                                        </DataTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                                <Setter Property="Background" Value="#FF173D7B"/>
-                            </Style>
-                        </DataGridTextColumn.HeaderStyle>
-
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="{x:Type TextBlock}">
-                                <Setter Property="TextBlock.TextWrapping" Value="Wrap"/>
-                                <Setter Property="FontFamily" Value="Segoe UI"/>
-                                <Setter Property="FontSize" Value="14"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-
-                    <DataGridTextColumn Header="SLSV" Binding="{Binding SOSVTD}" Width="*">
-                        <DataGridTextColumn.HeaderStyle>
-                            <Style TargetType="DataGridColumnHeader">
-                                <Setter Property="ContentTemplate">
-                                    <Setter.Value>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding}" FontFamily="Segoe UI" FontSize="16" Foreground="AliceBlue" Background="#FF173D7B" Padding="5"/>
-                                        </DataTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                                <Setter Property="Background" Value="#FF173D7B"/>
-                            </Style>
-                        </DataGridTextColumn.HeaderStyle>
-
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="{x:Type TextBlock}">
-                                <Setter Property="TextBlock.TextWrapping" Value="Wrap"/>
-                                <Setter Property="FontFamily" Value="Segoe UI"/>
-                                <Setter Property="FontSize" Value="14"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-
-                    <DataGridTextColumn Header="Đơn vị" Binding="{Binding MADV}" Width="*">
-                        <DataGridTextColumn.HeaderStyle>
-                            <Style TargetType="DataGridColumnHeader">
-                                <Setter Property="ContentTemplate">
-                                    <Setter.Value>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding}" FontFamily="Segoe UI" FontSize="16" Foreground="AliceBlue" Background="#FF173D7B" Padding="5"/>
-                                        </DataTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                                <Setter Property="Background" Value="#FF173D7B"/>
-                            </Style>
-                        </DataGridTextColumn.HeaderStyle>
-
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="{x:Type TextBlock}">
-                                <Setter Property="TextBlock.TextWrapping" Value="Wrap"/>
-                                <Setter Property="FontFamily" Value="Segoe UI"/>
-                                <Setter Property="FontSize" Value="14"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-                </DataGrid.Columns>
-            </DataGrid>
-
-            <!-- Kế hoạch mở môn-->
-
-            <DataGrid x:Name="Table_KeHoachMo" Visibility="Collapsed" Margin="216,136,153,136" AutoGenerateColumns="False" FontWeight="Medium" BorderBrush="{x:Null}" SelectionChanged="Table_KeHoachMo_SelectionChanged" Background="{x:Null}" VerticalScrollBarVisibility="Hidden" GridLinesVisibility="None" Grid.ColumnSpan="3">
-                <DataGrid.RowBackground>
-                    <SolidColorBrush Color="#FFA3BDD2" Opacity="0.6"/>
-                </DataGrid.RowBackground>
-
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Mã HP" Binding="{Binding MAHP}" Width="*">
-                        <DataGridTextColumn.HeaderStyle>
-                            <Style TargetType="DataGridColumnHeader">
-                                <Setter Property="ContentTemplate">
-                                    <Setter.Value>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding}" FontFamily="Segoe UI" FontSize="16" Foreground="AliceBlue" Background="#FF173D7B" Padding="5"/>
-                                        </DataTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                                <Setter Property="Background" Value="#FF173D7B"/>
-                            </Style>
-                        </DataGridTextColumn.HeaderStyle>
-
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="{x:Type TextBlock}">
-                                <Setter Property="TextBlock.TextWrapping" Value="Wrap"/>
-                                <Setter Property="FontFamily" Value="Segoe UI"/>
-                                <Setter Property="FontSize" Value="14"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-
-                    <DataGridTextColumn Header="Tên HP" Binding="{Binding TENHP}" Width="*">
-                        <DataGridTextColumn.HeaderStyle>
-                            <Style TargetType="DataGridColumnHeader">
-                                <Setter Property="ContentTemplate">
-                                    <Setter.Value>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding}" FontFamily="Segoe UI" FontSize="16" Foreground="AliceBlue" Background="#FF173D7B" Padding="5"/>
-                                        </DataTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                                <Setter Property="Background" Value="#FF173D7B"/>
-                            </Style>
-                        </DataGridTextColumn.HeaderStyle>
-
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="{x:Type TextBlock}">
-                                <Setter Property="TextBlock.TextWrapping" Value="Wrap"/>
-                                <Setter Property="FontFamily" Value="Segoe UI"/>
-                                <Setter Property="FontSize" Value="14"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-
-                    <DataGridTextColumn Header="Học kỳ" Binding="{Binding HK}" Width="*">
-                        <DataGridTextColumn.HeaderStyle>
-                            <Style TargetType="DataGridColumnHeader">
-                                <Setter Property="ContentTemplate">
-                                    <Setter.Value>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding}" FontFamily="Segoe UI" FontSize="16" Foreground="AliceBlue" Background="#FF173D7B" Padding="5"/>
-                                        </DataTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                                <Setter Property="Background" Value="#FF173D7B"/>
-                            </Style>
-                        </DataGridTextColumn.HeaderStyle>
-
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="{x:Type TextBlock}">
-                                <Setter Property="TextBlock.TextWrapping" Value="Wrap"/>
-                                <Setter Property="FontFamily" Value="Segoe UI"/>
-                                <Setter Property="FontSize" Value="14"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-
-                    <DataGridTextColumn Header="Năm học" Binding="{Binding NAM}" Width="*">
-                        <DataGridTextColumn.HeaderStyle>
-                            <Style TargetType="DataGridColumnHeader">
-                                <Setter Property="ContentTemplate">
-                                    <Setter.Value>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding}" FontFamily="Segoe UI" FontSize="16" Foreground="AliceBlue" Background="#FF173D7B" Padding="5"/>
-                                        </DataTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                                <Setter Property="Background" Value="#FF173D7B"/>
-                            </Style>
-                        </DataGridTextColumn.HeaderStyle>
-
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="{x:Type TextBlock}">
-                                <Setter Property="TextBlock.TextWrapping" Value="Wrap"/>
-                                <Setter Property="FontFamily" Value="Segoe UI"/>
-                                <Setter Property="FontSize" Value="14"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-
-                    <DataGridTextColumn Header="Chương trình đào tạo" Binding="{Binding MACT}" Width="*">
-                        <DataGridTextColumn.HeaderStyle>
-                            <Style TargetType="DataGridColumnHeader">
-                                <Setter Property="ContentTemplate">
-                                    <Setter.Value>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding}" FontFamily="Segoe UI" FontSize="16" Foreground="AliceBlue" Background="#FF173D7B" Padding="5"/>
-                                        </DataTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                                <Setter Property="Background" Value="#FF173D7B"/>
-                            </Style>
-                        </DataGridTextColumn.HeaderStyle>
-
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="{x:Type TextBlock}">
-                                <Setter Property="TextBlock.TextWrapping" Value="Wrap"/>
-                                <Setter Property="FontFamily" Value="Segoe UI"/>
-                                <Setter Property="FontSize" Value="14"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-                </DataGrid.Columns>
-            </DataGrid>
-
-            <!-- button danh sách sinh viên -->
-            <Label x:Name="Label_DsSinhVien" Content="DANH SÁCH SINH VIÊN" Visibility="Collapsed" HorizontalAlignment="Left" Margin="458,41,0,0" VerticalAlignment="Top" Foreground="#333" Background="{x:Null}" FlowDirection="RightToLeft" Grid.ColumnSpan="2" Width="348">
-                <Label.Style>
-                    <Style TargetType="Label">
-                        <Setter Property="FontSize" Value="30"/>
-                        <Setter Property="FontFamily" Value="Segoe UI"/>
-                        <Setter Property="FontWeight" Value="Bold"/>
-                        <Setter Property="FontStyle" Value="Normal"/>
-                    </Style>
-                </Label.Style>
-            </Label>
-
-            <DataGrid x:Name="Table_DsSinhVien" Visibility="Collapsed" Margin="216,136,153,136" AutoGenerateColumns="False" FontWeight="Medium" BorderBrush="{x:Null}" SelectionChanged="Table_DsSinhVien_SelectionChanged" Background="{x:Null}" VerticalScrollBarVisibility="Hidden" GridLinesVisibility="None" Grid.ColumnSpan="3">
-                <DataGrid.RowBackground>
-                    <SolidColorBrush Color="#FFA3BDD2" Opacity="0.6"/>
-                </DataGrid.RowBackground>
-
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Mã SV" Binding="{Binding MASV}" Width="*">
-                        <DataGridTextColumn.HeaderStyle>
-                            <Style TargetType="DataGridColumnHeader">
-                                <Setter Property="ContentTemplate">
-                                    <Setter.Value>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding}" FontFamily="Segoe UI" FontSize="16" Foreground="AliceBlue" Background="#FF173D7B" Padding="5"/>
-                                        </DataTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                                <Setter Property="Background" Value="#FF173D7B"/>
-                            </Style>
-                        </DataGridTextColumn.HeaderStyle>
-
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="{x:Type TextBlock}">
-                                <Setter Property="TextBlock.TextWrapping" Value="Wrap"/>
-                                <Setter Property="FontFamily" Value="Segoe UI"/>
-                                <Setter Property="FontSize" Value="14"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-
-                    <DataGridTextColumn Header="Tên SV" Binding="{Binding HOTEN}" Width="*">
-                        <DataGridTextColumn.HeaderStyle>
-                            <Style TargetType="DataGridColumnHeader">
-                                <Setter Property="ContentTemplate">
-                                    <Setter.Value>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding}" FontFamily="Segoe UI" FontSize="16" Foreground="AliceBlue" Background="#FF173D7B" Padding="5"/>
-                                        </DataTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                                <Setter Property="Background" Value="#FF173D7B"/>
-                            </Style>
-                        </DataGridTextColumn.HeaderStyle>
-
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="{x:Type TextBlock}">
-                                <Setter Property="TextBlock.TextWrapping" Value="Wrap"/>
-                                <Setter Property="FontFamily" Value="Segoe UI"/>
-                                <Setter Property="FontSize" Value="14"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-
-                    <DataGridTextColumn Header="Phái" Binding="{Binding PHAI}" Width="*">
-                        <DataGridTextColumn.HeaderStyle>
-                            <Style TargetType="DataGridColumnHeader">
-                                <Setter Property="ContentTemplate">
-                                    <Setter.Value>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding}" FontFamily="Segoe UI" FontSize="16" Foreground="AliceBlue" Background="#FF173D7B" Padding="5"/>
-                                        </DataTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                                <Setter Property="Background" Value="#FF173D7B"/>
-                            </Style>
-                        </DataGridTextColumn.HeaderStyle>
-
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="{x:Type TextBlock}">
-                                <Setter Property="TextBlock.TextWrapping" Value="Wrap"/>
-                                <Setter Property="FontFamily" Value="Segoe UI"/>
-                                <Setter Property="FontSize" Value="14"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-
-                    <DataGridTextColumn Header="Ngày sinh" Binding="{Binding NGSINH}" Width="*">
-                        <DataGridTextColumn.HeaderStyle>
-                            <Style TargetType="DataGridColumnHeader">
-                                <Setter Property="ContentTemplate">
-                                    <Setter.Value>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding}" FontFamily="Segoe UI" FontSize="16" Foreground="AliceBlue" Background="#FF173D7B" Padding="5"/>
-                                        </DataTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                                <Setter Property="Background" Value="#FF173D7B"/>
-                            </Style>
-                        </DataGridTextColumn.HeaderStyle>
-
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="{x:Type TextBlock}">
-                                <Setter Property="TextBlock.TextWrapping" Value="Wrap"/>
-                                <Setter Property="FontFamily" Value="Segoe UI"/>
-                                <Setter Property="FontSize" Value="14"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-
-                    <DataGridTextColumn Header="Địa chỉ" Binding="{Binding DCHI}" Width="*">
-                        <DataGridTextColumn.HeaderStyle>
-                            <Style TargetType="DataGridColumnHeader">
-                                <Setter Property="ContentTemplate">
-                                    <Setter.Value>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding}" FontFamily="Segoe UI" FontSize="16" Foreground="AliceBlue" Background="#FF173D7B" Padding="5"/>
-                                        </DataTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                                <Setter Property="Background" Value="#FF173D7B"/>
-                            </Style>
-                        </DataGridTextColumn.HeaderStyle>
-
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="{x:Type TextBlock}">
-                                <Setter Property="TextBlock.TextWrapping" Value="Wrap"/>
-                                <Setter Property="FontFamily" Value="Segoe UI"/>
-                                <Setter Property="FontSize" Value="14"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-
-                    <DataGridTextColumn Header="SĐT" Binding="{Binding DT}" Width="*">
-                        <DataGridTextColumn.HeaderStyle>
-                            <Style TargetType="DataGridColumnHeader">
-                                <Setter Property="ContentTemplate">
-                                    <Setter.Value>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding}" FontFamily="Segoe UI" FontSize="16" Foreground="AliceBlue" Background="#FF173D7B" Padding="5"/>
-                                        </DataTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                                <Setter Property="Background" Value="#FF173D7B"/>
-                            </Style>
-                        </DataGridTextColumn.HeaderStyle>
-
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="{x:Type TextBlock}">
-                                <Setter Property="TextBlock.TextWrapping" Value="Wrap"/>
-                                <Setter Property="FontFamily" Value="Segoe UI"/>
-                                <Setter Property="FontSize" Value="14"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-
-                    <DataGridTextColumn Header="CTDT" Binding="{Binding CTDT}" Width="*">
-                        <DataGridTextColumn.HeaderStyle>
-                            <Style TargetType="DataGridColumnHeader">
-                                <Setter Property="ContentTemplate">
-                                    <Setter.Value>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding}" FontFamily="Segoe UI" FontSize="16" Foreground="AliceBlue" Background="#FF173D7B" Padding="5"/>
-                                        </DataTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                                <Setter Property="Background" Value="#FF173D7B"/>
-                            </Style>
-                        </DataGridTextColumn.HeaderStyle>
-
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="{x:Type TextBlock}">
-                                <Setter Property="TextBlock.TextWrapping" Value="Wrap"/>
-                                <Setter Property="FontFamily" Value="Segoe UI"/>
-                                <Setter Property="FontSize" Value="14"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-
-                    <DataGridTextColumn Header="TCTL" Binding="{Binding TCTL}" Width="*">
-                        <DataGridTextColumn.HeaderStyle>
-                            <Style TargetType="DataGridColumnHeader">
-                                <Setter Property="ContentTemplate">
-                                    <Setter.Value>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding}" FontFamily="Segoe UI" FontSize="16" Foreground="AliceBlue" Background="#FF173D7B" Padding="5"/>
-                                        </DataTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                                <Setter Property="Background" Value="#FF173D7B"/>
-                            </Style>
-                        </DataGridTextColumn.HeaderStyle>
-
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="{x:Type TextBlock}">
-                                <Setter Property="TextBlock.TextWrapping" Value="Wrap"/>
-                                <Setter Property="FontFamily" Value="Segoe UI"/>
-                                <Setter Property="FontSize" Value="14"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-
-                    <DataGridTextColumn Header="ĐTBTL" Binding="{Binding DTBTL}" Width="*">
-                        <DataGridTextColumn.HeaderStyle>
-                            <Style TargetType="DataGridColumnHeader">
-                                <Setter Property="ContentTemplate">
-                                    <Setter.Value>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding}" FontFamily="Segoe UI" FontSize="16" Foreground="AliceBlue" Background="#FF173D7B" Padding="5"/>
-                                        </DataTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                                <Setter Property="Background" Value="#FF173D7B"/>
-                            </Style>
-                        </DataGridTextColumn.HeaderStyle>
-
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="{x:Type TextBlock}">
-                                <Setter Property="TextBlock.TextWrapping" Value="Wrap"/>
-                                <Setter Property="FontFamily" Value="Segoe UI"/>
-                                <Setter Property="FontSize" Value="14"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-
-                </DataGrid.Columns>
-            </DataGrid>
+                <!-- DataGrid - Danh sách sinh viên -->
+                <DataGrid Grid.Row="1" Grid.Column="1" x:Name="Table_DsSinhVien" ItemsSource="{Binding YourData}" AutoGenerateColumns="True" FontWeight="Medium" BorderBrush="{x:Null}" Background="{x:Null}" VerticalScrollBarVisibility="Hidden" GridLinesVisibility="None" SelectionChanged="Table_DsSinhVien_SelectionChanged">
+                    <DataGrid.RowBackground>
+                        <SolidColorBrush Color="#FFA3BDD2" Opacity="0.6"/>
+                    </DataGrid.RowBackground>
+                    <DataGrid.ColumnHeaderStyle>
+                        <Style TargetType="{x:Type DataGridColumnHeader}">
+                            <Setter Property="ContentTemplate">
+                                <Setter.Value>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding}" FontFamily="Segoe UI" FontSize="16" Foreground="AliceBlue" Background="#FF173D7B" Padding="5"/>
+                                    </DataTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="Background" Value="#FF173D7B"/>
+                        </Style>
+                    </DataGrid.ColumnHeaderStyle>
+                </DataGrid>
+            </Grid>
         </Grid>
-
     </Grid>
 </Page>
     

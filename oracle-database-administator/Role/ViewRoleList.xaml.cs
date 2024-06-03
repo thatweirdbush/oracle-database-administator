@@ -40,7 +40,7 @@ namespace oracle_database_administator.Role
         {
             if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
             {
-                mainWindow.MainFrame.Navigate(new oracle_database_administator.SystemDashboard());
+                mainWindow.MainFrame.Navigate(new SystemDashboard());
             }
         }
 
@@ -117,9 +117,9 @@ namespace oracle_database_administator.Role
             if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
             {
                 if (Database.Instance.IsSelectable)
-                    mainWindow.MainFrame.Navigate(new oracle_database_administator.SystemDashboard());
+                    mainWindow.MainFrame.Navigate(new SystemDashboard());
                 else
-                    mainWindow.MainFrame.Navigate(new oracle_database_administator.Role.ViewRoleList());
+                    mainWindow.MainFrame.Navigate(new ViewRoleList());
             }
         }
 

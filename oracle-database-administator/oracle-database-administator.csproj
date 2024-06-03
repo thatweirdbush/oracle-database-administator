@@ -131,9 +131,6 @@
     <Compile Include="UniversityDashboard.xaml.cs">
       <DependentUpon>UniversityDashboard.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Staff\StaffDashboard.xaml.cs">
-      <DependentUpon>StaffDashboard.xaml</DependentUpon>
-    </Compile>
     <Compile Include="User\GrantPrivOnTable.xaml.cs">
       <DependentUpon>GrantPrivOnTable.xaml</DependentUpon>
     </Compile>
@@ -195,10 +192,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UniversityDashboard.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Staff\StaffDashboard.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -307,6 +300,7 @@
   <ItemGroup>
     <Folder Include="DepartmentHead\" />
     <Folder Include="Ministry\" />
+    <Folder Include="Staff\" />
     <Folder Include="UnitHead\" />
   </ItemGroup>
   <ItemGroup>
@@ -314,6 +308,15 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="images\pascal-bernardon.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\user-icon-512px.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\campus.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\harrington.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Text.Json.6.0.1\build\System.Text.Json.targets" Condition="Exists('..\packages\System.Text.Json.6.0.1\build\System.Text.Json.targets')" />

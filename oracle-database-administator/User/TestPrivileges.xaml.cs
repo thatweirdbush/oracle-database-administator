@@ -115,7 +115,7 @@ namespace oracle_database_administator.User
             }
             if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
             {
-                mainWindow.MainFrame.Navigate(new oracle_database_administator.SystemDashboard());
+                mainWindow.MainFrame.Navigate(new SystemDashboard());
             }
         }
 
