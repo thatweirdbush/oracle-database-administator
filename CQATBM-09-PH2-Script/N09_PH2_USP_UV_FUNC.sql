@@ -8,10 +8,22 @@
 
 
 
+-- CONNECT vào C##ADMIN để tạo CSDL trên Schema C##ADMIN 
+CONN C##ADMIN/123;
 ----------------------------------------------------------------
 -- Script tạo các Role trong Database
 ------------------------------------------------------------------ 
 ALTER SESSION SET "_ORACLE_SCRIPT" = TRUE;
+
+-- Xóa các Role trước khi chạy script
+DROP ROLE N09_RL_NHANVIEN;
+DROP ROLE N09_RL_GIANGVIEN;
+DROP ROLE N09_RL_GIAOVU;
+DROP ROLE N09_RL_TRUONG_DONVI;
+DROP ROLE N09_RL_TRUONG_KHOA;
+DROP ROLE N09_RL_SINHVIEN;
+/
+-- Tạo Role
 CREATE ROLE N09_RL_NHANVIEN;
 CREATE ROLE N09_RL_GIANGVIEN;
 CREATE ROLE N09_RL_GIAOVU;
@@ -23,6 +35,17 @@ CREATE ROLE N09_RL_SINHVIEN;
 ----------------------------------------------------------------
 -- Script tạo View cho tất cả Table trong Database
 ----------------------------------------------------------------
+-- Xóa các View trước khi chạy script
+DROP VIEW UV_N09_NHANSU;
+DROP VIEW UV_N09_SINHVIEN;
+DROP VIEW UV_N09_DONVI;
+DROP VIEW UV_N09_HOCPHAN;
+DROP VIEW UV_N09_KHMO;
+DROP VIEW UV_N09_PHANCONG;
+DROP VIEW UV_N09_DANGKY;
+/
+
+-- Tạo View
 CREATE OR REPLACE VIEW UV_N09_NHANSU AS
 SELECT 
     MANV AS "Mã Nhân Viên",
@@ -187,7 +210,7 @@ BEGIN
         FETCH CUR INTO USR; 
         EXIT WHEN CUR%NOTFOUND; 
         
-        STRSQL := 'DROP USER '|| USR ||' CASCADE'; 
+        STRSQL := 'DROP USER '|| USR || ' CASCADE'; 
         EXECUTE IMMEDIATE(STRSQL); 
     END LOOP; 
     STRSQL := 'ALTER SESSION SET "_ORACLE_SCRIPT" = FALSE'; 
@@ -216,7 +239,7 @@ BEGIN
         FETCH CUR INTO USR; 
         EXIT WHEN CUR%NOTFOUND; 
         
-        STRSQL := 'DROP USER '|| USR ||' CASCADE'; 
+        STRSQL := 'DROP USER '|| USR || ' CASCADE'; 
         EXECUTE IMMEDIATE(STRSQL); 
     END LOOP; 
     STRSQL := 'ALTER SESSION SET "_ORACLE_SCRIPT" = FALSE'; 
@@ -285,10 +308,10 @@ END;
 -----------------------------------------------------------------
 -- Thực thi các Stored Procedure cần thiết 
 -----------------------------------------------------------------
--- Thực thi Stored Procedure xóa user cho tất cả nhân sự
+-- Thực thi Stored Procedure xóa user cho tất cả nhân sự trước khi tạo user Nhân sự mới
 EXEC N09_DROP_USER_NHANSU;
 /
--- Thực thi Stored Procedure xóa user cho tất cả sinh viên
+-- Thực thi Stored Procedure xóa user cho tất cả sinh viên trước khi tạo user Sinh viên mới
 EXEC N09_DROP_USER_SINHVIEN;
 /
 -- Thực thi Stored Procedure tạo user cho tất cả nhân sự
@@ -298,19 +321,19 @@ EXEC N09_CREATE_USER_NHANSU;
 EXEC N09_CREATE_USER_SINHVIEN;
 /
 -- Thực thi Stored Procedure gán Role cho tất cả Nhân viên
-EXEC N09_GRANT_ROLE_NHANSU('N09_RL_NHANVIEN', 'Nhan vien');
+EXEC N09_GRANT_ROLE_NHANSU('N09_RL_NHANVIEN', 'Nhân viên');
 /
 -- Thực thi Stored Procedure gán Role cho tất cả Giảng viên
-EXEC N09_GRANT_ROLE_NHANSU('N09_RL_GIANGVIEN', 'Giang vien');
+EXEC N09_GRANT_ROLE_NHANSU('N09_RL_GIANGVIEN', 'Giảng viên');
 /
 -- Thực thi Stored Procedure gán Role cho tất cả Giáo vụ
-EXEC N09_GRANT_ROLE_NHANSU('N09_RL_GIAOVU', 'Giao vu');
+EXEC N09_GRANT_ROLE_NHANSU('N09_RL_GIAOVU', 'Giáo vụ');
 /
 -- Thực thi Stored Procedure gán Role cho tất cả Trưởng đơn vị
-EXEC N09_GRANT_ROLE_NHANSU('N09_RL_TRUONG_DONVI', 'Truong don vi');
+EXEC N09_GRANT_ROLE_NHANSU('N09_RL_TRUONG_DONVI', 'Trưởng đơn vị');
 /
 -- Thực thi Stored Procedure gán Role cho tất cả Trưởng khoa
-EXEC N09_GRANT_ROLE_NHANSU('N09_RL_TRUONG_KHOA', 'Truong khoa');
+EXEC N09_GRANT_ROLE_NHANSU('N09_RL_TRUONG_KHOA', 'Trưởng khoa');
 /
 -- Thực thi Stored Procedure gán Role cho tất cả sinh viên
 EXEC N09_GRANT_ROLE_SINHVIEN('N09_RL_SINHVIEN');
@@ -373,6 +396,16 @@ GRANT EXECUTE ON N09_SELECT_ANY_TABLE TO PUBLIC;
 
 
 
+-- -- Test
+--  -- SELECT tất cả các dòng của Table N09_NHANVIEN
+--  CONN NV201/NV201
+--  VARIABLE rc REFCURSOR;
+--      EXECUTE C##ADMIN.N09_SELECT_ANY_TABLE(:rc, 'C##ADMIN.UV_N09_DONVI');
+--  PRINT rc;
+--/
+
+
+
 ----------------------------------------------------------------
 -- Stored Procedure SELECT chỉ trả về 1 dòng của Table
 ----------------------------------------------------------------
@@ -395,12 +428,14 @@ GRANT EXECUTE ON N09_GET_SINGLE_LINE_DATA TO PUBLIC;
 /
 
 -- -- Test
--- VARIABLE rc REFCURSOR;
---     EXECUTE SYS.N09_GET_SINGLE_LINE_DATA(:rc, 'N09_NHANVIEN');
--- PRINT rc;
--- /
-
-
+--CONN NV201/NV201;
+--VARIABLE rc REFCURSOR;
+--     EXECUTE C##ADMIN.N09_GET_SINGLE_LINE_DATA(:rc, 'C##ADMIN.UV_N09_NHANSU_VIEWBY_GIANGVIEN');
+--PRINT rc;
+-- SELECT * FROM C##ADMIN.UV_N09_NHANSU_VIEWBY_GIANGVIEN
+--/
+ 
+ 
 
 ----------------------------------------------------------------
 -- Stored Procedure SELECT tất cả các Roles
