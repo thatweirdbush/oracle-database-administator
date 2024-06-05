@@ -8,13 +8,11 @@
 
 
 
--- CONNECT vào C##ADMIN để tạo CSDL trên Schema C##ADMIN 
-CONN C##ADMIN/123;
 /***************************************************************
 *  YÊU CẦU 1: CẤP QUYỀN TRUY CẬP
 ****************************************************************/
-/*
-*/
+-- CONNECT vào C##ADMIN để tạo CSDL trên Schema C##ADMIN 
+CONN C##ADMIN/123;
 /***************************************************************
 CS#1: Người dùng có VAITRO là “Nhân viên cơ bản” có quyền truy cập dữ liệu:
     - Xem dòng dữ liệu của chính mình trong quan hệ NHANSU, có thể chỉnh sửa số điện
@@ -752,7 +750,13 @@ CS#6: Người dùng có VAITRO là “Sinh viên” có quyền hạn:
         Sinh viên có thể hiệu chỉnh đăng ký học phần (thêm, xóa) nếu ngày hiện tại không vượt quá
         14 ngày so với ngày bắt đầu học kỳ (xem thêm thông tin về học kỳ trong quan hệ KHMO)
         mà sinh viên đang hiệu chỉnh đăng ký học phần.
+
+    * YÊU CẦU BẮT BUỘC: CS#6 sử dụng cơ chế VPD của Oracle để cài đặt.
 ****************************************************************/
+
+
+
+
 
 
 

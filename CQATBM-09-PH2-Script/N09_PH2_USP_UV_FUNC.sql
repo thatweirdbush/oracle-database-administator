@@ -55,7 +55,8 @@ SELECT
     PHUCAP AS "Phụ Cấp",
     DT AS "Điện Thoại",
     VAITRO AS "Vai Trò",
-    MADV AS "Mã Đơn Vị"
+    MADV AS "Mã Đơn Vị",
+    COSO AS "Cơ Sở"
 FROM N09_NHANSU;
 /
 
@@ -70,7 +71,8 @@ SELECT
     MACT AS "Mã Chương Trình",
     MANGANH AS "Mã Ngành",
     SOTCTL AS "Số Tín Chỉ",
-    DTBTL AS "Điểm TB"
+    DTBTL AS "Điểm TB",
+    COSO AS "Cơ Sở"
 FROM N09_SINHVIEN;
 /
 
