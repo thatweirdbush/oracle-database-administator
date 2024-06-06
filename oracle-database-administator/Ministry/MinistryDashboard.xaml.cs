@@ -133,6 +133,11 @@ namespace oracle_database_administator.Ministry
             Table_DsSinhVien.ItemsSource = Db.GetAnyTable(Db.STUDENTS);
         }
 
+        private void ThongBao_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
         private void Button_EditSDT_Click(object sender, RoutedEventArgs e)
         {
             TextBlock_SDT.Visibility = Visibility.Collapsed;

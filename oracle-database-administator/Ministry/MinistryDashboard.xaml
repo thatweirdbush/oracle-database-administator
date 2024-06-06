@@ -95,7 +95,6 @@
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="Kế hoạch Học tập" FontSize="18"/>
             </StackPanel>
-
         </Button>
         <Button Grid.Column="1" x:Name="DsSinhVien" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="22" BorderThickness="0" Height="50" Width="200" Click="DSSinhVien_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom" RenderTransformOrigin="-2.052,5.949" Margin="600,105,0,0" Cursor="Hand" >
             <Button.Resources>
@@ -111,6 +110,22 @@
             </Button.Effect>
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="Danh sách Sinh viên" FontSize="18"/>
+            </StackPanel>
+        </Button>
+        <Button Grid.Column="1" x:Name="ThongBao" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="22" BorderThickness="0" Height="50" Width="200" Click="ThongBao_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom" RenderTransformOrigin="-2.052,5.949" Margin="800,0,0,0" Cursor="Hand" >
+            <Button.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="CornerRadius" Value="24,24,0,0"/>
+                </Style>
+            </Button.Resources>
+            <Button.Background>
+                <SolidColorBrush Color="#FFFF75C1" Opacity="0.75"/>
+            </Button.Background>
+            <Button.Effect>
+                <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
+            </Button.Effect>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Thông báo" FontSize="18"/>
             </StackPanel>
         </Button>
 

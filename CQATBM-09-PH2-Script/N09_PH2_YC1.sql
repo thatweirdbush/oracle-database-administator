@@ -491,8 +491,8 @@ BEGIN
                 RAISE_APPLICATION_ERROR(-20001, 'Không thể thực hiện thao tác UPDATE vì học phần này không thuộc đơn vị của bạn.');
             ELSE
                 UPDATE N09_PHANCONG
-                SET MAGV = :NEW."Mã Giảng Viên", MAHP = :NEW."Mã Học Phần", HK = :NEW."Học Kỳ", NAM = :NEW."Năm Học", MACT = :NEW."Mã Chương Trình"
-                WHERE MAGV = :OLD."Mã Giảng Viên" AND MAHP = :OLD."Mã Học Phần" AND HK = :OLD."Học Kỳ" AND NAM = :OLD."Năm Học" AND MACT = :OLD."Mã Chương Trình";
+                SET MAGV = :NEW."Mã Giảng Viên", MAHP = :NEW."Mã Học Phần", HK = :NEW."Học Kỳ", NAM = :NEW."Năm", MACT = :NEW."Mã Chương Trình"
+                WHERE MAGV = :OLD."Mã Giảng Viên" AND MAHP = :OLD."Mã Học Phần" AND HK = :OLD."Học Kỳ" AND NAM = :OLD."Năm" AND MACT = :OLD."Mã Chương Trình";
             END IF;
             
         ELSIF INSERTING THEN
@@ -508,7 +508,7 @@ BEGIN
                 RAISE_APPLICATION_ERROR(-20001, 'Không thể thực hiện thao tác INSERT vì học phần này không thuộc đơn vị của bạn.');
             ELSE
                 INSERT INTO N09_PHANCONG (MAGV, MAHP, HK, NAM, MACT)
-                VALUES (:NEW."Mã Giảng Viên", :NEW."Mã Học Phần", :NEW."Học Kỳ", :NEW."Năm Học", :NEW."Mã Chương Trình");
+                VALUES (:NEW."Mã Giảng Viên", :NEW."Mã Học Phần", :NEW."Học Kỳ", :NEW."Năm", :NEW."Mã Chương Trình");
             END IF;
             
         ELSIF DELETING THEN
@@ -524,7 +524,7 @@ BEGIN
                 RAISE_APPLICATION_ERROR(-20001, 'Không thể thực hiện thao tác DELETE vì học phần này không thuộc đơn vị của bạn.');
             ELSE
                 DELETE FROM N09_PHANCONG
-                WHERE MAGV = :OLD."Mã Giảng Viên" AND MAHP = :OLD."Mã Học Phần" AND HK = :OLD."Học Kỳ" AND NAM = :OLD."Năm Học" AND MACT = :OLD."Mã Chương Trình";
+                WHERE MAGV = :OLD."Mã Giảng Viên" AND MAHP = :OLD."Mã Học Phần" AND HK = :OLD."Học Kỳ" AND NAM = :OLD."Năm" AND MACT = :OLD."Mã Chương Trình";
             END IF;
         END IF;  
     END IF;    
