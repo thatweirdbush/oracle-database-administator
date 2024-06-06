@@ -1,5 +1,7 @@
 ﻿using Oracle.ManagedDataAccess.Client;
+using oracle_database_administator.Ministry;
 using oracle_database_administator.Role;
+using oracle_database_administator.Staff;
 using oracle_database_administator.Teacher;
 using oracle_database_administator.User;
 using System;
@@ -32,21 +34,54 @@ namespace oracle_database_administator
             InitializeComponent();
         }
 
-        private void SchoolButton_Click(object sender, RoutedEventArgs e)
+        public void SwitchCaseRole()
+        {
+            MessageBox.Show(Db.GetCurrentRole(), "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+
+            switch (Db.GetCurrentRole())
+            {
+                case "N09_RL_NHANVIEN":
+                    {
+                        StaffDashboard staffDashboard = new StaffDashboard();
+                        NavigationService.Navigate(staffDashboard);
+                        break;
+                    }
+
+                case "N09_RL_GIANGVIEN":
+                    {
+                        TeacherDashboard teacherDashboard = new TeacherDashboard();
+                        NavigationService.Navigate(teacherDashboard);
+                        break;
+                    }
+                case "N09_RL_GIAOVU":
+                    {
+                        MinistryDashboard ministryDashboard = new MinistryDashboard();
+                        NavigationService.Navigate(ministryDashboard);
+                        break;
+                    }
+                default:
+                    {
+                        Db.ClearUpConnection();
+                        MessageBox.Show("You do not have permission to access this application!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                        break;
+                    }
+            }
+        }
+
+        public void UserAccessControl()
         {
             if (conn == null)
             {
                 if (Db.ConnectToServer())
-                {
-                    TeacherDashboard teacherDashboard = new TeacherDashboard();
-                    NavigationService.Navigate(teacherDashboard);
-                }
+                    SwitchCaseRole();
             }
             else
-            {
-                TeacherDashboard teacherDashboard = new TeacherDashboard();
-                NavigationService.Navigate(teacherDashboard);
-            }
+                SwitchCaseRole();
+        }
+
+        private void SchoolButton_Click(object sender, RoutedEventArgs e)
+        {
+            UserAccessControl();
         }
 
         private void SystemButton_Click(object sender, RoutedEventArgs e)

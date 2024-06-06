@@ -110,7 +110,7 @@ SELECT
     MAGV AS "Mã Giảng Viên",
     MAHP AS "Mã Học Phần",
     HK AS "Học Kỳ",
-    NAM AS "Năm Học",
+    NAM AS "Năm",
     MACT AS "Mã Chương Trình"
 FROM N09_PHANCONG;
 /
@@ -707,20 +707,128 @@ END;
 /
 
 
+/***************************************************************
+* Phân Hệ 2
+****************************************************************/
+----------------------------------------------------------------
+-- Stored Procedure UPDATE bảng N09_NHANSU
+-- Tham số truyền vào: Tên cột cần UPDATE, Giá trị cần UPDATE, Mã nhân sự cần UPDATE
+-- Tham số optional: Không
+----------------------------------------------------------------
+CREATE OR REPLACE PROCEDURE N09_UPDATE_NHANSU
+(STR_COLUMN IN VARCHAR2, STR_VALUE IN VARCHAR2, STR_ID IN VARCHAR2)
+IS
+BEGIN
+    EXECUTE IMMEDIATE 'UPDATE C##ADMIN.N09_NHANSU SET ' || STR_COLUMN || ' = ''' || STR_VALUE || ''' WHERE MANV = ''' || STR_ID || '''';
+END;
+/
+
+-- Gán quyền thực thi thủ tục trên cho tất cả user
+GRANT EXECUTE ON N09_UPDATE_NHANSU TO PUBLIC;
+/
+
+
+----------------------------------------------------------------
+-- Stored Procedure UPDATE bảng N09_SINHVIEN
+-- Tham số truyền vào: Tên cột cần UPDATE, Giá trị cần UPDATE, Mã nhân sự cần UPDATE
+-- Tham số optional: Không
+----------------------------------------------------------------
+CREATE OR REPLACE PROCEDURE N09_UPDATE_SINHVIEN
+(STR_COLUMN IN VARCHAR2, STR_VALUE IN VARCHAR2, STR_ID IN VARCHAR2)
+IS
+BEGIN
+    EXECUTE IMMEDIATE 'UPDATE C##ADMIN.N09_SINHVIEN SET ' || STR_COLUMN || ' = ''' || STR_VALUE || ''' WHERE MASV = ''' || STR_ID || '''';
+END;
+/
+    
+-- Gán quyền thực thi thủ tục trên cho tất cả user
+GRANT EXECUTE ON N09_UPDATE_SINHVIEN TO PUBLIC;
+/
+    
+        
+----------------------------------------------------------------
+-- Stored Procedure SELECT bảng N09_DANGKY kết hợp với N09_PHANCONG bởi Giảng viên
+-- Tham số truyền vào: Tất cả các cột của bảng N09_PHANCONG (Mã Giảng Viên, Mã Học Phần, Học Kỳ, Năm, Mã Chương Trình)
+-- Tham số optional: Không
+----------------------------------------------------------------
+CREATE OR REPLACE PROCEDURE N09_DANGKY_JOIN_PHANCONG_BY_GIANGVIEN(
+    OUTPUT OUT SYS_REFCURSOR,
+    STR_MAGV IN VARCHAR2,
+    STR_MAHP IN VARCHAR2,
+    STR_HK IN NUMBER,
+    STR_NAM IN NUMBER,
+    STR_MACT IN VARCHAR2)
+IS
+    sql_query VARCHAR2(1000);
+BEGIN
+    sql_query := 'SELECT D."Mã Sinh Viên", D."Mã Giảng Viên", D."Mã Học Phần", D."Học Kỳ", D."Năm", D."Mã Chương Trình",
+        D."Điểm Thi", D."Điểm Quá Trình", D."Điểm Cuối Kỳ", D."Điểm Tổng Kết" 
+        FROM C##ADMIN.UV_N09_DANGKY_VIEWBY_GIANGVIEN D, C##ADMIN.UV_N09_PHANCONG_VIEWBY_GIANGVIEN P 
+        WHERE D."Mã Giảng Viên" = :1 AND D."Mã Học Phần" = :2 
+        AND D."Học Kỳ" = :3 AND D."Năm" = :4 AND D."Mã Chương Trình" = :5
+        AND D."Mã Giảng Viên" = P."Mã Giảng Viên" AND D."Mã Học Phần" = P."Mã Học Phần" 
+        AND D."Học Kỳ" = P."Học Kỳ" AND D."Năm" = P."Năm" AND D."Mã Chương Trình" = P."Mã Chương Trình"';
+
+    OPEN OUTPUT FOR sql_query USING STR_MAGV, STR_MAHP, STR_HK, STR_NAM, STR_MACT;
+END;
+/
+
+-- Gán quyền thực thi thủ tục trên cho tất cả user
+GRANT EXECUTE ON N09_DANGKY_JOIN_PHANCONG_BY_GIANGVIEN TO N09_RL_GIANGVIEN;
+/
+    
+---- Test
+--CONN NV201/NV201;
+--VARIABLE rc REFCURSOR;
+--EXECUTE C##ADMIN.N09_DANGKY_JOIN_PHANCONG_BY_GIANGVIEN(:rc, 'NV201', 'HP001', 1, 2024, 'CQ');
+--PRINT rc;
+--/   
     
 
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+----------------------------------------------------------------
+-- Stored Procedure SELECT USER ROLE của User hiện tại
+-- Tham số truyền vào: Không
+-- Tham số optional: Không
+----------------------------------------------------------------
+CREATE OR REPLACE PROCEDURE N09_GET_CURRENT_USER_ROLE(
+    OUTPUT OUT SYS_REFCURSOR)
+AS
+    l_sql_stmt VARCHAR2(1000);
+BEGIN
+    l_sql_stmt := 'SELECT GRANTED_ROLE FROM DBA_ROLE_PRIVS WHERE GRANTEE = SYS_CONTEXT(''USERENV'', ''SESSION_USER'') AND GRANTED_ROLE LIKE ''%N09_%''';
+    OPEN OUTPUT FOR l_sql_stmt;
+END;
+/
+
+-- Gán quyền thực thi thủ tục trên cho tất cả user
+GRANT EXECUTE ON N09_GET_CURRENT_USER_ROLE TO PUBLIC;
+/
+
+---- Test
+--CONN NV201/NV201;
+--VARIABLE rc REFCURSOR;
+--EXECUTE C##ADMIN.N09_GET_CURRENT_USER_ROLE(:rc);
+--PRINT rc;
+--/   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     

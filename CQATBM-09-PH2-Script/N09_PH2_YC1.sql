@@ -598,16 +598,26 @@ GRANT SELECT ON UV_N09_NHANSU_VIEWBY_TRUONGKHOA TO N09_RL_TRUONG_KHOA;
 -- 1a.(cont). Có thể chỉnh sửa số điện thoại (ĐT) của chính mình (nếu số điện thoại có thay đổi).
 -- Tạo trigger khi UPDATE số điện thoại (DT) của chính mình
 -- <NOTE>
--- Vì Trưởng khoa được xem dữ liệu trên toàn bộ lược đồ CSDL phải kiểm tra khi UPDATE số điện thoại
+-- A. Vì Trưởng khoa được xem dữ liệu trên toàn bộ lược đồ CSDL phải kiểm tra khi UPDATE số điện thoại
+-- B. Trong Trigger không được dùng lại table/view của cùng tên table đang cài trigger
+-- nếu không sẽ gặp lỗi `ORA-04091: table is mutating, trigger/function may not see it error during execution of oracle trigger`
 -- </NOTE>
 CREATE OR REPLACE TRIGGER TR_N09_NHANSU_UPDATE_SDT_BY_TRUONGKHOA
-BEFORE UPDATE OF DT ON N09_NHANSU
+AFTER UPDATE OF DT ON N09_NHANSU
 FOR EACH ROW
+DECLARE
+    l_is_truongdonvi NUMBER;
 BEGIN
-    IF :OLD.MANV = SYS_CONTEXT('userenv', 'session_user') THEN
-        :NEW.DT := :OLD.DT;
-    ELSE
-        RAISE_APPLICATION_ERROR(-20001, 'Bạn không thể thay đổi số điện thoại của người khác.');
+    -- Kiểm tra nếu người dùng hiện tại là Trưởng khoa
+    SELECT COUNT (*)    
+    INTO l_is_truongdonvi
+    FROM USER_ROLE_PRIVS
+    WHERE GRANTED_ROLE = 'N09_RL_TRUONG_KHOA';
+
+    IF l_is_truongdonvi > 0 THEN
+        IF :NEW.MANV <> :OLD.MANV THEN
+            RAISE_APPLICATION_ERROR(-20001, 'Bạn không thể thay đổi số điện thoại của người khác.');
+        END IF;
     END IF;
 END;
 /

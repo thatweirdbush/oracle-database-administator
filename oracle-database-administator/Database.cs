@@ -11,6 +11,11 @@ using System.Windows;
 using System.Data;
 using oracle_database_administator.User;
 using System.Reflection;
+using oracle_database_administator.Class;
+using oracle_database_administator.Teacher;
+using System.Windows.Navigation;
+using oracle_database_administator.Staff;
+using oracle_database_administator.Ministry;
 
 namespace oracle_database_administator
 {    
@@ -128,6 +133,17 @@ namespace oracle_database_administator
                 OracleConnection.ClearPool(_connection);
                 _connection = null;
             }
+        }
+
+        /// <summary>
+        /// Clear up connection credentials
+        /// </summary>
+        public void ClearUpConnection()
+        {
+            // Disconnect from the server & reset the connection credentials
+            Disconnect();
+            ConnectionUsername = "";
+            ConnectionPassword = "";
         }
 
         // Implement Singleton pattern
@@ -524,9 +540,22 @@ namespace oracle_database_administator
         public string SUBJECTS = $"{ADMIN_TABLE_PREFIX}HOCPHAN";
         public string COURSE_OPENING_PLANS = $"{ADMIN_TABLE_PREFIX}KHMO";
 
+        // Special stored procedures
+        public string UPDATE_STAFF = $"C##ADMIN.N09_UPDATE_NHANSU";
+        public string STUDENT_REGISTRATION_BY_TEACHER = $"C##ADMIN.N09_DANGKY_JOIN_PHANCONG_BY_GIANGVIEN";
+        public string GET_CURRENT_ROLE = $"C##ADMIN.N09_GET_CURRENT_USER_ROLE";
 
 
-        // Get data context for each role using stored procedure name, and parameter name and value (optional)
+
+
+        /// <summary>
+        /// Get data context for each role using stored procedure name, and parameter name and value (optional)
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="tableName"></param>
+        /// <param name="parameterName"></param>
+        /// <param name="parameterValue"></param>
+        /// <returns>T object</returns>
         public T LoadDataContext<T>(string tableName, string parameterName = null, object parameterValue = null) where T : class, new()
         {
             try
@@ -568,6 +597,96 @@ namespace oracle_database_administator
                 return null;
             }
         }
+
+        /// <summary>
+        /// Update NHANSU table with
+        /// </summary>
+        /// <param name="columnName"></param>
+        /// <param name="columnValue"></param>
+        /// <param name="ID"></param>
+        /// <returns>Status: -1 when successfully!</returns>
+        public int UpdateStaff(string columnName, object columnValue, object ID)
+        {
+            try
+            {
+                using (OracleCommand command = new OracleCommand(UPDATE_STAFF, Connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("STR_COLUMN", OracleDbType.Varchar2).Value = columnName;
+                    command.Parameters.Add("STR_VALUE", OracleDbType.Varchar2).Value = columnValue;
+                    command.Parameters.Add("STR_ID", OracleDbType.Varchar2).Value = ID;
+                    return command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                return 1;
+            }
+        }
+
+        /// <summary>
+        /// Get DANGKY JOIN PHANCONG BY GIANGVIEN
+        /// </summary>
+        /// <param name="assignment"></param>
+        /// <returns>Table type with selected cols</returns>
+        public DataView GetRegistrationsByTeacher(Assignment assignment)
+        {
+            try
+            {
+                using (OracleCommand command = new OracleCommand(STUDENT_REGISTRATION_BY_TEACHER, Connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add(outParameter, OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                    command.Parameters.Add("STR_MAGV", OracleDbType.Varchar2).Value = assignment.MAGV;
+                    command.Parameters.Add("STR_MAHP", OracleDbType.Varchar2).Value = assignment.MAHP;
+                    command.Parameters.Add("STR_HK", OracleDbType.Varchar2).Value = assignment.HK;
+                    command.Parameters.Add("STR_NAM", OracleDbType.Varchar2).Value = assignment.NAM;
+                    command.Parameters.Add("STR_MACT", OracleDbType.Varchar2).Value = assignment.MACT;
+
+                    using (OracleDataAdapter adapter = new OracleDataAdapter(command))
+                    {
+                        DataTable dataTable = new DataTable();
+                        adapter.Fill(dataTable);
+                        return dataTable.DefaultView;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Get current role of user
+        /// </summary>
+        /// <returns>String role</returns>
+        public string GetCurrentRole()
+        {
+            try
+            {
+                using (OracleCommand command = new OracleCommand(GET_CURRENT_ROLE, Connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add(outParameter, OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+
+                    object result = command.ExecuteScalar();
+                    return result.ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                return null;
+            }
+        }
+
+
+
+
+
 
 
 

@@ -35,43 +35,16 @@ namespace oracle_database_administator
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            //Db.ConnectToServer();
         }
 
         private void UserButton_Click(object sender, RoutedEventArgs e)
         {
-            //if (conn == null)
-            //{
-            //    if (Db.ConnectToServer())
-            //    {
-            //        ViewUserList viewUserList = new ViewUserList();
-            //        NavigationService.Navigate(viewUserList);
-            //    }
-            //}
-            //else
-            //{
-            //    ViewUserList viewUserList = new ViewUserList();
-            //    NavigationService.Navigate(viewUserList);
-            //}
             ViewUserList viewUserList = new ViewUserList();
             NavigationService.Navigate(viewUserList);
         }
 
         private void RoleButton_Click(object sender, RoutedEventArgs e)
         {
-            //if (conn == null)
-            //{
-            //    if (Db.ConnectToServer())
-            //    {
-            //        ViewRoleList viewRoleList = new ViewRoleList();
-            //        NavigationService.Navigate(viewRoleList);
-            //    }
-            //}
-            //else
-            //{
-            //    ViewRoleList viewRoleList = new ViewRoleList();
-            //    NavigationService.Navigate(viewRoleList);
-            //}
             ViewRoleList viewRoleList = new ViewRoleList();
             NavigationService.Navigate(viewRoleList);
         }
@@ -80,10 +53,7 @@ namespace oracle_database_administator
         {
             if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
             {
-                // Disconnect from the server & reset the connection credentials
-                Db.Disconnect();
-                Db.ConnectionUsername = "";
-                Db.ConnectionPassword = "";
+                Db.ClearUpConnection();
                 mainWindow.MainFrame.Navigate(new Dashboard());
             }
         }
