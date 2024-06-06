@@ -59,9 +59,10 @@ namespace oracle_database_administator.Teacher
             Table_PhanCong.Visibility = Visibility.Collapsed;
             Table_DangKy.Visibility = Visibility.Collapsed;
             Button_SeeRegistrations.Visibility = Visibility.Collapsed;
+            Button_BackToAssignments.Visibility = Visibility.Collapsed;
         }
 
-        private void HomeButton_Click(object sender, RoutedEventArgs e)
+        private void LogoutButton_Click(object sender, RoutedEventArgs e)
         {
             // Open a Confirmation dialog
             MessageBoxResult result = MessageBox.Show("Are you sure you want to exit?", "Exit", MessageBoxButton.YesNo, MessageBoxImage.Question);
@@ -162,13 +163,27 @@ namespace oracle_database_administator.Teacher
 
         private void Button_SeeRegistrations_Click(object sender, RoutedEventArgs e)
         {
+            if (assignment == null)
+            {
+                MessageBox.Show("An Assignment is required!", "Empty Field Exception", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
             HideAllElements();
             Grid_AcademicPlan.Visibility = Visibility.Visible;
             Table_DangKy.Visibility = Visibility.Visible;
-            Button_SeeRegistrations.Visibility = Visibility.Visible;
+            Button_BackToAssignments.Visibility = Visibility.Visible;
             Table_DangKy.ItemsSource = Db.GetRegistrationsByTeacher(assignment);
+
+            // Reset the assignment
+            assignment = null;
         }
-        
+
+        private void Button_BackToAssignments_Click(object sender, RoutedEventArgs e)
+        {
+            PhanCong_Click(sender, e);
+        }
+
         private void Table_DsHocPhan_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
@@ -191,18 +206,17 @@ namespace oracle_database_administator.Teacher
 
         private void Table_PhanCong_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            // Get the selected row
-            DataRowView row = (DataRowView)Table_PhanCong.SelectedItem;
-            if (row == null)
-                return;
-
-            // Get the selected row's data
-            assignment = new Assignment();
-            assignment.MAGV = row["Mã Giảng Viên"].ToString();
-            assignment.MAHP = row["Mã Học Phần"].ToString();
-            assignment.HK = Int64.Parse(row["Học Kỳ"].ToString());
-            assignment.NAM = Int64.Parse(row["Năm"].ToString());
-            assignment.MACT = row["Mã Chương Trình"].ToString();
+            if (Table_PhanCong.SelectedItem is DataRowView row)
+            {
+                assignment = new Assignment
+                {
+                    MAGV = row["Mã Giảng Viên"].ToString(),
+                    MAHP = row["Mã Học Phần"].ToString(),
+                    HK = Int64.Parse(row["Học Kỳ"].ToString()),
+                    NAM = Int64.Parse(row["Năm"].ToString()),
+                    MACT = row["Mã Chương Trình"].ToString()
+                };
+            }
         }
 
         private void Table_DsSinhVien_SelectionChanged(object sender, SelectionChangedEventArgs e)

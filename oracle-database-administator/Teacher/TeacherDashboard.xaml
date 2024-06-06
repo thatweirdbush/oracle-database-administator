@@ -28,10 +28,10 @@
         <Label Grid.Column="1" Content="TRƯỜNG ĐẠI HỌC X" FontFamily="Segoe UI Black" FontSize="32" HorizontalAlignment="Left" Height="43" Margin="90,20,0,0" VerticalAlignment="Top" Width="800" Foreground="#FF190E64" FontWeight="Bold" Padding="0,0,0,0"/>
         <Label Grid.Column="1" Content="Hệ Thống Quản Lý Nội Bộ" FontSize="20" HorizontalAlignment="Left" Height="27" VerticalAlignment="Top" Width="315" Margin="90,68,0,0" Padding="0,0,0,0" FontWeight="Bold" Foreground="#FFFF5C0F"/>
 
-        <Button Grid.Row="0" Grid.Column="1" x:Name="Logout" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="22" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="50" Width="160" Click="HomeButton_Click" RenderTransformOrigin="-2.052,5.949" Margin="0,40,0,0" HorizontalAlignment="Right" VerticalAlignment="Top" Cursor="Hand" >
+        <Button Grid.Row="0" Grid.Column="1" x:Name="Logout" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="22" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="50" Width="160" Click="LogoutButton_Click" RenderTransformOrigin="-2.052,5.949" Margin="0,40,0,0" HorizontalAlignment="Right" VerticalAlignment="Top" Cursor="Hand" >
             <StackPanel Orientation="Horizontal">
-                <Image Source="/images/back-icon.png" Width="25" Height="25" Margin="0,0,5,0" />
-                <TextBlock Text="Đăng xuất" VerticalAlignment="Center"/>
+                <Image Source="/images/exit.png" Width="28" Height="25" Margin="0,0,5,0" />
+                <TextBlock Text="Thoát" Width="65"/>
             </StackPanel>
             <Button.Resources>
                 <Style TargetType="{x:Type Border}">
@@ -435,6 +435,25 @@
                     <StackPanel Orientation="Horizontal">
                         <Image Source="/images/user-searching.png" Width="29" Height="27" Margin="0,0,5,0" />
                         <TextBlock Text="Xem" VerticalAlignment="Center" Width="61"/>
+                    </StackPanel>
+                </Button>
+
+                <!-- Button - Quay lại sau khi Xem Danh sách Đăng Ký của Học sinh-->
+                <Button Grid.Column="1" x:Name="Button_BackToAssignments" Visibility="Collapsed" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="22" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="50" Width="160" Click="Button_BackToAssignments_Click" RenderTransformOrigin="-2.052,5.949" Margin="0,-75,0,0" HorizontalAlignment="Right" VerticalAlignment="Top" Cursor="Hand" Grid.ColumnSpan="2" >
+                    <Button.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius" Value="4"/>
+                        </Style>
+                    </Button.Resources>
+                    <Button.Background>
+                        <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.HighlightColorKey}}" Opacity="0.75"/>
+                    </Button.Background>
+                    <Button.Effect>
+                        <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
+                    </Button.Effect>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/images/back-icon.png" Width="29" Height="27" Margin="0,0,5,0" />
+                        <TextBlock Text="Trở về" VerticalAlignment="Center" Width="73"/>
                     </StackPanel>
                 </Button>
             </Grid>

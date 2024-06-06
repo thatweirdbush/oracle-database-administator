@@ -51,7 +51,7 @@ namespace oracle_database_administator.Staff
             Grid_StudentList.Visibility = Visibility.Collapsed;
         }
 
-        private void HomeButton_Click(object sender, RoutedEventArgs e)
+        private void LogoutButton_Click(object sender, RoutedEventArgs e)
         {
             // Open a Confirmation dialog
             MessageBoxResult result = MessageBox.Show("Are you sure you want to exit?", "Exit", MessageBoxButton.YesNo, MessageBoxImage.Question);
