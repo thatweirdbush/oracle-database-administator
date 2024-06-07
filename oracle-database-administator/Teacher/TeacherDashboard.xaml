@@ -46,7 +46,7 @@
             </Button.Effect>
         </Button>
 
-        <Button Grid.Column="1" x:Name="Info" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="22" BorderThickness="0" Height="50" Width="200" Click="TTCN_Click" VerticalAlignment="Bottom" RenderTransformOrigin="-2.052,5.949" Margin="0,105,0,0" HorizontalAlignment="Left" Cursor="Hand" >
+        <Button Grid.Column="1" x:Name="Info" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="22" BorderThickness="0" Height="50" Width="184" Click="TTCN_Click" VerticalAlignment="Bottom" HorizontalAlignment="Left" Cursor="Hand" >
             <Button.Resources>
                 <Style TargetType="{x:Type Border}">
                     <Setter Property="CornerRadius" Value="24,24,0,0"/>
@@ -63,7 +63,7 @@
             </StackPanel>
         </Button>
 
-        <Button Grid.Column="1" x:Name="DsDonVi" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="22" BorderThickness="0" Height="50" Width="200" Click="TTDonVi_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom" RenderTransformOrigin="-2.052,5.949" Margin="200,105,0,0" Cursor="Hand" >
+        <Button Grid.Column="1" x:Name="DsDonVi" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="22" BorderThickness="0" Height="50" Width="183" Click="TTDonVi_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="184,0,0,0" Cursor="Hand" >
             <Button.Resources>
                 <Style TargetType="{x:Type Border}">
                     <Setter Property="CornerRadius" Value="24,24,0,0"/>
@@ -80,7 +80,7 @@
             </StackPanel>
 
         </Button>
-        <Button Grid.Column="1" x:Name="KHHocTap" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="22" BorderThickness="0" Height="50" Width="200" Click="KHHocTap_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom" RenderTransformOrigin="-2.052,5.949" Margin="400,105,0,0" Cursor="Hand" >
+        <Button Grid.Column="1" x:Name="KHHocTap" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="22" BorderThickness="0" Height="50" Width="184" Click="KHHocTap_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="367,0,0,0" Cursor="Hand" >
             <Button.Resources>
                 <Style TargetType="{x:Type Border}">
                     <Setter Property="CornerRadius" Value="24,24,0,0"/>
@@ -97,7 +97,7 @@
             </StackPanel>
 
         </Button>
-        <Button Grid.Column="1" x:Name="DsSinhVien" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="22" BorderThickness="0" Height="50" Width="200" Click="DSSinhVien_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom" RenderTransformOrigin="-2.052,5.949" Margin="600,105,0,0" Cursor="Hand" >
+        <Button Grid.Column="1" x:Name="DsSinhVien" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="22" BorderThickness="0" Height="50" Width="184" Click="DSSinhVien_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="551,0,0,0" Cursor="Hand" >
             <Button.Resources>
                 <Style TargetType="{x:Type Border}">
                     <Setter Property="CornerRadius" Value="24,24,0,0"/>
@@ -113,7 +113,7 @@
                 <TextBlock Text="Danh sách Sinh viên" FontSize="18"/>
             </StackPanel>
         </Button>
-        <Button Grid.Column="1" x:Name="ThongBao" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="22" BorderThickness="0" Height="50" Width="200" Click="ThongBao_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom" RenderTransformOrigin="-2.052,5.949" Margin="800,0,0,0" Cursor="Hand" >
+        <Button Grid.Column="1" x:Name="ThongBao" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="22" BorderThickness="0" Height="50" Width="184" Click="ThongBao_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="735,0,0,0" Cursor="Hand" >
             <Button.Resources>
                 <Style TargetType="{x:Type Border}">
                     <Setter Property="CornerRadius" Value="24,24,0,0"/>
@@ -129,7 +129,7 @@
                 <TextBlock Text="Thông báo" FontSize="18"/>
             </StackPanel>
         </Button>
-        
+
         <!-- Main Grid - Dành để hiển thị dữ liệu khác nhau khi nhấn các Button -->
         <Grid x:Name="Grid_DisplayData" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             <Grid.Resources>
@@ -434,9 +434,9 @@
                         </Style>
                     </DataGrid.RowStyle>
                 </DataGrid>
-                
+
                 <!-- Button - Xem Danh sách Đăng Ký của Học sinh-->
-                <Button Grid.Column="1" x:Name="Button_SeeRegistrations" Visibility="Collapsed" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="22" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="50" Width="160" Click="Button_SeeRegistrations_Click" RenderTransformOrigin="-2.052,5.949" Margin="0,-75,0,0" HorizontalAlignment="Right" VerticalAlignment="Top" Cursor="Hand" Grid.ColumnSpan="2" >
+                <Button Grid.Column="1" x:Name="Button_SeeRegistrations" Visibility="Visible" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="22" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="50" Width="160" Click="Button_SeeRegistrations_Click" RenderTransformOrigin="-2.052,5.949" Margin="0,-75,0,0" HorizontalAlignment="Right" VerticalAlignment="Top" Cursor="Hand" Grid.ColumnSpan="2" >
                     <Button.Resources>
                         <Style TargetType="{x:Type Border}">
                             <Setter Property="CornerRadius" Value="4"/>

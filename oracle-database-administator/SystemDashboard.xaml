@@ -22,7 +22,7 @@
                     <TextBlock Text="Welcome to" Height="62" HorizontalAlignment="Center" FontSize="40" FontFamily="Segoe UI Semibold" Margin="0,78,0,461"/>
                     <TextBlock FontSize="56" FontFamily="Bookman Old Style" FontWeight="Bold" HorizontalAlignment="Center" TextWrapping="WrapWithOverflow" Height="144" Margin="0,140,0,317"><Run Text="Oracle Database"/><LineBreak/><Run Text="  Administrator"/></TextBlock>
                     <TextBlock FontSize="22" TextWrapping="Wrap" TextAlignment="Center" Margin="73,284,73,249" Text="Your comprehensive solution for managing and optimizing Oracle databases." Width="474" FontWeight="Medium"/>
-                    <Button x:Name="UserButton" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="24" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="69" Width="224" Click="UserButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="73,404,0,0">
+                    <Button x:Name="UserButton" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="24" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="69" Width="224" Click="UserButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="73,404,0,0" Cursor="Hand">
                         <StackPanel Orientation="Horizontal">
                             <Image Source="/images/user-icon.png" Width="30" Height="30" Margin="0,0,7,0" />
                             <TextBlock Text="USER" VerticalAlignment="Center"/>
@@ -39,7 +39,7 @@
                             <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
                         </Button.Effect>
                     </Button>
-                    <Button x:Name="RoleButton" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="24" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="69" Width="224" Click="RoleButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="323,404,0,0" >
+                    <Button x:Name="RoleButton" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="24" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="69" Width="224" Click="RoleButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="323,404,0,0" Cursor="Hand" >
                         <StackPanel Orientation="Horizontal">
                             <Image Source="/images/role-icon.png" Width="35" Height="35" Margin="0,0,10,0" />
                             <TextBlock Text="ROLE" VerticalAlignment="Center"/>
@@ -56,7 +56,7 @@
                             <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
                         </Button.Effect>
                     </Button>
-                    <Button x:Name="BackButton" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="50" Width="80" Click="BackButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="24,24,0,0" >
+                    <Button x:Name="BackButton" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="50" Width="80" Click="BackButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="24,24,0,0" Cursor="Hand" >
                         <Button.Resources>
                             <Style TargetType="{x:Type Border}">
                                 <Setter Property="CornerRadius" Value="24"/>
