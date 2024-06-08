@@ -106,8 +106,13 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Class\Assignment.cs" />
+    <Compile Include="Class\CourseOpeningPlan.cs" />
+    <Compile Include="Class\MainViewModel.cs" />
     <Compile Include="Class\Personnel.cs" />
+    <Compile Include="Class\Registration.cs" />
     <Compile Include="Class\Student.cs" />
+    <Compile Include="Class\Subject.cs" />
+    <Compile Include="Class\Unit.cs" />
     <Compile Include="Dashboard.xaml.cs">
       <DependentUpon>Dashboard.xaml</DependentUpon>
     </Compile>

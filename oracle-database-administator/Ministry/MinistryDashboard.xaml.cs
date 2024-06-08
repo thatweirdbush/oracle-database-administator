@@ -3,6 +3,7 @@ using oracle_database_administator.Class;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -41,7 +42,7 @@ namespace oracle_database_administator.Ministry
 
         private void GetUserDataContext()
         {
-            personnel = Db.LoadDataContext<Personnel>(Db.STAFFS_VIEWBY_TEACHER);
+            personnel = Db.LoadSingleLineDataContext<Personnel>(Db.STAFFS_VIEWBY_TEACHER);
             Grid_DisplayData.DataContext = personnel;
         }
 
@@ -130,7 +131,13 @@ namespace oracle_database_administator.Ministry
         {
             HideAllElements();
             Grid_StudentList.Visibility = Visibility.Visible;
-            Table_DsSinhVien.ItemsSource = Db.GetAnyTable(Db.STUDENTS);
+            //Table_DsSinhVien.ItemsSource = Db.GetAnyTable(Db.STUDENTS);
+
+
+
+
+
+            Table_DsSinhVien.ItemsSource = Db.LoadDataContext<Student>("C##ADMIN.N09_SINHVIEN");
         }
 
         private void ThongBao_Click(object sender, RoutedEventArgs e)
@@ -228,6 +235,40 @@ namespace oracle_database_administator.Ministry
         private void Table_DsSinhVien_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
+        }
+
+        private void Table_DsSinhVien_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
+        {
+            if (e.EditAction == DataGridEditAction.Commit)
+            {
+                var dataGrid = sender as DataGrid;
+
+                // Sử dụng Dispatcher để đợi cho quá trình chỉnh sửa hoàn tất
+                dataGrid.Dispatcher.InvokeAsync(() =>
+                {
+                    var student = e.Row.Item as Student;
+                    int result = 0;
+
+                    if (Db.IsExistStudent(student.MASV))
+                    {
+                        result = Db.UpdateStudent(student);
+                    }
+                    else
+                    {
+                        result = Db.InsertStudent(student);
+                    }
+
+                    if (result < 0)
+                    {
+                        MessageBox.Show("Execute successfully", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                    else
+                    {                     
+                        // Update the binding source to the previous value
+                        Table_DsSinhVien.ItemsSource = Db.LoadDataContext<Student>("C##ADMIN.N09_SINHVIEN");
+                    }
+                }, System.Windows.Threading.DispatcherPriority.Background);
+            }
         }
     }
 }

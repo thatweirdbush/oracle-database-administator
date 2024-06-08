@@ -41,7 +41,7 @@ namespace oracle_database_administator.Teacher
 
         private void GetUserDataContext()
         {
-            personnel = Db.LoadDataContext<Personnel>(Db.STAFFS_VIEWBY_TEACHER);
+            personnel = Db.LoadSingleLineDataContext<Personnel>(Db.STAFFS_VIEWBY_TEACHER);
             Grid_DisplayData.DataContext = personnel;
         }
 

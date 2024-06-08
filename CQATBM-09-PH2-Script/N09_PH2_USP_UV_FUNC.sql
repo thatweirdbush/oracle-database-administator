@@ -814,13 +814,110 @@ GRANT EXECUTE ON N09_GET_CURRENT_USER_ROLE TO PUBLIC;
 
 
 
+----------------------------------------------------------------
+-- Stored Procedure Kiểm tra Student có tồn tại không
+-- Tham số truyền vào: MASV
+-- Tham số optional: Không
+----------------------------------------------------------------
+CREATE OR REPLACE PROCEDURE N09_IS_EXIST_STUDENT(
+    OUTPUT OUT SYS_REFCURSOR,
+    STR_MASV IN VARCHAR2)
+AS
+BEGIN
+    OPEN OUTPUT FOR 'SELECT COUNT(*) FROM C##ADMIN.N09_SINHVIEN WHERE MASV = ''' || STR_MASV || '''';
+END;
+/
+
+-- Gán quyền thực thi thủ tục trên cho tất cả user
+GRANT EXECUTE ON N09_IS_EXIST_STUDENT TO PUBLIC;
+/
+
+-- Test
+CONN NV301/NV301;
+VARIABLE rc REFCURSOR;
+EXECUTE C##ADMIN.N09_IS_EXIST_STUDENT(:rc, 'SV001');
+PRINT rc;
+/
+
+
+
+----------------------------------------------------------------
+-- Stored Procedure Insert Student
+-- Tham số truyền vào: MASV
+-- Tham số optional: HOTEN, PHAI, NGSINH, DIACHI, DT, MACT, MANGANH, SOTCTL, DTBTL, COSO
+----------------------------------------------------------------
+CREATE OR REPLACE PROCEDURE N09_INSERT_STUDENT(
+    STR_MASV IN VARCHAR2,
+    STR_HOTEN IN VARCHAR2 DEFAULT NULL,
+    STR_PHAI IN VARCHAR2 DEFAULT NULL,
+    STR_NGSINH IN DATE DEFAULT NULL,
+    STR_DIACHI IN VARCHAR2 DEFAULT NULL,
+    STR_DT IN VARCHAR2 DEFAULT NULL,
+    STR_MACT IN VARCHAR2 DEFAULT NULL,
+    STR_MANGANH IN VARCHAR2 DEFAULT NULL,
+    STR_SOTCTL IN NUMBER DEFAULT NULL,
+    STR_DTBTL IN NUMBER DEFAULT NULL,
+    STR_COSO IN VARCHAR2 DEFAULT NULL)
+IS
+BEGIN
+    EXECUTE IMMEDIATE 'INSERT INTO C##ADMIN.N09_SINHVIEN(MASV, HOTEN, PHAI, NGSINH, DIACHI, DT, MACT, MANGANH, SOTCTL, DTBTL, COSO) 
+                        VALUES(:1, :2, :3, :4, :5, :6, :7, :8, :9, :10, :11)'
+                        USING STR_MASV, STR_HOTEN, STR_PHAI, STR_NGSINH, STR_DIACHI, STR_DT, STR_MACT, STR_MANGANH, STR_SOTCTL, STR_DTBTL, STR_COSO;
+END;
+/
+
+-- Gán quyền thực thi thủ tục trên cho tất cả user
+GRANT EXECUTE ON N09_INSERT_STUDENT TO PUBLIC;
+/
+
+---- Test
+--CONN NV301/NV301;
+--SELECT * FROM C##ADMIN.N09_SINHVIEN;
+--EXECUTE C##ADMIN.N09_INSERT_STUDENT('SV201', 'Nguyen Van A', 'Nam', TO_DATE('01/01/2000', 'DD/MM/YYYY'), 'Ha Noi', '0123456789', 'CT1', 'CN1', 120, 8.5, 'CS1');
+--/
+
+
+
+----------------------------------------------------------------
+-- Stored Procedure Update Student
+-- Tham số truyền vào: MASV, HOTEN, PHAI, NGSINH, DIACHI, DT, MACT, MANGANH, SOTCTL, DTBTL, COSO
+-- Tham số optional: Không
+----------------------------------------------------------------
+CREATE OR REPLACE PROCEDURE N09_UPDATE_STUDENT(
+    STR_MASV IN VARCHAR2,
+    STR_HOTEN IN VARCHAR2,
+    STR_PHAI IN VARCHAR2,
+    STR_NGSINH IN DATE,
+    STR_DIACHI IN VARCHAR2,
+    STR_DT IN VARCHAR2,
+    STR_MACT IN VARCHAR2,
+    STR_MANGANH IN VARCHAR2,
+    STR_SOTCTL IN NUMBER,
+    STR_DTBTL IN NUMBER,
+    STR_COSO IN VARCHAR2)
+IS
+BEGIN
+    EXECUTE IMMEDIATE 'UPDATE C##ADMIN.N09_SINHVIEN SET HOTEN = :1, PHAI = :2, NGSINH = :3, DIACHI = :4, DT = :5, MACT = :6, MANGANH = :7, SOTCTL = :8, DTBTL = :9, COSO = :10 WHERE MASV = :11'
+                        USING STR_HOTEN, STR_PHAI, STR_NGSINH, STR_DIACHI, STR_DT, STR_MACT, STR_MANGANH, STR_SOTCTL, STR_DTBTL, STR_COSO, STR_MASV;
+END;
+/
+
+-- Gán quyền thực thi thủ tục trên cho tất cả user
+GRANT EXECUTE ON N09_UPDATE_STUDENT TO PUBLIC;
+
+-- Test
+CONN NV301/NV301;
+SELECT * FROM C##ADMIN.N09_SINHVIEN;
+EXECUTE C##ADMIN.N09_UPDATE_STUDENT('SV001', 'Nguyen Van B', 'Nam', TO_DATE('01/01/2000', 'DD/MM/YYYY'), 'Ha Noi', '0123456789', 'CT1', 'CN1', 120, 8.5, 'CS1');
+/
 
 
 
 
 
 
-
+-- CONN NV301/NV301;
+-- SELECT * FROM C##ADMIN.N09_SINHVIEN;
 
 
 

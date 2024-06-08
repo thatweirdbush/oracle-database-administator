@@ -16,9 +16,11 @@ using oracle_database_administator.Teacher;
 using System.Windows.Navigation;
 using oracle_database_administator.Staff;
 using oracle_database_administator.Ministry;
+using System.Windows.Controls;
+using System.Collections.ObjectModel;
 
 namespace oracle_database_administator
-{    
+{
     public class Database
     {
         /**********************************************************
@@ -33,7 +35,7 @@ namespace oracle_database_administator
         /// <WARNING>
         /// TODO: THIS MUST NOT BE PUBLIC
         /// </WARNING>
-        public string ConnectionPassword 
+        public string ConnectionPassword
         {
             get { return password; }
             set { password = value; }
@@ -162,7 +164,7 @@ namespace oracle_database_administator
         public bool IsSelectable
         {
             get { return dataGridChanged; }
-            set {  dataGridChanged = value; }
+            set { dataGridChanged = value; }
         }
 
         public OracleConnection AlternateConnection(string new_username, string new_password)
@@ -260,7 +262,7 @@ namespace oracle_database_administator
 
                     object result = command.ExecuteScalar();
                     return result.ToString();
-                }            
+                }
             }
             catch (Exception ex)
             {
@@ -277,7 +279,8 @@ namespace oracle_database_administator
         /// <returns>Table type with selected cols</returns>
         public DataView UpdateDataView(string procedureName, string inputValue = null)
         {
-            try {
+            try
+            {
                 using (OracleCommand command = new OracleCommand(procedureName, Connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
@@ -296,7 +299,8 @@ namespace oracle_database_administator
                     }
                 }
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                 return null;
             }
@@ -516,21 +520,21 @@ namespace oracle_database_administator
         public static string GET_SINGLE_LINE_DATA = $"C##ADMIN.N09_GET_SINGLE_LINE_DATA";
 
         // Table's view name for each role - NHANSU
-        public string STAFFS_VIEWBY_STAFF= $"{ADMIN_TABLE_PREFIX}NHANSU_VIEWBY_NHANVIEN";
+        public string STAFFS_VIEWBY_STAFF = $"{ADMIN_TABLE_PREFIX}NHANSU_VIEWBY_NHANVIEN";
         public string STAFFS_VIEWBY_TEACHER = $"{ADMIN_TABLE_PREFIX}NHANSU_VIEWBY_GIANGVIEN";
-        public string STAFFS_VIEWBY_MINISTRY= $"{ADMIN_TABLE_PREFIX}NHANSU_VIEWBY_GIAOVU";
+        public string STAFFS_VIEWBY_MINISTRY = $"{ADMIN_TABLE_PREFIX}NHANSU_VIEWBY_GIAOVU";
         public string STAFFS_VIEWBY_UNIT_HEAD = $"{ADMIN_TABLE_PREFIX}NHANSU_VIEWBY_TRUONGDONVI";
         public string STAFFS_VIEWBY_DEPARTMENT_HEAD = $"{ADMIN_TABLE_PREFIX}NHANSU_VIEWBY_TRUONGKHOA";
 
         // Table's view name for each role - PHANCONG
-        public string ASSIGNMENTS_VIEWBY_TEACHER= $"{ADMIN_TABLE_PREFIX}PHANCONG_VIEWBY_GIANGVIEN";
+        public string ASSIGNMENTS_VIEWBY_TEACHER = $"{ADMIN_TABLE_PREFIX}PHANCONG_VIEWBY_GIANGVIEN";
         public string ASSIGNMENTS_VIEWBY_MINISTRY = $"{ADMIN_TABLE_PREFIX}PHANCONG_VIEWBY_GIAOVU";
         public string ASSIGNMENTS_VIEWBY_UNIT_HEAD = $"{ADMIN_TABLE_PREFIX}PHANCONG_VIEWBY_TRUONGDONVI";
         public string ASSIGNMENTS_VIEWBY_DEPARTMENT_HEAD = $"{ADMIN_TABLE_PREFIX}PHANCONG_VIEWBY_TRUONGKHOA";
 
         // Table's view name for each role - DANGKY
         public string REGISTRATIONS_VIEWBY_TEACHER = $"{ADMIN_TABLE_PREFIX}DANGKY_VIEWBY_GIANGVIEN";
-        public string REGISTRATIONS_VIEWBY_MINISTRY= $"{ADMIN_TABLE_PREFIX}DANGKY_VIEWBY_GIAOVU";
+        public string REGISTRATIONS_VIEWBY_MINISTRY = $"{ADMIN_TABLE_PREFIX}DANGKY_VIEWBY_GIAOVU";
         public string REGISTRATIONS_VIEWBY_UNIT_HEAD = $"{ADMIN_TABLE_PREFIX}DANGKY_VIEWBY_TRUONGDONVI";
         public string REGISTRATIONS_VIEWBY_DEPARTMENT_HEAD = $"{ADMIN_TABLE_PREFIX}DANGKY_VIEWBY_TRUONGKHOA";
 
@@ -544,6 +548,9 @@ namespace oracle_database_administator
         public string UPDATE_STAFF = $"C##ADMIN.N09_UPDATE_NHANSU";
         public string STUDENT_REGISTRATION_BY_TEACHER = $"C##ADMIN.N09_DANGKY_JOIN_PHANCONG_BY_GIANGVIEN";
         public string GET_CURRENT_ROLE = $"C##ADMIN.N09_GET_CURRENT_USER_ROLE";
+        public string IS_EXIST_STUDENT = $"C##ADMIN.N09_IS_EXIST_STUDENT";
+        public string INSERT_STUDENT = $"C##ADMIN.N09_INSERT_STUDENT";
+        public string UPDATE_STUDENT = $"C##ADMIN.N09_UPDATE_STUDENT";
 
 
 
@@ -556,7 +563,7 @@ namespace oracle_database_administator
         /// <param name="parameterName"></param>
         /// <param name="parameterValue"></param>
         /// <returns>T object</returns>
-        public T LoadDataContext<T>(string tableName, string parameterName = null, object parameterValue = null) where T : class, new()
+        public T LoadSingleLineDataContext<T>(string tableName, string parameterName = null, object parameterValue = null) where T : class, new()
         {
             try
             {
@@ -588,6 +595,56 @@ namespace oracle_database_administator
                             dr.Close();
                             return null;
                         }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Load Data Context Error: {ex.Message}", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Get data context for each role using ObservableCollection, stored procedure name, and parameter name and value (optional)
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="tableName"></param>
+        /// <param name="parameterName"></param>
+        /// <param name="parameterValue"></param>
+        /// <returns>ObservableCollection</returns>
+        public ObservableCollection<T> LoadDataContext<T>(string tableName, string parameterName = null, object parameterValue = null) where T : class, new()
+        {
+            try
+            {
+                ObservableCollection<T> entities = new ObservableCollection<T>();
+
+                using (OracleCommand cmd = new OracleCommand(SELECT_ANY_TABLE, Connection))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add(outParameter, OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                    cmd.Parameters.Add("STR_TABLE_NAME", OracleDbType.Varchar2).Value = tableName;
+                    if (parameterName != null)
+                        cmd.Parameters.Add(parameterName, OracleDbType.Varchar2).Value = parameterValue;
+
+                    using (OracleDataReader dr = cmd.ExecuteReader())
+                    {
+                        while (dr.Read())
+                        {
+                            T entity = new T();
+                            foreach (PropertyInfo prop in typeof(T).GetProperties())
+                            {
+                                if (!dr.IsDBNull(dr.GetOrdinal(prop.Name)))
+                                {
+                                    prop.SetValue(entity, dr[prop.Name]);
+                                }
+
+                            }
+                            entities.Add(entity);
+
+                        }
+                        dr.Close();
+                        return entities;
                     }
                 }
             }
@@ -683,10 +740,99 @@ namespace oracle_database_administator
             }
         }
 
+        /// <summary>
+        /// Check if student is exist in database
+        /// </summary>
+        /// <param name="studentId"></param>
+        /// <returns>True/False</returns>
+        public bool IsExistStudent(string studentId)
+        {
+            try
+            {
+                using (OracleCommand command = new OracleCommand(IS_EXIST_STUDENT, Connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add(outParameter, OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                    command.Parameters.Add("STR_MASV", OracleDbType.Varchar2).Value = studentId;
+                    var result = command.ExecuteScalar();
 
+                    return Convert.ToInt32(result) > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                return false;
+            }
+        }
 
+        /// <summary>
+        /// Insert student into database
+        /// </summary>
+        /// <param name="student"></param>
+        /// <returns>-1 if success</returns>
+        public int InsertStudent(Student student)
+        {
+            try
+            {
+                using (OracleCommand command = new OracleCommand(INSERT_STUDENT, Connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("STR_MASV", OracleDbType.Varchar2).Value = student.MASV;
+                    command.Parameters.Add("STR_HOTEN", OracleDbType.Varchar2).Value = (object)student.HOTEN ?? DBNull.Value;
+                    command.Parameters.Add("STR_PHAI", OracleDbType.Varchar2).Value = (object)student.PHAI ?? DBNull.Value;
+                    command.Parameters.Add("STR_NGSINH", OracleDbType.Date).Value = (object)student.NGSINH ?? DBNull.Value;
+                    command.Parameters.Add("STR_DIACHI", OracleDbType.Varchar2).Value = (object)student.DIACHI ?? DBNull.Value;
+                    command.Parameters.Add("STR_DT", OracleDbType.Varchar2).Value = (object)student.DT ?? DBNull.Value;
+                    command.Parameters.Add("STR_MACT", OracleDbType.Varchar2).Value = (object)student.MACT ?? DBNull.Value;
+                    command.Parameters.Add("STR_MANGANH", OracleDbType.Varchar2).Value = (object)student.MANGANH ?? DBNull.Value;
+                    command.Parameters.Add("STR_SOTCTL", OracleDbType.Int64).Value = (object)student.SOTCTL ?? DBNull.Value;
+                    command.Parameters.Add("STR_DTBTL", OracleDbType.Double).Value = (object)student.DTBTL ?? DBNull.Value;
+                    command.Parameters.Add("STR_COSO", OracleDbType.Varchar2).Value = (object)student.COSO ?? DBNull.Value;
+                    
+                    return command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message, "InsertStudent Error", MessageBoxButton.OK, MessageBoxImage.Information);
+                return 0;
+            }
+        }
 
+        /// <summary>
+        /// Update student into database
+        /// </summary>
+        /// <param name="student"></param>
+        /// <returns>-1 if success</returns>
+        public int UpdateStudent(Student student)
+        {
+            try
+            {
+                using (OracleCommand command = new OracleCommand(UPDATE_STUDENT, Connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("STR_MASV", OracleDbType.Varchar2).Value = student.MASV;
+                    command.Parameters.Add("STR_HOTEN", OracleDbType.Varchar2).Value = (object)student.HOTEN ?? DBNull.Value;
+                    command.Parameters.Add("STR_PHAI", OracleDbType.Varchar2).Value = (object)student.PHAI ?? DBNull.Value;
+                    command.Parameters.Add("STR_NGSINH", OracleDbType.Date).Value = (object)student.NGSINH ?? DBNull.Value;
+                    command.Parameters.Add("STR_DIACHI", OracleDbType.Varchar2).Value = (object)student.DIACHI ?? DBNull.Value;
+                    command.Parameters.Add("STR_DT", OracleDbType.Varchar2).Value = (object)student.DT ?? DBNull.Value;
+                    command.Parameters.Add("STR_MACT", OracleDbType.Varchar2).Value = (object)student.MACT ?? DBNull.Value;
+                    command.Parameters.Add("STR_MANGANH", OracleDbType.Varchar2).Value = (object)student.MANGANH ?? DBNull.Value;
+                    command.Parameters.Add("STR_SOTCTL", OracleDbType.Int64).Value = (object)student.SOTCTL ?? DBNull.Value;
+                    command.Parameters.Add("STR_DTBTL", OracleDbType.Double).Value = (object)student.DTBTL ?? DBNull.Value;
+                    command.Parameters.Add("STR_COSO", OracleDbType.Varchar2).Value = (object)student.COSO ?? DBNull.Value;
 
+                    return command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message, "InsertStudent Error", MessageBoxButton.OK, MessageBoxImage.Information);
+                return 0;
+            }
+        }
 
 
 

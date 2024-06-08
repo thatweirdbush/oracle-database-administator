@@ -292,7 +292,7 @@
             </Grid>
 
             <!-- Grid Kế hoạch học tập -->
-            <Grid x:Name="Grid_AcademicPlan" Visibility="Visible">
+            <Grid x:Name="Grid_AcademicPlan" Visibility="Collapsed">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="4*" />
                     <RowDefinition Height="20*" />
@@ -475,7 +475,7 @@
             </Grid>
 
             <!-- Grid Danh sách sinh viên -->
-            <Grid x:Name="Grid_StudentList" Visibility="Collapsed">
+            <Grid x:Name="Grid_StudentList" Visibility="Visible">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="4*" />
                     <RowDefinition Height="20*" />
@@ -492,7 +492,7 @@
                 <Label Grid.Column="1" x:Name="Label_DsSinhVien" Content="DANH SÁCH SINH VIÊN" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#333" FontSize="30" FontWeight="Bold"/>
 
                 <!-- DataGrid - Danh sách sinh viên -->
-                <DataGrid Grid.Row="1" Grid.Column="1" x:Name="Table_DsSinhVien" ColumnWidth="*" ItemsSource="{Binding YourData}" AutoGenerateColumns="True" FontWeight="Medium" BorderBrush="{x:Null}" Background="{x:Null}" VerticalScrollBarVisibility="Hidden" GridLinesVisibility="None" SelectionChanged="Table_DsSinhVien_SelectionChanged">
+                <DataGrid Grid.Row="1" Grid.Column="1" x:Name="Table_DsSinhVien" ColumnWidth="*" ItemsSource="{Binding YourData}" AutoGenerateColumns="True" FontWeight="Medium" BorderBrush="{x:Null}" Background="{x:Null}" VerticalScrollBarVisibility="Hidden" GridLinesVisibility="None" SelectionChanged="Table_DsSinhVien_SelectionChanged"  RowEditEnding="Table_DsSinhVien_RowEditEnding" CanUserDeleteRows="False">
                     <DataGrid.RowBackground>
                         <SolidColorBrush Color="#FFA3BDD2" Opacity="0.6"/>
                     </DataGrid.RowBackground>
