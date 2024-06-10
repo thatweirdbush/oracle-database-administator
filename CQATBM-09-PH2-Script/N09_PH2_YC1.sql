@@ -360,7 +360,7 @@ GRANT SELECT, INSERT, DELETE ON N09_DANGKY TO N09_RL_GIAOVU;
 /
 
 -- Tạo Trigger khi Insert vào bảng DANGKY bởi Giáo vụ
-CREATE OR REPLACE TRIGGER TR_N09_DANGKY_MANAGE_BY_GIAOVU
+CREATE OR REPLACE TRIGGER N09_TRG_MANAGE_DANGKY_BY_GIAOVU
 BEFORE INSERT OR DELETE ON N09_DANGKY
 FOR EACH ROW
 DECLARE
@@ -1003,27 +1003,20 @@ CREATE OR REPLACE FUNCTION N09_POLICY_FUNCTION_HOCPHAN
 (P_SCHEMA VARCHAR2, P_OBJ VARCHAR2)
 RETURN VARCHAR2
 AS
-    MA VARCHAR2(5);
+    MACT VARCHAR2(5);
     USER VARCHAR(100);
     STRSQL VARCHAR2(2000);
-    CURSOR CUR IS (SELECT MAHP
-                   FROM N09_DANGKY 
-                   WHERE MASV = SYS_CONTEXT('USERENV','SESSION_USER'));
 BEGIN 
     USER:= SYS_CONTEXT('USERENV','SESSION_USER');
     IF INSTR(USER, 'SV') > 0 THEN
-        OPEN CUR;
-        LOOP 
-            FETCH CUR INTO MA;
-            EXIT WHEN CUR%NOTFOUND;
-            
-            IF (STRSQL IS NOT NULL) THEN
-                STRSQL:= STRSQL ||''',''';
-            END IF;
-            STRSQL:= STRSQL || MA;
-        END LOOP;
-        CLOSE CUR;
-        RETURN 'MAHP IN ('''||STRSQL||''')';
+        -- Lấy mã chương trình của sinh viên
+        SELECT MACT INTO MACT
+        FROM N09_SINHVIEN
+        WHERE MASV = USER;
+        
+        -- Xây dựng chuỗi điều kiện để lọc các học phần của chương trình
+        STRSQL := 'MAHP IN (SELECT MAHP FROM N09_KHMO WHERE MACT = ''' || MACT || ''')';
+        RETURN STRSQL;
     ELSE
         RETURN NULL;
     END IF;
@@ -1156,66 +1149,56 @@ GRANT UPDATE ON C##ADMIN.N09_DANGKY TO SV001;
 --/
 
 
-
 -- 6c. Thêm, Xóa các dòng dữ liệu đăng ký học phần (ĐANGKY) liên quan đến chính sinh
 -- viên đó trong học kỳ của năm học hiện tại (nếu thời điểm hiệu chỉnh đăng ký còn hợp lệ).
-CREATE OR REPLACE FUNCTION N09_POLICY_FUNCTION_INSERT_SELETE_DANGKY
+CREATE OR REPLACE FUNCTION N09_POLICY_FUNCTION_INSERT_DELETE_DANGKY
 (P_SCHEMA VARCHAR2, P_OBJ VARCHAR2)
 RETURN VARCHAR2
 AS
-  MA VARCHAR2(5);
-  HK NUMBER(1);
-  NAM NUMBER(4);
-  USER VARCHAR(100);
-  STRSQL VARCHAR2(2000);
-  CURSOR CUR IS 
-    SELECT MAHP, HK, NAM
-    FROM N09_DANGKY
-    WHERE MASV = SYS_CONTEXT('USERENV', 'SESSION_USER');
-  HK_START_DATE DATE;
-  HK_END_DATE DATE;
+    USER VARCHAR2(100);
+    HK NUMBER(1);
+    NGAY NUMBER(2);
+    THANG NUMBER(2);
+    NAM NUMBER(4);
+
 BEGIN 
     USER:= SYS_CONTEXT('USERENV','SESSION_USER');
     IF INSTR(USER, 'SV') > 0 THEN
-        STRSQL := '';
-    
-        OPEN CUR;
-        LOOP 
-            FETCH CUR INTO MA, HK, NAM;
-            EXIT WHEN CUR%NOTFOUND;
-        
-            -- Tính toán ngày bắt đầu học kỳ dựa trên giá trị của HK
-            IF HK = 1 THEN
-                HK_START_DATE := TO_DATE(TO_CHAR(NAM) || '0101', 'YYYYMMDD');
-            ELSIF HK = 2 THEN
-                HK_START_DATE := TO_DATE(TO_CHAR(NAM) || '0501', 'YYYYMMDD');
-            ELSIF HK = 3 THEN
-                HK_START_DATE := TO_DATE(TO_CHAR(NAM) || '0901', 'YYYYMMDD');
+
+        NGAY := TO_NUMBER(TO_CHAR(SYSDATE, 'DD'));
+        THANG := TO_NUMBER(TO_CHAR(SYSDATE, 'MM'));
+        NAM := TO_NUMBER(TO_CHAR(SYSDATE, 'YYYY'));
+
+        IF NGAY >= 1 AND NGAY <= 14 THEN
+            IF THANG = 1 THEN
+                HK := 1;
+            ELSIF THANG = 5 THEN
+                HK := 2;
+            ELSIF THANG = 9 THEN
+                HK := 3;
+            ELSIF THANG > 1 AND THANG <= 4 THEN
+                HK := 2;
+            ELSIF THANG > 5 AND THANG <= 8 THEN
+                HK := 3;
             ELSE
-                RETURN '1=0'; -- Nếu không xác định được học kỳ
+                HK := 1;
+                NAM := NAM + 1;
             END IF;
-        
-            -- Tính toán ngày kết thúc hợp lệ cho việc đăng ký
-            HK_END_DATE := HK_START_DATE + 14;
-        
-            -- Kiểm tra nếu ngày hiện tại nằm trong khoảng thời gian hợp lệ
-            IF SYSDATE <= HK_END_DATE THEN
-                IF STRSQL != '' THEN
-                    STRSQL := STRSQL ||''',''';
-                END IF;
-                STRSQL := STRSQL || MA;
-            END IF;
-        END LOOP;
-        CLOSE CUR;
-    
-        -- Nếu không có mã học phần hợp lệ thì trả về điều kiện luôn sai
-        IF STRSQL = '' THEN
-            RETURN '1=0';
         ELSE
-            RETURN 'MAHP IN ('''||STRSQL||''')';
+            IF THANG >= 1 AND THANG <= 4 THEN
+                HK := 2;
+            ELSIF THANG >= 5 AND THANG <= 8 THEN
+                HK := 3;
+            ELSE
+                HK := 1;
+                NAM := NAM + 1;
+            END IF;
         END IF;
+        
+        -- Trả về điều kiện cho phép thêm, xóa NẾU năm học >= năm hiện tại và học kỳ >= học kỳ hiện tại
+        RETURN 'HK >= ' || HK || ' AND NAM >= ' || NAM;
     ELSE
-        RETURN '1=1';
+        RETURN NULL;
     END IF;
 END;
 /
@@ -1224,8 +1207,8 @@ BEGIN
     DBMS_RLS.ADD_POLICY(
         OBJECT_SCHEMA => 'C##ADMIN',
         OBJECT_NAME => 'N09_DANGKY',
-        POLICY_NAME => 'N09_POLICY_INSERT_SELETE_DANGKY',
-        POLICY_FUNCTION => 'N09_POLICY_FUNCTION_INSERT_SELETE_DANGKY',
+        POLICY_NAME => 'N09_POLICY_INSERT_DELETE_DANGKY',
+        POLICY_FUNCTION => 'N09_POLICY_FUNCTION_INSERT_DELETE_DANGKY',
         STATEMENT_TYPES => 'INSERT, DELETE',
         UPDATE_CHECK => TRUE
     );
@@ -1244,25 +1227,23 @@ GRANT INSERT, DELETE ON C##ADMIN.N09_DANGKY TO N09_RL_SINHVIEN;
 --
 ---- Xóa Học phần HP003, Học kỳ 3, Năm 2024 (1/9/2024), Ngày hiện tại 10/6/2024: Thành công
 --CONN SV001/SV001;
---DELETE FROM C##ADMIN.N09_DANGKY WHERE MASV = 'SV001' AND MAHP = 'HP003';
+--DELETE FROM C##ADMIN.N09_DANGKY WHERE MASV = 'SV001' AND MAHP = 'HP003' AND MAGV = 'NV201' AND HK = 3 AND NAM = 2024;
 --/
 --
 ---- Xóa Học phần HP001, Học kỳ 1, Năm 2024 (1/1/2024), Ngày hiện tại 10/6/2024: Không thành công
 --CONN SV001/SV001;
---DELETE FROM C##ADMIN.N09_DANGKY WHERE MASV = 'SV001' AND MAHP = 'HP001';
+--DELETE FROM C##ADMIN.N09_DANGKY WHERE MASV = 'SV001' AND MAHP = 'HP001' AND MAGV = 'NV201' AND HK = 1 AND NAM = 2024;
 --/
 --
 ---- Thêm Học phần HP003, Học kỳ 3, Năm 2024 (1/9/2024), Ngày hiện tại 10/6/2024: Thành công
----- WARNING: ĐANG BỊ LỖI INSERT
 --CONN SV001/SV001;
 --INSERT INTO C##ADMIN.N09_DANGKY VALUES('SV001', 'NV201', 'HP003', 3, 2024, 'CQ', NULL, NULL, NULL, NULL);
 --/
-
-
-
-
-
-
+--
+---- Thêm Học phần HP001, Học kỳ 1, Năm 2024 (1/1/2024), Ngày hiện tại 10/6/2024: Không thành công
+--CONN SV001/SV001;
+--INSERT INTO C##ADMIN.N09_DANGKY VALUES('SV001', 'NV202', 'HP001', 2, 2024, 'CLC', NULL, NULL, NULL, NULL);
+--/
 
 
 
