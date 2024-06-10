@@ -492,7 +492,21 @@
                 <Label Grid.Column="1" x:Name="Label_DsSinhVien" Content="DANH SÁCH SINH VIÊN" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#333" FontSize="30" FontWeight="Bold"/>
 
                 <!-- DataGrid - Danh sách sinh viên -->
-                <DataGrid Grid.Row="1" Grid.Column="1" x:Name="Table_DsSinhVien" ColumnWidth="*" ItemsSource="{Binding YourData}" AutoGenerateColumns="True" FontWeight="Medium" BorderBrush="{x:Null}" Background="{x:Null}" VerticalScrollBarVisibility="Hidden" GridLinesVisibility="None" SelectionChanged="Table_DsSinhVien_SelectionChanged"  RowEditEnding="Table_DsSinhVien_RowEditEnding" CanUserDeleteRows="False">
+                <DataGrid Grid.Row="1" Grid.Column="1" x:Name="Table_DsSinhVien" ColumnWidth="*" ItemsSource="{Binding YourData}" AutoGenerateColumns="False" FontWeight="Medium" BorderBrush="{x:Null}" Background="{x:Null}" VerticalScrollBarVisibility="Hidden" GridLinesVisibility="None" SelectionChanged="Table_DsSinhVien_SelectionChanged"  RowEditEnding="Table_DsSinhVien_RowEditEnding" CanUserDeleteRows="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="ID" Binding="{Binding MASV}"/>
+                        <DataGridTextColumn Header="Họ Tên" Binding="{Binding HOTEN}"/>
+                        <DataGridTextColumn Header="Giới Tính" Binding="{Binding PHAI}"/>
+                        <DataGridTextColumn Header="Ngày Sinh" Binding="{Binding NGSINH}"/>
+                        <DataGridTextColumn Header="Địa Chỉ" Binding="{Binding DIACHI}"/>
+                        <DataGridTextColumn Header="SĐT" Binding="{Binding DT}"/>
+                        <DataGridTextColumn Header="Chương Trình" Binding="{Binding MACT}"/>
+                        <DataGridTextColumn Header="Ngành" Binding="{Binding MANGANH}"/>
+                        <DataGridTextColumn Header="Tín Chỉ" Binding="{Binding SOTCTL}"/>
+                        <DataGridTextColumn Header="Điểm TB" Binding="{Binding DTBTL}"/>
+                        <DataGridTextColumn Header="Cơ Sở" Binding="{Binding COSO}"/>
+                    </DataGrid.Columns>
+                    
                     <DataGrid.RowBackground>
                         <SolidColorBrush Color="#FFA3BDD2" Opacity="0.6"/>
                     </DataGrid.RowBackground>

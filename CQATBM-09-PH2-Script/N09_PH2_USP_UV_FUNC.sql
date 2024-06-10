@@ -383,26 +383,17 @@ GRANT EXECUTE ON N09_SELECT_ANY_TABLE TO PUBLIC;
 /
 
 -- -- Test
---  -- SELECT tất cả các dòng của Table N09_NHANVIEN
---  CONN HUYP/123
---  VARIABLE rc REFCURSOR;
---      EXECUTE SYS.N09_SELECT_ANY_TABLE(:rc, 'N09_BAOCAO');
---  PRINT rc;
--- /
-
--- -- Không SELECT được dòng nào trong Table N09_NHANVIEN
--- VARIABLE rc REFCURSOR;
---     EXECUTE SYS.N09_SELECT_ANY_TABLE(:rc, 'N09_NHANVIEN', '1=0');
--- PRINT rc;
--- /
-
-
-
--- -- Test
---  -- SELECT tất cả các dòng của Table N09_NHANVIEN
+--  -- SELECT tất cả các dòng của Table UV_N09_DONVI
 --  CONN NV201/NV201
 --  VARIABLE rc REFCURSOR;
 --      EXECUTE C##ADMIN.N09_SELECT_ANY_TABLE(:rc, 'C##ADMIN.UV_N09_DONVI');
+--  PRINT rc;
+--/
+
+-- -- Không SELECT được dòng nào trong Table N09_NHANVIEN
+--  CONN NV201/NV201
+--  VARIABLE rc REFCURSOR;
+--      EXECUTE C##ADMIN.N09_SELECT_ANY_TABLE(:rc, 'C##ADMIN.UV_N09_DONVI', '1=0');
 --  PRINT rc;
 --/
 
@@ -727,23 +718,6 @@ END;
 GRANT EXECUTE ON N09_UPDATE_NHANSU TO PUBLIC;
 /
 
-
-----------------------------------------------------------------
--- Stored Procedure UPDATE bảng N09_SINHVIEN
--- Tham số truyền vào: Tên cột cần UPDATE, Giá trị cần UPDATE, Mã nhân sự cần UPDATE
--- Tham số optional: Không
-----------------------------------------------------------------
-CREATE OR REPLACE PROCEDURE N09_UPDATE_SINHVIEN
-(STR_COLUMN IN VARCHAR2, STR_VALUE IN VARCHAR2, STR_ID IN VARCHAR2)
-IS
-BEGIN
-    EXECUTE IMMEDIATE 'UPDATE C##ADMIN.N09_SINHVIEN SET ' || STR_COLUMN || ' = ''' || STR_VALUE || ''' WHERE MASV = ''' || STR_ID || '''';
-END;
-/
-    
--- Gán quyền thực thi thủ tục trên cho tất cả user
-GRANT EXECUTE ON N09_UPDATE_SINHVIEN TO PUBLIC;
-/
     
         
 ----------------------------------------------------------------
@@ -832,12 +806,12 @@ END;
 GRANT EXECUTE ON N09_IS_EXIST_STUDENT TO PUBLIC;
 /
 
--- Test
-CONN NV301/NV301;
-VARIABLE rc REFCURSOR;
-EXECUTE C##ADMIN.N09_IS_EXIST_STUDENT(:rc, 'SV001');
-PRINT rc;
-/
+-- -- Test
+-- CONN NV301/NV301;
+-- VARIABLE rc REFCURSOR;
+-- EXECUTE C##ADMIN.N09_IS_EXIST_STUDENT(:rc, 'SV001');
+-- PRINT rc;
+-- /
 
 
 
@@ -879,7 +853,7 @@ GRANT EXECUTE ON N09_INSERT_STUDENT TO PUBLIC;
 
 
 ----------------------------------------------------------------
--- Stored Procedure Update Student
+-- Stored Procedure Update Student (FULL)
 -- Tham số truyền vào: MASV, HOTEN, PHAI, NGSINH, DIACHI, DT, MACT, MANGANH, SOTCTL, DTBTL, COSO
 -- Tham số optional: Không
 ----------------------------------------------------------------
@@ -905,23 +879,11 @@ END;
 -- Gán quyền thực thi thủ tục trên cho tất cả user
 GRANT EXECUTE ON N09_UPDATE_STUDENT TO PUBLIC;
 
--- Test
-CONN NV301/NV301;
-SELECT * FROM C##ADMIN.N09_SINHVIEN;
-EXECUTE C##ADMIN.N09_UPDATE_STUDENT('SV001', 'Nguyen Van B', 'Nam', TO_DATE('01/01/2000', 'DD/MM/YYYY'), 'Ha Noi', '0123456789', 'CT1', 'CN1', 120, 8.5, 'CS1');
-/
-
-
-
-
-
-
+-- -- Test
 -- CONN NV301/NV301;
 -- SELECT * FROM C##ADMIN.N09_SINHVIEN;
-
-
-
-
+-- EXECUTE C##ADMIN.N09_UPDATE_STUDENT('SV001', 'Nguyen Van B', 'Nam', TO_DATE('01/01/2000', 'DD/MM/YYYY'), 'Ha Noi', '0123456789', 'CT1', 'CN1', 120, 8.5, 'CS1');
+-- /
 
 
 
