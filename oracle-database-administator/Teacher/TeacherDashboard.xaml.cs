@@ -23,10 +23,9 @@ namespace oracle_database_administator.Teacher
     /// </summary>
     public partial class TeacherDashboard : Page
     {
-        private OracleConnection conn = Database.Instance.Connection;
+        private MainViewModel MainViewModel = MainViewModel.Instance;
         private Database Db = Database.Instance;
-        Personnel personnel = null;
-        Assignment assignment = null;
+        private Personnel personnel = null;
 
         public TeacherDashboard()
         {
@@ -41,7 +40,7 @@ namespace oracle_database_administator.Teacher
 
         private void GetUserDataContext()
         {
-            personnel = Db.LoadSingleLineDataContext<Personnel>(Db.STAFFS_VIEWBY_TEACHER);
+            personnel = Db.LoadSingleLineDataContext<Personnel>(Db.PERSONNELS);
             Grid_DisplayData.DataContext = personnel;
         }
 
@@ -58,8 +57,6 @@ namespace oracle_database_administator.Teacher
             Table_KeHoachMo.Visibility = Visibility.Collapsed;
             Table_PhanCong.Visibility = Visibility.Collapsed;
             Table_DangKy.Visibility = Visibility.Collapsed;
-            Button_SeeRegistrations.Visibility = Visibility.Collapsed;
-            Button_BackToAssignments.Visibility = Visibility.Collapsed;
         }
 
         private void LogoutButton_Click(object sender, RoutedEventArgs e)
@@ -89,7 +86,7 @@ namespace oracle_database_administator.Teacher
         {
             HideAllElements();
             Grid_Unit.Visibility = Visibility.Visible;
-            Table_DonVi.ItemsSource = Db.GetAnyTable(Db.UNITS);
+            Table_DonVi.ItemsSource = MainViewModel.Units;
         }
 
         private void KHHocTap_Click(object sender, RoutedEventArgs e)
@@ -97,7 +94,7 @@ namespace oracle_database_administator.Teacher
             HideAllElements();
             Grid_AcademicPlan.Visibility = Visibility.Visible;
             Table_DsHocPhan.Visibility = Visibility.Visible;
-            Table_DsHocPhan.ItemsSource = Db.GetAnyTable(Db.SUBJECTS);
+            Table_DsHocPhan.ItemsSource = MainViewModel.Subjects;
         }
 
         private void DSHocPhan_Click(object sender, RoutedEventArgs e)
@@ -105,7 +102,7 @@ namespace oracle_database_administator.Teacher
             HideAllElements();
             Grid_AcademicPlan.Visibility = Visibility.Visible;
             Table_DsHocPhan.Visibility = Visibility.Visible;
-            Table_DsHocPhan.ItemsSource = Db.GetAnyTable(Db.SUBJECTS);
+            Table_DsHocPhan.ItemsSource = MainViewModel.Subjects;
         }
 
         private void KeHoachMo_Click(object sender, RoutedEventArgs e)
@@ -113,7 +110,7 @@ namespace oracle_database_administator.Teacher
             HideAllElements();
             Grid_AcademicPlan.Visibility = Visibility.Visible;
             Table_KeHoachMo.Visibility = Visibility.Visible;
-            Table_KeHoachMo.ItemsSource = Db.GetAnyTable(Db.COURSE_OPENING_PLANS);
+            Table_KeHoachMo.ItemsSource = MainViewModel.CourseOpeningPlans;
         }
 
         private void PhanCong_Click(object sender, RoutedEventArgs e)
@@ -121,15 +118,22 @@ namespace oracle_database_administator.Teacher
             HideAllElements();
             Grid_AcademicPlan.Visibility = Visibility.Visible;
             Table_PhanCong.Visibility = Visibility.Visible;
-            Button_SeeRegistrations.Visibility = Visibility.Visible;
-            Table_PhanCong.ItemsSource = Db.GetAnyTable(Db.ASSIGNMENTS_VIEWBY_TEACHER);
+            Table_PhanCong.ItemsSource = MainViewModel.Assignments;
+        }
+
+        private void DangKy_Click(object sender, RoutedEventArgs e)
+        {
+            HideAllElements();
+            Grid_AcademicPlan.Visibility = Visibility.Visible;
+            Table_DangKy.Visibility = Visibility.Visible;
+            Table_DangKy.ItemsSource = MainViewModel.Registrations;
         }
 
         private void DSSinhVien_Click(object sender, RoutedEventArgs e)
         {
             HideAllElements();
             Grid_StudentList.Visibility = Visibility.Visible;
-            Table_DsSinhVien.ItemsSource = Db.GetAnyTable(Db.STUDENTS);
+            Table_DsSinhVien.ItemsSource = MainViewModel.Students;
         }
 
         private void ThongBao_Click(object sender, RoutedEventArgs e)
@@ -151,7 +155,7 @@ namespace oracle_database_administator.Teacher
             // Update the database
             string column = "DT";
             string newPhoneNumber = TextBox_SDT.Text;
-            int result = Db.UpdateStaff(column, newPhoneNumber, personnel.MANV);
+            int result = Db.UpdateStaffPhoneNo(column, newPhoneNumber, personnel.MANV);
 
             if (result != -1)
                 return;
@@ -164,30 +168,7 @@ namespace oracle_database_administator.Teacher
             TextBox_SDT.Visibility = Visibility.Collapsed;
             Button_EditSDT.Visibility = Visibility.Visible;
             Button_SaveSDT.Visibility = Visibility.Collapsed;
-        }
-
-        private void Button_SeeRegistrations_Click(object sender, RoutedEventArgs e)
-        {
-            if (assignment == null)
-            {
-                MessageBox.Show("An Assignment is required!", "Empty Field Exception", MessageBoxButton.OK, MessageBoxImage.Information);
-                return;
-            }
-
-            HideAllElements();
-            Grid_AcademicPlan.Visibility = Visibility.Visible;
-            Table_DangKy.Visibility = Visibility.Visible;
-            Button_BackToAssignments.Visibility = Visibility.Visible;
-            Table_DangKy.ItemsSource = Db.GetRegistrationsByTeacher(assignment);
-
-            // Reset the assignment
-            assignment = null;
-        }
-
-        private void Button_BackToAssignments_Click(object sender, RoutedEventArgs e)
-        {
-            PhanCong_Click(sender, e);
-        }
+        }       
 
         private void Table_DsHocPhan_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -211,22 +192,34 @@ namespace oracle_database_administator.Teacher
 
         private void Table_PhanCong_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (Table_PhanCong.SelectedItem is DataRowView row)
-            {
-                assignment = new Assignment
-                {
-                    MAGV = row["Mã Giảng Viên"].ToString(),
-                    MAHP = row["Mã Học Phần"].ToString(),
-                    HK = Int64.Parse(row["Học Kỳ"].ToString()),
-                    NAM = Int64.Parse(row["Năm"].ToString()),
-                    MACT = row["Mã Chương Trình"].ToString()
-                };
-            }
+
         }
 
         private void Table_DsSinhVien_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
+        }
+
+        private void Table_DangKy_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
+        {
+            if (e.EditAction == DataGridEditAction.Commit)
+            {
+                var dataGrid = sender as DataGrid;
+
+                // Sử dụng Dispatcher để đợi cho quá trình chỉnh sửa hoàn tất
+                dataGrid.Dispatcher.InvokeAsync(() =>
+                {
+                    var regist = e.Row.Item as Registration;
+                    int result = 0;
+
+                    result = Db.UpdateRegistration(regist);
+                    MessageBox.Show("Executed!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                    // Update the binding source to the previous value
+                    Table_DangKy.ItemsSource = MainViewModel.Registrations;
+
+                }, System.Windows.Threading.DispatcherPriority.Background);
+            }
         }
     }
 }

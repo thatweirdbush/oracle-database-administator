@@ -139,6 +139,9 @@
     <Compile Include="Staff\StaffDashboard.xaml.cs">
       <DependentUpon>StaffDashboard.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Student\StudentDashboard.xaml.cs">
+      <DependentUpon>StudentDashboard.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Teacher\TeacherDashboard.xaml.cs">
       <DependentUpon>TeacherDashboard.xaml</DependentUpon>
     </Compile>
@@ -167,6 +170,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Staff\StaffDashboard.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Student\StudentDashboard.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -337,6 +344,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="images\exit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\exit-white.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Text.Json.6.0.1\build\System.Text.Json.targets" Condition="Exists('..\packages\System.Text.Json.6.0.1\build\System.Text.Json.targets')" />

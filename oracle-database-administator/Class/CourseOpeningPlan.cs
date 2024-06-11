@@ -15,5 +15,14 @@ namespace oracle_database_administator.Class
 
         // Default Constructor
         public CourseOpeningPlan() { }
+
+        // Copy Constructor
+        public CourseOpeningPlan(CourseOpeningPlan other)
+        {
+            MAHP = other.MAHP;
+            HK = other.HK;
+            NAM = other.NAM;
+            MACT = other.MACT;
+        }
     }
 }

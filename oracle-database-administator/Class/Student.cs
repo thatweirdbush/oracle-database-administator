@@ -28,27 +28,22 @@ namespace oracle_database_administator.Class
         // Default Constructor
         public Student() { }
 
-        //public Student(DataRowView row)
-        //{
-        //    try
-        //    {
-        //        int index = 0;
-        //        foreach (PropertyInfo prop in typeof(Student).GetProperties())
-        //        {
-        //            prop.SetValue(this, row[index]);
-        //            index++;
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        MessageBox.Show("Error: " + ex.Message, "DataRowView Conversion Error", MessageBoxButton.OK, MessageBoxImage.Information);
-        //    }
-        //}
-
-        public string ToOracleDate()
+        // Copy Constructor
+        public Student(Student other)
         {
-            return "TO_DATE('" + NGSINH.Value.ToString("dd/MM/yyyy") + "', 'DD/MM/YYYY')";
+            MASV = other.MASV;
+            HOTEN = other.HOTEN;
+            PHAI = other.PHAI;
+            NGSINH = other.NGSINH;
+            DIACHI = other.DIACHI;
+            DT = other.DT;
+            MACT = other.MACT;
+            MANGANH = other.MANGANH;
+            SOTCTL = other.SOTCTL;
+            DTBTL = other.DTBTL;
+            COSO = other.COSO;
         }
+
     }
 
 

@@ -23,5 +23,19 @@ namespace oracle_database_administator.Class
 
         // Default Constructor
         public Personnel() { }
+
+        // Copy Constructor
+        public Personnel(Personnel other)
+        {
+            MANV = other.MANV;
+            HOTEN = other.HOTEN;
+            PHAI = other.PHAI;
+            NGSINH = other.NGSINH;
+            PHUCAP = other.PHUCAP;
+            DT = other.DT;
+            VAITRO = other.VAITRO;
+            MADV = other.MADV;
+            COSO = other.COSO;
+        }
     }
 }

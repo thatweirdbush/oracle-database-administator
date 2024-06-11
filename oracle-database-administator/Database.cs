@@ -516,41 +516,53 @@ namespace oracle_database_administator
         /**********************************************************
         * Database's Stored Procedures - Phan He 2
         ***********************************************************/
-        static public string ADMIN_TABLE_PREFIX = $"C##ADMIN.UV_N09_";
-        public static string GET_SINGLE_LINE_DATA = $"C##ADMIN.N09_GET_SINGLE_LINE_DATA";
+        static public string ADMIN_PREFIX = $"C##ADMIN.N09_";
 
-        // Table's view name for each role - NHANSU
-        public string STAFFS_VIEWBY_STAFF = $"{ADMIN_TABLE_PREFIX}NHANSU_VIEWBY_NHANVIEN";
-        public string STAFFS_VIEWBY_TEACHER = $"{ADMIN_TABLE_PREFIX}NHANSU_VIEWBY_GIANGVIEN";
-        public string STAFFS_VIEWBY_MINISTRY = $"{ADMIN_TABLE_PREFIX}NHANSU_VIEWBY_GIAOVU";
-        public string STAFFS_VIEWBY_UNIT_HEAD = $"{ADMIN_TABLE_PREFIX}NHANSU_VIEWBY_TRUONGDONVI";
-        public string STAFFS_VIEWBY_DEPARTMENT_HEAD = $"{ADMIN_TABLE_PREFIX}NHANSU_VIEWBY_TRUONGKHOA";
-
-        // Table's view name for each role - PHANCONG
-        public string ASSIGNMENTS_VIEWBY_TEACHER = $"{ADMIN_TABLE_PREFIX}PHANCONG_VIEWBY_GIANGVIEN";
-        public string ASSIGNMENTS_VIEWBY_MINISTRY = $"{ADMIN_TABLE_PREFIX}PHANCONG_VIEWBY_GIAOVU";
-        public string ASSIGNMENTS_VIEWBY_UNIT_HEAD = $"{ADMIN_TABLE_PREFIX}PHANCONG_VIEWBY_TRUONGDONVI";
-        public string ASSIGNMENTS_VIEWBY_DEPARTMENT_HEAD = $"{ADMIN_TABLE_PREFIX}PHANCONG_VIEWBY_TRUONGKHOA";
-
-        // Table's view name for each role - DANGKY
-        public string REGISTRATIONS_VIEWBY_TEACHER = $"{ADMIN_TABLE_PREFIX}DANGKY_VIEWBY_GIANGVIEN";
-        public string REGISTRATIONS_VIEWBY_MINISTRY = $"{ADMIN_TABLE_PREFIX}DANGKY_VIEWBY_GIAOVU";
-        public string REGISTRATIONS_VIEWBY_UNIT_HEAD = $"{ADMIN_TABLE_PREFIX}DANGKY_VIEWBY_TRUONGDONVI";
-        public string REGISTRATIONS_VIEWBY_DEPARTMENT_HEAD = $"{ADMIN_TABLE_PREFIX}DANGKY_VIEWBY_TRUONGKHOA";
-
-        // Table's view name for EVERY role
-        public string STUDENTS = $"{ADMIN_TABLE_PREFIX}SINHVIEN";
-        public string UNITS = $"{ADMIN_TABLE_PREFIX}DONVI";
-        public string SUBJECTS = $"{ADMIN_TABLE_PREFIX}HOCPHAN";
-        public string COURSE_OPENING_PLANS = $"{ADMIN_TABLE_PREFIX}KHMO";
+        // Table's name for EVERY role
+        public string STUDENTS = $"{ADMIN_PREFIX}SINHVIEN";
+        public string PERSONNELS = $"{ADMIN_PREFIX}NHANSU";
+        public string UNITS = $"{ADMIN_PREFIX}DONVI";
+        public string SUBJECTS = $"{ADMIN_PREFIX}HOCPHAN";
+        public string COURSE_OPENING_PLANS = $"{ADMIN_PREFIX}KHMO";
+        public string ASSIGNMENTS = $"{ADMIN_PREFIX}PHANCONG";
+        public string REGISTRATIONS = $"{ADMIN_PREFIX}DANGKY";
 
         // Special stored procedures
-        public string UPDATE_STAFF = $"C##ADMIN.N09_UPDATE_NHANSU";
-        public string STUDENT_REGISTRATION_BY_TEACHER = $"C##ADMIN.N09_DANGKY_JOIN_PHANCONG_BY_GIANGVIEN";
-        public string GET_CURRENT_ROLE = $"C##ADMIN.N09_GET_CURRENT_USER_ROLE";
-        public string IS_EXIST_STUDENT = $"C##ADMIN.N09_IS_EXIST_STUDENT";
-        public string INSERT_STUDENT = $"C##ADMIN.N09_INSERT_STUDENT";
-        public string UPDATE_STUDENT = $"C##ADMIN.N09_UPDATE_STUDENT";
+        public string SELECT_ANY_TABLE_ADMIN = $"{ADMIN_PREFIX}SELECT_ANY_TABLE";
+        public string GET_SINGLE_LINE_DATA = $"{ADMIN_PREFIX}GET_SINGLE_LINE_DATA";
+        public string UPDATE_SINGLE_COL_STAFF = $"{ADMIN_PREFIX}UPDATE_SINGLE_COL_NHANSU";
+        public string UPDATE_SINGLE_COL_STUDENT = $"{ADMIN_PREFIX}UPDATE_SINGLE_COL_SINHVIEN";
+        public string STUDENT_REGISTRATION_BY_TEACHER = $"{ADMIN_PREFIX}DANGKY_JOIN_PHANCONG_BY_GIANGVIEN";
+        public string GET_CURRENT_ROLE = $"{ADMIN_PREFIX}GET_CURRENT_USER_ROLE";
+
+        // Stored procedures for Check exist
+        public string IS_EXIST_STUDENT = $"{ADMIN_PREFIX}IS_EXIST_SINHVIEN";
+        public string IS_EXIST_PERSONNEL = $"{ADMIN_PREFIX}IS_EXIST_NHANSU";
+        public string IS_EXIST_UNIT = $"{ADMIN_PREFIX}IS_EXIST_DONVI";
+        public string IS_EXIST_SUBJECT = $"{ADMIN_PREFIX}IS_EXIST_HOCPHAN";
+        public string IS_EXIST_COURSE_OPENING_PLAN = $"{ADMIN_PREFIX}IS_EXIST_KHMO";
+        public string IS_EXIST_ASSIGNMENT = $"{ADMIN_PREFIX}IS_EXIST_PHANCONG";
+        public string IS_EXIST_REGISTRATION = $"{ADMIN_PREFIX}IS_EXIST_DANGKY";
+
+        // Stored procedures for CRUD operations
+        public string INSERT_PERSONNEL = $"{ADMIN_PREFIX}INSERT_NHANSU";
+        public string UPDATE_PERSONNEL = $"{ADMIN_PREFIX}UPDATE_NHANSU";
+        public string INSERT_STUDENT = $"{ADMIN_PREFIX}INSERT_SINHVIEN";
+        public string UPDATE_STUDENT = $"{ADMIN_PREFIX}UPDATE_SINHVIEN";
+        public string INSERT_UNIT = $"{ADMIN_PREFIX}INSERT_DONVI";
+        public string UPDATE_UNIT = $"{ADMIN_PREFIX}UPDATE_DONVI";
+        public string INSERT_SUBJECT = $"{ADMIN_PREFIX}INSERT_HOCPHAN";
+        public string UPDATE_SUBJECT = $"{ADMIN_PREFIX}UPDATE_HOCPHAN";
+        public string INSERT_COURSE_OPENING_PLAN = $"{ADMIN_PREFIX}INSERT_KHMO";
+        public string UPDATE_COURSE_OPENING_PLAN = $"{ADMIN_PREFIX}UPDATE_KHMO";
+        public string INSERT_ASSIGNMENT = $"{ADMIN_PREFIX}INSERT_PHANCONG";
+        public string UPDATE_ASSIGNMENT = $"{ADMIN_PREFIX}UPDATE_PHANCONG";
+        public string INSERT_REGISTRATION = $"{ADMIN_PREFIX}INSERT_DANGKY";
+        public string UPDATE_REGISTRATION = $"{ADMIN_PREFIX}UPDATE_DANGKY";
+        public string DELETE_REGISTRATION = $"{ADMIN_PREFIX}DELETE_DANGKY";
+
+
+
 
 
 
@@ -619,7 +631,7 @@ namespace oracle_database_administator
             {
                 ObservableCollection<T> entities = new ObservableCollection<T>();
 
-                using (OracleCommand cmd = new OracleCommand(SELECT_ANY_TABLE, Connection))
+                using (OracleCommand cmd = new OracleCommand(SELECT_ANY_TABLE_ADMIN, Connection))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.Add(outParameter, OracleDbType.RefCursor).Direction = ParameterDirection.Output;
@@ -656,17 +668,37 @@ namespace oracle_database_administator
         }
 
         /// <summary>
-        /// Update NHANSU table with
+        /// Update NHANSU table with single column
         /// </summary>
         /// <param name="columnName"></param>
         /// <param name="columnValue"></param>
         /// <param name="ID"></param>
         /// <returns>Status: -1 when successfully!</returns>
-        public int UpdateStaff(string columnName, object columnValue, object ID)
+        public int UpdateStaffPhoneNo(string columnName, object columnValue, object ID)
         {
             try
             {
-                using (OracleCommand command = new OracleCommand(UPDATE_STAFF, Connection))
+                using (OracleCommand command = new OracleCommand(UPDATE_SINGLE_COL_STAFF, Connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("STR_COLUMN", OracleDbType.Varchar2).Value = columnName;
+                    command.Parameters.Add("STR_VALUE", OracleDbType.Varchar2).Value = columnValue;
+                    command.Parameters.Add("STR_ID", OracleDbType.Varchar2).Value = ID;
+                    return command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                return 1;
+            }
+        }
+
+        public int UpdateStudentSingleCol(string columnName, object columnValue, object ID)
+        {
+            try
+            {
+                using (OracleCommand command = new OracleCommand(UPDATE_SINGLE_COL_STUDENT, Connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add("STR_COLUMN", OracleDbType.Varchar2).Value = columnName;
@@ -735,11 +767,15 @@ namespace oracle_database_administator
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Error: " + ex.Message, "Get Current Role Error", MessageBoxButton.OK, MessageBoxImage.Information);
                 return null;
             }
         }
 
+
+        /**********************************************************
+        * Stored Procedures - Check exist
+        ***********************************************************/
         /// <summary>
         /// Check if student is exist in database
         /// </summary>
@@ -767,11 +803,184 @@ namespace oracle_database_administator
         }
 
         /// <summary>
+        /// Check if personnel is exist in database
+        /// </summary>
+        /// <param name="personnelId"></param>
+        /// <returns></returns>
+        public bool IsExistPersonnel(string personnelId)
+        {
+            try
+            {
+                using (OracleCommand command = new OracleCommand(IS_EXIST_PERSONNEL, Connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add(outParameter, OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                    command.Parameters.Add("STR_MANV", OracleDbType.Varchar2).Value = personnelId;
+                    var result = command.ExecuteScalar();
+
+                    return Convert.ToInt32(result) > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Check if unit is exist in database
+        /// </summary>
+        /// <param name="unitId"></param>
+        /// <returns>True/False</returns>
+        public bool IsExistUnit(string unitId)
+        {
+            try
+            {
+                using (OracleCommand command = new OracleCommand(IS_EXIST_UNIT, Connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add(outParameter, OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                    command.Parameters.Add("STR_MADV", OracleDbType.Varchar2).Value = unitId;
+                    var result = command.ExecuteScalar();
+
+                    return Convert.ToInt32(result) > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Check if subject is exist in database
+        /// </summary>
+        /// <param name="subjectId"></param>
+        /// <returns>True/False</returns>
+        public bool IsExistSubject(string subjectId)
+        {
+            try
+            {
+                using (OracleCommand command = new OracleCommand(IS_EXIST_SUBJECT, Connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add(outParameter, OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                    command.Parameters.Add("STR_MAHP", OracleDbType.Varchar2).Value = subjectId;
+                    var result = command.ExecuteScalar();
+
+                    return Convert.ToInt32(result) > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Check if course opening plan is exist in database
+        /// </summary>
+        /// <param name="plan"></param>
+        /// <returns>True/False</returns>
+        public bool IsExistCourseOpeningPlan(CourseOpeningPlan plan)
+        {
+            try
+            {
+                using (OracleCommand command = new OracleCommand(IS_EXIST_COURSE_OPENING_PLAN, Connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add(outParameter, OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                    command.Parameters.Add("STR_MAHP", OracleDbType.Varchar2).Value = plan.MAHP;
+                    command.Parameters.Add("STR_HK", OracleDbType.Varchar2).Value = plan.HK;
+                    command.Parameters.Add("STR_NAM", OracleDbType.Varchar2).Value = plan.NAM;
+                    command.Parameters.Add("STR_MACT", OracleDbType.Varchar2).Value = plan.MACT;
+                    var result = command.ExecuteScalar();
+
+                    return Convert.ToInt32(result) > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Check if assignment is exist in database
+        /// </summary>
+        /// <param name="assignment"></param>
+        /// <returns>True/False</returns>
+        public bool IsExistAssignment(Assignment assignment)
+        {
+            try
+            {
+                using (OracleCommand command = new OracleCommand(IS_EXIST_ASSIGNMENT, Connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add(outParameter, OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                    command.Parameters.Add("STR_MAGV", OracleDbType.Varchar2).Value = assignment.MAGV;
+                    command.Parameters.Add("STR_MAHP", OracleDbType.Varchar2).Value = assignment.MAHP;
+                    command.Parameters.Add("STR_HK", OracleDbType.Int64).Value = assignment.HK;
+                    command.Parameters.Add("STR_NAM", OracleDbType.Int64).Value = assignment.NAM;
+                    command.Parameters.Add("STR_MACT", OracleDbType.Varchar2).Value = assignment.MACT;
+                    var result = command.ExecuteScalar();
+
+                    return Convert.ToInt32(result) > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Check if registration is exist in database
+        /// </summary>
+        /// <param name="registration"></param>
+        /// <returns>True/False</returns>
+        public bool IsExistRegistration(Registration registration)
+        {
+            try
+            {
+                using (OracleCommand command = new OracleCommand(IS_EXIST_REGISTRATION, Connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add(outParameter, OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                    command.Parameters.Add("STR_MASV", OracleDbType.Varchar2).Value = registration.MASV;
+                    command.Parameters.Add("STR_MAGV", OracleDbType.Varchar2).Value = registration.MAGV;
+                    command.Parameters.Add("STR_MAHP", OracleDbType.Varchar2).Value = registration.MAHP;
+                    command.Parameters.Add("STR_HK", OracleDbType.Int64).Value = registration.HK;
+                    command.Parameters.Add("STR_NAM", OracleDbType.Int64).Value = registration.NAM;
+                    command.Parameters.Add("STR_MACT", OracleDbType.Varchar2).Value = registration.MACT;
+
+                    var result = command.ExecuteScalar();
+
+                    return Convert.ToInt32(result) > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                return false;
+            }
+        }
+
+
+        /**********************************************************
+        * Stored Procedures - CRUD operations
+        ***********************************************************/
+        /// <summary>
         /// Insert student into database
         /// </summary>
         /// <param name="student"></param>
         /// <returns>-1 if success</returns>
-        public int InsertStudent(Student student)
+        public int InsertStudent(Class.Student student)
         {
             try
             {
@@ -795,7 +1004,7 @@ namespace oracle_database_administator
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error: " + ex.Message, "InsertStudent Error", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Error: " + ex.Message, "Insert Student Error", MessageBoxButton.OK, MessageBoxImage.Information);
                 return 0;
             }
         }
@@ -805,7 +1014,7 @@ namespace oracle_database_administator
         /// </summary>
         /// <param name="student"></param>
         /// <returns>-1 if success</returns>
-        public int UpdateStudent(Student student)
+        public int UpdateStudent(Class.Student student)
         {
             try
             {
@@ -829,12 +1038,401 @@ namespace oracle_database_administator
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error: " + ex.Message, "InsertStudent Error", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Error: " + ex.Message, "Update Student Error", MessageBoxButton.OK, MessageBoxImage.Information);
                 return 0;
             }
         }
 
+        /// <summary>
+        /// Insert registration into database
+        /// </summary>
+        /// <param name="registration"></param>
+        /// <returns>-1 if success</returns>
+        public int InsertRegistration(Registration registration)
+        {
+            try
+            {
+                using (OracleCommand command = new OracleCommand(INSERT_REGISTRATION, Connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("STR_MASV", OracleDbType.Varchar2).Value = registration.MASV;
+                    command.Parameters.Add("STR_MAGV", OracleDbType.Varchar2).Value = registration.MAGV;
+                    command.Parameters.Add("STR_MAHP", OracleDbType.Varchar2).Value = registration.MAHP;
+                    command.Parameters.Add("STR_HK", OracleDbType.Int64).Value = registration.HK;
+                    command.Parameters.Add("STR_NAM", OracleDbType.Int64).Value = registration.NAM;
+                    command.Parameters.Add("STR_MACT", OracleDbType.Varchar2).Value = registration.MACT;
+                    command.Parameters.Add("STR_DIEMTH", OracleDbType.Double).Value = registration.DIEMTH;
+                    command.Parameters.Add("STR_DIEMQT", OracleDbType.Double).Value = registration.DIEMQT;
+                    command.Parameters.Add("STR_DIEMCK", OracleDbType.Double).Value = registration.DIEMCK;
+                    command.Parameters.Add("STR_DIEMTK", OracleDbType.Double).Value = registration.DIEMTK;
 
+                    return command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message, "Insert Registration Error", MessageBoxButton.OK, MessageBoxImage.Information);
+                return 0;
+            }
+        }
 
+        /// <summary>
+        /// Update registration into database
+        /// </summary>
+        /// <param name="registration"></param>
+        /// <returns>-1 if success</returns>
+        public int UpdateRegistration(Registration registration)
+        {
+            try
+            {
+                using (OracleCommand command = new OracleCommand(UPDATE_REGISTRATION, Connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("STR_MASV", OracleDbType.Varchar2).Value = registration.MASV;
+                    command.Parameters.Add("STR_MAGV", OracleDbType.Varchar2).Value = registration.MAGV;
+                    command.Parameters.Add("STR_MAHP", OracleDbType.Varchar2).Value = registration.MAHP;
+                    command.Parameters.Add("STR_HK", OracleDbType.Int64).Value = registration.HK;
+                    command.Parameters.Add("STR_NAM", OracleDbType.Int64).Value = registration.NAM;
+                    command.Parameters.Add("STR_MACT", OracleDbType.Varchar2).Value = registration.MACT;
+                    command.Parameters.Add("STR_DIEMTH", OracleDbType.Double).Value = registration.DIEMTH;
+                    command.Parameters.Add("STR_DIEMQT", OracleDbType.Double).Value = registration.DIEMQT;
+                    command.Parameters.Add("STR_DIEMCK", OracleDbType.Double).Value = registration.DIEMCK;
+                    command.Parameters.Add("STR_DIEMTK", OracleDbType.Double).Value = registration.DIEMTK;
+
+                    return command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message, "Update Registration Error", MessageBoxButton.OK, MessageBoxImage.Information);
+                return 0;
+            }
+        }
+
+        /// <summary>
+        /// Insert personnel from database
+        /// </summary>
+        /// <param name="personnel"></param>
+        /// <returns>-1 if success</returns>
+        public int InsertPersonnel(Personnel personnel)
+        {
+            try
+            {
+                using (OracleCommand command = new OracleCommand(INSERT_PERSONNEL, Connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("STR_MANV", OracleDbType.Varchar2).Value = personnel.MANV;
+                    command.Parameters.Add("STR_HOTEN", OracleDbType.Varchar2).Value = (object)personnel.HOTEN ?? DBNull.Value;
+                    command.Parameters.Add("STR_PHAI", OracleDbType.Varchar2).Value = (object)personnel.PHAI ?? DBNull.Value;
+                    command.Parameters.Add("STR_NGSINH", OracleDbType.Date).Value = (object)personnel.NGSINH ?? DBNull.Value;
+                    command.Parameters.Add("STR_PHUCAP", OracleDbType.Int64).Value = (object)personnel.PHUCAP ?? DBNull.Value;
+                    command.Parameters.Add("STR_DT", OracleDbType.Varchar2).Value = (object)personnel.DT ?? DBNull.Value;
+                    command.Parameters.Add("STR_VAITRO", OracleDbType.Varchar2).Value = (object)personnel.VAITRO ?? DBNull.Value;
+                    command.Parameters.Add("STR_MADV", OracleDbType.Varchar2).Value = (object)personnel.MADV ?? DBNull.Value;
+                    command.Parameters.Add("STR_COSO", OracleDbType.Varchar2).Value = (object)personnel.COSO ?? DBNull.Value;
+
+                    return command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message, "Insert Personnel Error", MessageBoxButton.OK, MessageBoxImage.Information);
+                return 0;
+            }
+        }
+
+        /// <summary>
+        /// Update personnel into database
+        /// </summary>
+        /// <param name="personnel"></param>
+        /// <returns>-1 if success</returns>
+        public int UpdatePersonnel(Personnel personnel)
+        {
+            try
+            {
+                using (OracleCommand command = new OracleCommand(UPDATE_PERSONNEL, Connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("STR_MANV", OracleDbType.Varchar2).Value = personnel.MANV;
+                    command.Parameters.Add("STR_HOTEN", OracleDbType.Varchar2).Value = (object)personnel.HOTEN ?? DBNull.Value;
+                    command.Parameters.Add("STR_PHAI", OracleDbType.Varchar2).Value = (object)personnel.PHAI ?? DBNull.Value;
+                    command.Parameters.Add("STR_NGSINH", OracleDbType.Date).Value = (object)personnel.NGSINH ?? DBNull.Value;
+                    command.Parameters.Add("STR_PHUCAP", OracleDbType.Int64).Value = (object)personnel.PHUCAP ?? DBNull.Value;
+                    command.Parameters.Add("STR_DT", OracleDbType.Varchar2).Value = (object)personnel.DT ?? DBNull.Value;
+                    command.Parameters.Add("STR_VAITRO", OracleDbType.Varchar2).Value = (object)personnel.VAITRO ?? DBNull.Value;
+                    command.Parameters.Add("STR_MADV", OracleDbType.Varchar2).Value = (object)personnel.MADV ?? DBNull.Value;
+                    command.Parameters.Add("STR_COSO", OracleDbType.Varchar2).Value = (object)personnel.COSO ?? DBNull.Value;
+
+                    return command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message, "Update Personnel Error", MessageBoxButton.OK, MessageBoxImage.Information);
+                return 0;
+            }
+        }
+
+        /// <summary>
+        /// Insert unit into database
+        /// </summary>
+        /// <param name="unit"></param>
+        /// <returns>-1 if success</returns>
+        public int InsertUnit(Unit unit)
+        {
+            try
+            {
+                using (OracleCommand command = new OracleCommand(INSERT_UNIT, Connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("STR_MADV", OracleDbType.Varchar2).Value = unit.MADV;
+                    command.Parameters.Add("STR_TENDV", OracleDbType.Varchar2).Value = (object)unit.TENDV ?? DBNull.Value;
+                    command.Parameters.Add("STR_TRGDV", OracleDbType.Varchar2).Value = (object)unit.TRGDV ?? DBNull.Value;
+
+                    return command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message, "Insert Unit Error", MessageBoxButton.OK, MessageBoxImage.Information);
+                return 0;
+            }
+        }
+
+        /// <summary>
+        /// Update unit into database
+        /// </summary>
+        /// <param name="unit"></param>
+        /// <returns>-1 if success</returns>
+        public int UpdateUnit(Unit unit)
+        {
+            try
+            {
+                using (OracleCommand command = new OracleCommand(UPDATE_UNIT, Connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("STR_MADV", OracleDbType.Varchar2).Value = unit.MADV;
+                    command.Parameters.Add("STR_TENDV", OracleDbType.Varchar2).Value = (object)unit.TENDV ?? DBNull.Value;
+                    command.Parameters.Add("STR_TRGDV", OracleDbType.Varchar2).Value = (object)unit.TRGDV ?? DBNull.Value;
+
+                    return command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message, "Update Unit Error", MessageBoxButton.OK, MessageBoxImage.Information);
+                return 0;
+            }
+        }
+
+        /// <summary>
+        /// Insert subject into database
+        /// </summary>
+        /// <param name="subject"></param>
+        /// <returns>-1 if success</returns>
+        public int InsertSubject(Subject subject)
+        {
+            try
+            {
+                using (OracleCommand command = new OracleCommand(INSERT_SUBJECT, Connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("STR_MAHP", OracleDbType.Varchar2).Value = subject.MAHP;
+                    command.Parameters.Add("STR_TENHP", OracleDbType.Varchar2).Value = (object)subject.TENHP ?? DBNull.Value;
+                    command.Parameters.Add("STR_SOTC", OracleDbType.Int64).Value = (object)subject.SOTC ?? DBNull.Value;
+                    command.Parameters.Add("STR_SOTL", OracleDbType.Int64).Value = (object)subject.STLT ?? DBNull.Value;
+                    command.Parameters.Add("STR_SOTH", OracleDbType.Int64).Value = (object)subject.STTH ?? DBNull.Value;
+                    command.Parameters.Add("STR_SOSVTD", OracleDbType.Varchar2).Value = (object)subject.SOSVTD ?? DBNull.Value;
+                    command.Parameters.Add("STR_MADV", OracleDbType.Varchar2).Value = (object)subject.MADV ?? DBNull.Value;
+
+                    return command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message, "Insert Subject Error", MessageBoxButton.OK, MessageBoxImage.Information);
+                return 0;
+            }
+        }
+
+        /// <summary>
+        /// Update subject into database
+        /// </summary>
+        /// <param name="subject"></param>
+        /// <returns>-1 if success</returns>
+        public int UpdateSubject(Subject subject)
+        {
+            try
+            {
+                using (OracleCommand command = new OracleCommand(UPDATE_SUBJECT, Connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("STR_MAHP", OracleDbType.Varchar2).Value = subject.MAHP;
+                    command.Parameters.Add("STR_TENHP", OracleDbType.Varchar2).Value = (object)subject.TENHP ?? DBNull.Value;
+                    command.Parameters.Add("STR_SOTC", OracleDbType.Int64).Value = (object)subject.SOTC ?? DBNull.Value;
+                    command.Parameters.Add("STR_SOTL", OracleDbType.Int64).Value = (object)subject.STLT ?? DBNull.Value;
+                    command.Parameters.Add("STR_SOTH", OracleDbType.Int64).Value = (object)subject.STTH ?? DBNull.Value;
+                    command.Parameters.Add("STR_SOSVTD", OracleDbType.Varchar2).Value = (object)subject.SOSVTD ?? DBNull.Value;
+                    command.Parameters.Add("STR_MADV", OracleDbType.Varchar2).Value = (object)subject.MADV ?? DBNull.Value;
+
+                    return command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message, "Update Subject Error", MessageBoxButton.OK, MessageBoxImage.Information);
+                return 0;
+            }
+        }
+
+        /// <summary>
+        /// Insert course opening plan into database
+        /// </summary>
+        /// <param name="courseOpeningPlan"></param>
+        /// <returns>-1 if success</returns>
+        public int InsertCourseOpeningPlan(CourseOpeningPlan courseOpeningPlan)
+        {
+            try
+            {
+                using (OracleCommand command = new OracleCommand(INSERT_COURSE_OPENING_PLAN, Connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("STR_MAHP", OracleDbType.Varchar2).Value = courseOpeningPlan.MAHP;
+                    command.Parameters.Add("STR_HK", OracleDbType.Int64).Value = courseOpeningPlan.HK;
+                    command.Parameters.Add("STR_NAM", OracleDbType.Int64).Value = courseOpeningPlan.NAM;
+                    command.Parameters.Add("STR_MACT", OracleDbType.Varchar2).Value = courseOpeningPlan.MACT;
+
+                    return command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message, "Insert Course Opening Plan Error", MessageBoxButton.OK, MessageBoxImage.Information);
+                return 0;
+            }
+        }
+
+        /// <summary>
+        /// Update course opening plan into database
+        /// </summary>
+        /// <param name="newPlan"></param>
+        /// <param name="oldPlan"></param>
+        /// <returns>-1 if success</returns>
+        public int UpdateCourseOpeningPlan(CourseOpeningPlan newPlan, CourseOpeningPlan oldPlan)
+        {
+            try
+            {
+                using (OracleCommand command = new OracleCommand(UPDATE_COURSE_OPENING_PLAN, Connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("STR_MAHP", OracleDbType.Varchar2).Value = newPlan.MAHP;
+                    command.Parameters.Add("STR_HK", OracleDbType.Int64).Value = newPlan.HK;
+                    command.Parameters.Add("STR_NAM", OracleDbType.Int64).Value = newPlan.NAM;
+                    command.Parameters.Add("STR_MACT", OracleDbType.Varchar2).Value = newPlan.MACT;
+                    command.Parameters.Add("STR_OLD_MAHP", OracleDbType.Varchar2).Value = oldPlan.MAHP;
+                    command.Parameters.Add("STR_OLD_HK", OracleDbType.Int64).Value = oldPlan.HK;
+                    command.Parameters.Add("STR_OLD_NAM", OracleDbType.Int64).Value = oldPlan.NAM;
+                    command.Parameters.Add("STR_OLD_MACT", OracleDbType.Varchar2).Value = oldPlan.MACT;
+
+                    return command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message, "Update Course Opening Plan Error", MessageBoxButton.OK, MessageBoxImage.Information);
+                return 0;
+            }
+        }
+
+        /// <summary>
+        /// Insert assignment into database
+        /// </summary>
+        /// <param name="assignment"></param>
+        /// <returns>-1 if success</returns>
+        public int InsertAssignment(Assignment assignment)
+        {
+            try
+            {
+                using (OracleCommand command = new OracleCommand(INSERT_ASSIGNMENT, Connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("STR_MAGV", OracleDbType.Varchar2).Value = assignment.MAGV;
+                    command.Parameters.Add("STR_MAHP", OracleDbType.Varchar2).Value = assignment.MAHP;
+                    command.Parameters.Add("STR_HK", OracleDbType.Int64).Value = assignment.HK;
+                    command.Parameters.Add("STR_NAM", OracleDbType.Int64).Value = assignment.NAM;
+                    command.Parameters.Add("STR_MACT", OracleDbType.Varchar2).Value = assignment.MACT;
+
+                    return command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message, "Insert Assignment Error", MessageBoxButton.OK, MessageBoxImage.Information);
+                return 0;
+            }
+        }
+
+        /// <summary>
+        /// Update assignment into database
+        /// </summary>
+        /// <param name="newAssignment"></param>
+        /// <param name="oldAssignment"></param>
+        /// <returns>-1 if success</returns>
+        public int UpdateAssignment(Assignment newAssignment, Assignment oldAssignment)
+        {
+            try
+            {
+                using (OracleCommand command = new OracleCommand(UPDATE_ASSIGNMENT, Connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("STR_MAGV", OracleDbType.Varchar2).Value = newAssignment.MAGV;
+                    command.Parameters.Add("STR_MAHP", OracleDbType.Varchar2).Value = newAssignment.MAHP;
+                    command.Parameters.Add("STR_HK", OracleDbType.Int64).Value = newAssignment.HK;
+                    command.Parameters.Add("STR_NAM", OracleDbType.Int64).Value = newAssignment.NAM;
+                    command.Parameters.Add("STR_MACT", OracleDbType.Varchar2).Value = newAssignment.MACT;
+                    command.Parameters.Add("STR_OLD_MAGV", OracleDbType.Varchar2).Value = oldAssignment.MAGV;
+                    command.Parameters.Add("STR_OLD_MAHP", OracleDbType.Varchar2).Value = oldAssignment.MAHP;
+                    command.Parameters.Add("STR_OLD_HK", OracleDbType.Int64).Value = oldAssignment.HK;
+                    command.Parameters.Add("STR_OLD_NAM", OracleDbType.Int64).Value = oldAssignment.NAM;
+                    command.Parameters.Add("STR_OLD_MACT", OracleDbType.Varchar2).Value = oldAssignment.MACT;
+
+                    return command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message, "Update Assignment Error", MessageBoxButton.OK, MessageBoxImage.Information);
+                return 0;
+            }
+        }
+
+        /// <summary>
+        /// Delete assignment from database
+        /// </summary>
+        /// <param name="registration"></param>
+        /// <returns>-1 if success</returns>
+        public int DeleteRegistration(Registration registration)
+        {
+            try
+            {
+                using (OracleCommand command = new OracleCommand(DELETE_REGISTRATION, Connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("STR_MASV", OracleDbType.Varchar2).Value = registration.MASV;
+                    command.Parameters.Add("STR_MAGV", OracleDbType.Varchar2).Value = registration.MAGV;
+                    command.Parameters.Add("STR_MAHP", OracleDbType.Varchar2).Value = registration.MAHP;
+                    command.Parameters.Add("STR_HK", OracleDbType.Int64).Value = registration.HK;
+                    command.Parameters.Add("STR_NAM", OracleDbType.Int64).Value = registration.NAM;
+                    command.Parameters.Add("STR_MACT", OracleDbType.Varchar2).Value = registration.MACT;
+
+                    return command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message, "Delete Registration Error", MessageBoxButton.OK, MessageBoxImage.Information);
+                return 0;
+            }
+        }
     }
 }

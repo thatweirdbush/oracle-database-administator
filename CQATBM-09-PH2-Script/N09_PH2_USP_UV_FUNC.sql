@@ -123,7 +123,7 @@ SELECT
     HK AS "Học Kỳ",
     NAM AS "Năm",
     MACT AS "Mã Chương Trình",
-    DIEMTH AS "Điểm Thi",
+    DIEMTH AS "Điểm Thực Hành",
     DIEMQT AS "Điểm Quá Trình",
     DIEMCK AS "Điểm Cuối Kỳ",
     DIEMTK AS "Điểm Tổng Kết"
@@ -702,11 +702,11 @@ END;
 * Phân Hệ 2
 ****************************************************************/
 ----------------------------------------------------------------
--- Stored Procedure UPDATE bảng N09_NHANSU
+-- Stored Procedure UPDATE 1 cột trên bảng N09_NHANSU
 -- Tham số truyền vào: Tên cột cần UPDATE, Giá trị cần UPDATE, Mã nhân sự cần UPDATE
 -- Tham số optional: Không
 ----------------------------------------------------------------
-CREATE OR REPLACE PROCEDURE N09_UPDATE_NHANSU
+CREATE OR REPLACE PROCEDURE N09_UPDATE_SINGLE_COL_NHANSU
 (STR_COLUMN IN VARCHAR2, STR_VALUE IN VARCHAR2, STR_ID IN VARCHAR2)
 IS
 BEGIN
@@ -715,11 +715,30 @@ END;
 /
 
 -- Gán quyền thực thi thủ tục trên cho tất cả user
-GRANT EXECUTE ON N09_UPDATE_NHANSU TO PUBLIC;
+GRANT EXECUTE ON N09_UPDATE_SINGLE_COL_NHANSU TO PUBLIC;
 /
 
     
         
+----------------------------------------------------------------
+-- Stored Procedure UPDATE 1 cột trên bảng N09_SINHVIEN
+-- Tham số truyền vào: Tên cột cần UPDATE, Giá trị cần UPDATE, Mã nhân sự cần UPDATE
+-- Tham số optional: Không
+----------------------------------------------------------------
+CREATE OR REPLACE PROCEDURE N09_UPDATE_SINGLE_COL_SINHVIEN
+(STR_COLUMN IN VARCHAR2, STR_VALUE IN VARCHAR2, STR_ID IN VARCHAR2)
+IS
+BEGIN
+    EXECUTE IMMEDIATE 'UPDATE C##ADMIN.N09_SINHVIEN SET ' || STR_COLUMN || ' = ''' || STR_VALUE || ''' WHERE MASV = ''' || STR_ID || '''';
+END;
+/
+
+-- Gán quyền thực thi thủ tục trên cho tất cả user
+GRANT EXECUTE ON N09_UPDATE_SINGLE_COL_SINHVIEN TO PUBLIC;
+/
+
+
+
 ----------------------------------------------------------------
 -- Stored Procedure SELECT bảng N09_DANGKY kết hợp với N09_PHANCONG bởi Giảng viên
 -- Tham số truyền vào: Tất cả các cột của bảng N09_PHANCONG (Mã Giảng Viên, Mã Học Phần, Học Kỳ, Năm, Mã Chương Trình)
@@ -759,7 +778,7 @@ GRANT EXECUTE ON N09_DANGKY_JOIN_PHANCONG_BY_GIANGVIEN TO N09_RL_GIANGVIEN;
 --/   
     
 
-    
+
 ----------------------------------------------------------------
 -- Stored Procedure SELECT USER ROLE của User hiện tại
 -- Tham số truyền vào: Không
@@ -788,12 +807,15 @@ GRANT EXECUTE ON N09_GET_CURRENT_USER_ROLE TO PUBLIC;
 
 
 
+/***************************************************************
+* Stored Procedure Kiểm tra dữ liệu tồn tại
+****************************************************************/
 ----------------------------------------------------------------
--- Stored Procedure Kiểm tra Student có tồn tại không
+-- Stored Procedure Kiểm tra Sinh viên có tồn tại không
 -- Tham số truyền vào: MASV
 -- Tham số optional: Không
 ----------------------------------------------------------------
-CREATE OR REPLACE PROCEDURE N09_IS_EXIST_STUDENT(
+CREATE OR REPLACE PROCEDURE N09_IS_EXIST_SINHVIEN(
     OUTPUT OUT SYS_REFCURSOR,
     STR_MASV IN VARCHAR2)
 AS
@@ -803,24 +825,201 @@ END;
 /
 
 -- Gán quyền thực thi thủ tục trên cho tất cả user
-GRANT EXECUTE ON N09_IS_EXIST_STUDENT TO PUBLIC;
+GRANT EXECUTE ON N09_IS_EXIST_SINHVIEN TO PUBLIC;
 /
 
 -- -- Test
 -- CONN NV301/NV301;
 -- VARIABLE rc REFCURSOR;
--- EXECUTE C##ADMIN.N09_IS_EXIST_STUDENT(:rc, 'SV001');
+-- EXECUTE C##ADMIN.N09_IS_EXIST_SINHVIEN(:rc, 'SV001');
 -- PRINT rc;
 -- /
 
 
 
 ----------------------------------------------------------------
--- Stored Procedure Insert Student
+-- Stored Procedure Kiểm tra Nhân sự có tồn tại không
+-- Tham số truyền vào: MANV
+-- Tham số optional: Không
+----------------------------------------------------------------
+CREATE OR REPLACE PROCEDURE N09_IS_EXIST_NHANSU(
+    OUTPUT OUT SYS_REFCURSOR,
+    STR_MANV IN VARCHAR2)
+AS
+BEGIN
+    OPEN OUTPUT FOR 'SELECT COUNT(*) FROM C##ADMIN.N09_NHANSU WHERE MANV = ''' || STR_MANV || '''';
+END;
+/
+
+-- Gán quyền thực thi thủ tục trên cho tất cả user
+GRANT EXECUTE ON N09_IS_EXIST_NHANSU TO PUBLIC;
+/
+
+---- Test
+--CONN NV301/NV301;
+--VARIABLE rc REFCURSOR;
+--EXECUTE C##ADMIN.N09_IS_EXIST_NHANSU(:rc, 'NV301');
+--PRINT rc;
+--/
+
+
+
+----------------------------------------------------------------
+-- Stored Procedure Kiểm tra Đơn vị có tồn tại không
+-- Tham số truyền vào: MADV
+-- Tham số optional: Không
+----------------------------------------------------------------
+CREATE OR REPLACE PROCEDURE N09_IS_EXIST_DONVI(
+    OUTPUT OUT SYS_REFCURSOR,
+    STR_MADV IN VARCHAR2)
+AS
+BEGIN
+    OPEN OUTPUT FOR 'SELECT COUNT(*) FROM C##ADMIN.N09_DONVI WHERE MADV = ''' || STR_MADV || '''';
+END;
+/
+
+-- Gán quyền thực thi thủ tục trên cho tất cả user
+GRANT EXECUTE ON N09_IS_EXIST_DONVI TO PUBLIC;
+/
+
+---- Test
+--CONN NV301/NV301;
+--VARIABLE rc REFCURSOR;
+--EXECUTE C##ADMIN.N09_IS_EXIST_DONVI(:rc, 'KHOA1');
+--PRINT rc;
+--/
+
+
+
+----------------------------------------------------------------
+-- Stored Procedure Kiểm tra Học phần có tồn tại không
+-- Tham số truyền vào: MAHP
+-- Tham số optional: Không
+----------------------------------------------------------------
+CREATE OR REPLACE PROCEDURE N09_IS_EXIST_HOCPHAN(
+    OUTPUT OUT SYS_REFCURSOR,
+    STR_MAHP IN VARCHAR2)
+AS
+BEGIN
+    OPEN OUTPUT FOR 'SELECT COUNT(*) FROM C##ADMIN.N09_HOCPHAN WHERE MAHP = ''' || STR_MAHP || '''';
+END;
+/
+
+-- Gán quyền thực thi thủ tục trên cho tất cả user
+GRANT EXECUTE ON N09_IS_EXIST_HOCPHAN TO PUBLIC;
+/
+
+---- Test
+--CONN NV301/NV301;
+--VARIABLE rc REFCURSOR;
+--EXECUTE C##ADMIN.N09_IS_EXIST_HOCPHAN(:rc, 'HP001');
+--PRINT rc;
+--/
+
+
+
+----------------------------------------------------------------
+-- Stored Procedure Kiểm tra KHMO có tồn tại không
+-- Tham số truyền vào: MAHP, HK, NAM, MACT
+-- Tham số optional: Không
+----------------------------------------------------------------
+CREATE OR REPLACE PROCEDURE N09_IS_EXIST_KHMO(
+    OUTPUT OUT SYS_REFCURSOR,
+    STR_MAHP IN VARCHAR2,
+    STR_HK IN NUMBER,
+    STR_NAM IN NUMBER,
+    STR_MACT IN VARCHAR2)
+AS
+BEGIN
+    OPEN OUTPUT FOR 'SELECT COUNT(*) FROM C##ADMIN.N09_KHMO WHERE MAHP = ''' || STR_MAHP || ''' AND HK = ' || STR_HK || ' AND NAM = ' || STR_NAM || ' AND MACT = ''' || STR_MACT || '''';
+END;
+/
+
+-- Gán quyền thực thi thủ tục trên cho tất cả user
+GRANT EXECUTE ON N09_IS_EXIST_KHMO TO PUBLIC;
+/
+
+---- Test
+--CONN NV301/NV301;
+--VARIABLE rc REFCURSOR;
+--EXECUTE C##ADMIN.N09_IS_EXIST_KHMO(:rc, 'HP001', 1, 2024, 'CQ');
+--PRINT rc;
+--/
+
+
+
+----------------------------------------------------------------
+-- Stored Procedure Kiểm tra DANGKY có tồn tại không
+-- Tham số truyền vào: MASV, MAGV, MAHP, HK, NAM, MACT
+-- Tham số optional: Không
+----------------------------------------------------------------
+CREATE OR REPLACE PROCEDURE N09_IS_EXIST_DANGKY(
+    OUTPUT OUT SYS_REFCURSOR,
+    STR_MASV IN VARCHAR2,
+    STR_MAGV IN VARCHAR2,
+    STR_MAHP IN VARCHAR2,
+    STR_HK IN NUMBER,
+    STR_NAM IN NUMBER,
+    STR_MACT IN VARCHAR2)
+AS
+BEGIN
+    OPEN OUTPUT FOR 'SELECT COUNT(*) FROM C##ADMIN.N09_DANGKY WHERE MASV = ''' || STR_MASV || ''' AND MAGV = ''' || STR_MAGV || ''' AND MAHP = ''' || STR_MAHP || ''' AND HK = ' || STR_HK || ' AND NAM = ' || STR_NAM || ' AND MACT = ''' || STR_MACT || '''';
+END;
+/
+
+-- Gán quyền thực thi thủ tục trên cho tất cả user
+GRANT EXECUTE ON N09_IS_EXIST_DANGKY TO PUBLIC;
+/
+
+---- Test
+--CONN NV301/NV301;
+--VARIABLE rc REFCURSOR;
+--EXECUTE C##ADMIN.N09_IS_EXIST_DANGKY(:rc, 'SV001', 'NV301', 'HP001', 1, 2024, 'CQ');
+--PRINT rc;
+--/
+
+
+
+----------------------------------------------------------------
+-- Stored Procedure Kiểm tra PHANCONG có tồn tại không
+-- Tham số truyền vào: MAGV, MAHP, HK, NAM, MACT
+-- Tham số optional: Không
+----------------------------------------------------------------
+CREATE OR REPLACE PROCEDURE N09_IS_EXIST_PHANCONG(
+    OUTPUT OUT SYS_REFCURSOR,
+    STR_MAGV IN VARCHAR2,
+    STR_MAHP IN VARCHAR2,
+    STR_HK IN NUMBER,
+    STR_NAM IN NUMBER,
+    STR_MACT IN VARCHAR2)
+AS
+BEGIN
+    OPEN OUTPUT FOR 'SELECT COUNT(*) FROM C##ADMIN.N09_PHANCONG WHERE MAGV = ''' || STR_MAGV || ''' AND MAHP = ''' || STR_MAHP || ''' AND HK = ' || STR_HK || ' AND NAM = ' || STR_NAM || ' AND MACT = ''' || STR_MACT || '''';
+END;
+/
+
+-- Gán quyền thực thi thủ tục trên cho tất cả user
+GRANT EXECUTE ON N09_IS_EXIST_PHANCONG TO PUBLIC;
+/
+
+---- Test
+--CONN NV301/NV301;
+--VARIABLE rc REFCURSOR;
+--EXECUTE C##ADMIN.N09_IS_EXIST_PHANCONG(:rc, 'NV301', 'HP001', 1, 2024, 'CQ');
+--PRINT rc;
+--/
+
+
+
+/***************************************************************
+* Stored Procedure INSERT, UPDATE, DELETE trên các bảng Phân hệ 2
+****************************************************************/
+----------------------------------------------------------------
+-- Stored Procedure Insert SINHVIEN
 -- Tham số truyền vào: MASV
 -- Tham số optional: HOTEN, PHAI, NGSINH, DIACHI, DT, MACT, MANGANH, SOTCTL, DTBTL, COSO
 ----------------------------------------------------------------
-CREATE OR REPLACE PROCEDURE N09_INSERT_STUDENT(
+CREATE OR REPLACE PROCEDURE N09_INSERT_SINHVIEN(
     STR_MASV IN VARCHAR2,
     STR_HOTEN IN VARCHAR2 DEFAULT NULL,
     STR_PHAI IN VARCHAR2 DEFAULT NULL,
@@ -841,23 +1040,23 @@ END;
 /
 
 -- Gán quyền thực thi thủ tục trên cho tất cả user
-GRANT EXECUTE ON N09_INSERT_STUDENT TO PUBLIC;
+GRANT EXECUTE ON N09_INSERT_SINHVIEN TO PUBLIC;
 /
 
 ---- Test
 --CONN NV301/NV301;
 --SELECT * FROM C##ADMIN.N09_SINHVIEN;
---EXECUTE C##ADMIN.N09_INSERT_STUDENT('SV201', 'Nguyen Van A', 'Nam', TO_DATE('01/01/2000', 'DD/MM/YYYY'), 'Ha Noi', '0123456789', 'CT1', 'CN1', 120, 8.5, 'CS1');
+--EXECUTE C##ADMIN.N09_INSERT_SINHVIEN('SV201', 'Nguyen Van A', 'Nam', TO_DATE('01/01/2000', 'DD/MM/YYYY'), 'Ha Noi', '0123456789', 'CT1', 'CN1', 120, 8.5, 'CS1');
 --/
 
 
 
 ----------------------------------------------------------------
--- Stored Procedure Update Student (FULL)
+-- Stored Procedure Update SINHVIEN (FULL)
 -- Tham số truyền vào: MASV, HOTEN, PHAI, NGSINH, DIACHI, DT, MACT, MANGANH, SOTCTL, DTBTL, COSO
 -- Tham số optional: Không
 ----------------------------------------------------------------
-CREATE OR REPLACE PROCEDURE N09_UPDATE_STUDENT(
+CREATE OR REPLACE PROCEDURE N09_UPDATE_SINHVIEN(
     STR_MASV IN VARCHAR2,
     STR_HOTEN IN VARCHAR2,
     STR_PHAI IN VARCHAR2,
@@ -877,17 +1076,451 @@ END;
 /
 
 -- Gán quyền thực thi thủ tục trên cho tất cả user
-GRANT EXECUTE ON N09_UPDATE_STUDENT TO PUBLIC;
+GRANT EXECUTE ON N09_UPDATE_SINHVIEN TO PUBLIC;
+/
 
 -- -- Test
 -- CONN NV301/NV301;
 -- SELECT * FROM C##ADMIN.N09_SINHVIEN;
--- EXECUTE C##ADMIN.N09_UPDATE_STUDENT('SV001', 'Nguyen Van B', 'Nam', TO_DATE('01/01/2000', 'DD/MM/YYYY'), 'Ha Noi', '0123456789', 'CT1', 'CN1', 120, 8.5, 'CS1');
+-- EXECUTE C##ADMIN.N09_UPDATE_SINHVIEN('SV001', 'Nguyen Van B', 'Nam', TO_DATE('01/01/2000', 'DD/MM/YYYY'), 'Ha Noi', '0123456789', 'CT1', 'CN1', 120, 8.5, 'CS1');
 -- /
 
 
 
+----------------------------------------------------------------
+-- Stored Procedure Insert DANGKY
+-- Tham số truyền vào: MASV, MAGV, MAHP, HK, NAM, MACT
+-- Tham số optional: DIEMTH, DIEMQT, DIEMCK, DIEMTK
+----------------------------------------------------------------
+CREATE OR REPLACE PROCEDURE N09_INSERT_DANGKY(
+    STR_MASV IN VARCHAR2,
+    STR_MAGV IN VARCHAR2,
+    STR_MAHP IN VARCHAR2,
+    STR_HK IN NUMBER,
+    STR_NAM IN NUMBER,
+    STR_MACT IN VARCHAR2,
+    STR_DIEMTH IN NUMBER DEFAULT NULL,
+    STR_DIEMQT IN NUMBER DEFAULT NULL,
+    STR_DIEMCK IN NUMBER DEFAULT NULL,
+    STR_DIEMTK IN NUMBER DEFAULT NULL)
+IS
+BEGIN
+    EXECUTE IMMEDIATE 'INSERT INTO C##ADMIN.N09_DANGKY(MASV, MAGV, MAHP, HK, NAM, MACT, DIEMTH, DIEMQT, DIEMCK, DIEMTK) 
+                        VALUES(:1, :2, :3, :4, :5, :6, :7, :8, :9, :10)'
+                        USING STR_MASV, STR_MAGV, STR_MAHP, STR_HK, STR_NAM, STR_MACT, STR_DIEMTH, STR_DIEMQT, STR_DIEMCK, STR_DIEMTK;
+END;
+/
+
+-- Gán quyền thực thi thủ tục trên cho tất cả user
+GRANT EXECUTE ON N09_INSERT_DANGKY TO PUBLIC;
+/
+
+---- Test
+--CONN NV201/NV201;
+--SELECT * FROM C##ADMIN.N09_DANGKY;
+--EXECUTE C##ADMIN.N09_INSERT_DANGKY('SV001', 'NV201', 'HP001', 1, 2024, 'CQ', 10, 10, 10, 10);
+--/
 
 
 
-    
+----------------------------------------------------------------
+-- Stored Procedure Update DANGKY (Điểm)
+-- Tham số truyền vào: MASV, MAGV, MAHP, HK, NAM, MACT, DIEMTH, DIEMQT, DIEMCK, DIEMTK
+-- Tham số optional: Không
+----------------------------------------------------------------
+CREATE OR REPLACE PROCEDURE N09_UPDATE_DANGKY(
+    STR_MASV IN VARCHAR2,
+    STR_MAGV IN VARCHAR2,
+    STR_MAHP IN VARCHAR2,
+    STR_HK IN NUMBER,
+    STR_NAM IN NUMBER,
+    STR_MACT IN VARCHAR2,
+    STR_DIEMTH IN NUMBER,
+    STR_DIEMQT IN NUMBER,
+    STR_DIEMCK IN NUMBER,
+    STR_DIEMTK IN NUMBER)
+IS
+BEGIN
+    EXECUTE IMMEDIATE 'UPDATE C##ADMIN.N09_DANGKY SET DIEMTH = :1, DIEMQT = :2, DIEMCK = :3, DIEMTK = :4 WHERE MASV = :5 AND MAGV = :6 AND MAHP = :7 AND HK = :8 AND NAM = :9 AND MACT = :10'
+                        USING STR_DIEMTH, STR_DIEMQT, STR_DIEMCK, STR_DIEMTK, STR_MASV, STR_MAGV, STR_MAHP, STR_HK, STR_NAM, STR_MACT;
+END;
+/
+
+-- Gán quyền thực thi thủ tục trên cho tất cả user
+GRANT EXECUTE ON N09_UPDATE_DANGKY TO PUBLIC;
+/
+
+---- Test
+--CONN NV201/NV201;
+--SELECT * FROM C##ADMIN.N09_DANGKY;
+--VARIABLE rc REFCURSOR;
+--EXECUTE C##ADMIN.N09_SELECT_ANY_TABLE(:rc, 'C##ADMIN.N09_DANGKY');
+--PRINT rc;
+--EXECUTE C##ADMIN.N09_UPDATE_DANGKY('SV001', 'NV201', 'HP001', 1, 2024, 'CQ', 10, 10, 10, 10);
+--/
+
+
+
+----------------------------------------------------------------
+-- Stored Procedure Insert PHANCONG (FULL)
+-- Tham số truyền vào: MAGV, MAHP, HK, NAM, MACT
+-- Tham số optional: Không
+----------------------------------------------------------------
+CREATE OR REPLACE PROCEDURE N09_INSERT_PHANCONG(
+    STR_MAGV IN VARCHAR2,
+    STR_MAHP IN VARCHAR2,
+    STR_HK IN NUMBER,
+    STR_NAM IN NUMBER,
+    STR_MACT IN VARCHAR2)
+IS
+BEGIN
+    EXECUTE IMMEDIATE 'INSERT INTO C##ADMIN.N09_PHANCONG(MAGV, MAHP, HK, NAM, MACT) VALUES(:1, :2, :3, :4, :5)'
+                        USING STR_MAGV, STR_MAHP, STR_HK, STR_NAM, STR_MACT;
+END;
+/
+
+-- Gán quyền thực thi thủ tục trên cho tất cả user
+GRANT EXECUTE ON N09_INSERT_PHANCONG TO PUBLIC;
+/
+
+---- Test
+--CONN NV301/NV301;
+--SELECT * FROM C##ADMIN.N09_PHANCONG;
+--EXECUTE C##ADMIN.N09_INSERT_PHANCONG('NV201', 'HP001', 1, 2024, 'CQ');
+--/
+
+
+
+----------------------------------------------------------------
+-- Stored Procedure Update PHANCONG (FULL)
+-- Tham số truyền vào: MAGV, MAHP, HK, NAM, MACT
+-- Tham số optional: Không
+----------------------------------------------------------------
+CREATE OR REPLACE PROCEDURE N09_UPDATE_PHANCONG(
+    STR_MAGV IN VARCHAR2,
+    STR_MAHP IN VARCHAR2,
+    STR_HK IN NUMBER,
+    STR_NAM IN NUMBER,
+    STR_MACT IN VARCHAR2,
+    STR_OLD_MAGV IN VARCHAR2,
+    STR_OLD_MAHP IN VARCHAR2,
+    STR_OLD_HK IN NUMBER,
+    STR_OLD_NAM IN NUMBER,
+    STR_OLD_MACT IN VARCHAR2)
+IS
+BEGIN
+    EXECUTE IMMEDIATE 'UPDATE C##ADMIN.N09_PHANCONG SET MAGV = :1, MAHP = :2, HK = :3, NAM = :4, MACT = :5 WHERE MAGV = :6 AND MAHP = :7 AND HK = :8 AND NAM = :9 AND MACT = :10'
+                        USING STR_MAGV, STR_MAHP, STR_HK, STR_NAM, STR_MACT, STR_OLD_MAGV, STR_OLD_MAHP, STR_OLD_HK, STR_OLD_NAM, STR_OLD_MACT;
+END;
+/
+
+-- Gán quyền thực thi thủ tục trên cho tất cả user
+GRANT EXECUTE ON N09_UPDATE_PHANCONG TO PUBLIC;
+/
+
+---- Test
+--CONN NV301/NV301;
+--SELECT * FROM C##ADMIN.N09_PHANCONG WHERE MAHP = 'HP032';
+--/
+--
+---- UPDATE Học phần HP006 không thuộc Văn phòng khoa: Không thành công
+--CONN NV301/NV301;
+--EXECUTE C##ADMIN.N09_UPDATE_PHANCONG('NV217', 'HP006', 3, 2077, 'CLC', 'NV217', 'HP006', 3, 2024, 'CLC');
+--/
+--
+---- UPDATE Học phần HP032 thuộc Văn phòng khoa: Thành công
+--CONN NV301/NV301;
+--EXECUTE C##ADMIN.N09_UPDATE_PHANCONG('NV209', 'HP032', 2, 2025, 'CQ', 'NV209', 'HP032', 2, 2024, 'CQ');
+--/
+--
+---- UPDATE Học phần HP032 thuộc Văn phòng khoa: Thành công
+--CONN NV301/NV301;
+--EXECUTE C##ADMIN.N09_UPDATE_PHANCONG('NV209', 'HP032', 2, 2024, 'CQ', 'NV209', 'HP032', 2, 2025, 'CQ');
+--/
+
+
+
+----------------------------------------------------------------
+-- Stored Procedure Insert DONVI (FULL)
+-- Tham số truyền vào: MADV, TENDV, TRGDV
+-- Tham số optional: Không
+----------------------------------------------------------------
+CREATE OR REPLACE PROCEDURE N09_INSERT_DONVI(
+    STR_MADV IN VARCHAR2,
+    STR_TENDV IN VARCHAR2 DEFAULT NULL,
+    STR_TRGDV IN VARCHAR2 DEFAULT NULL)
+IS
+BEGIN
+    EXECUTE IMMEDIATE 'INSERT INTO C##ADMIN.N09_DONVI(MADV, TENDV, TRGDV) VALUES(:1, :2, :3)'
+                        USING STR_MADV, STR_TENDV, STR_TRGDV;
+END;
+/
+
+-- Gán quyền thực thi thủ tục trên cho tất cả user
+GRANT EXECUTE ON N09_INSERT_DONVI TO PUBLIC;
+/
+
+---- Test
+--CONN NV301/NV301;
+--SELECT * FROM C##ADMIN.N09_DONVI;
+--EXECUTE C##ADMIN.N09_INSERT_DONVI('DV008', 'Bộ môn TKVM', 'NV103');
+--/
+
+
+
+----------------------------------------------------------------
+-- Stored Procedure Update DONVI (FULL)
+-- Tham số truyền vào: MADV, TENDV, TRGDV
+-- Tham số optional: Không
+----------------------------------------------------------------
+CREATE OR REPLACE PROCEDURE N09_UPDATE_DONVI(
+    STR_MADV IN VARCHAR2,
+    STR_TENDV IN VARCHAR2,
+    STR_TRGDV IN VARCHAR2)
+IS
+BEGIN
+    EXECUTE IMMEDIATE 'UPDATE C##ADMIN.N09_DONVI SET TENDV = :1, TRGDV = :2 WHERE MADV = :3'
+                        USING STR_TENDV, STR_TRGDV, STR_MADV;
+END;
+/
+
+-- Gán quyền thực thi thủ tục trên cho tất cả user
+GRANT EXECUTE ON N09_UPDATE_DONVI TO PUBLIC;
+/
+
+---- Test
+--CONN NV301/NV301;
+--SELECT * FROM C##ADMIN.N09_DONVI;
+--EXECUTE C##ADMIN.N09_UPDATE_DONVI('DV001', 'Khoa CNTT', 'Nguyen Van A');
+--/
+
+
+
+----------------------------------------------------------------
+-- Stored Procedure Insert HOCPHAN (FULL)
+-- Tham số truyền vào: MAHP, TENHP, SOTC, STLT, STTH, SOSVTD, MADV
+-- Tham số optional: Không
+----------------------------------------------------------------
+CREATE OR REPLACE PROCEDURE N09_INSERT_HOCPHAN(
+    STR_MAHP IN VARCHAR2,
+    STR_TENHP IN VARCHAR2 DEFAULT NULL,
+    STR_SOTC IN NUMBER DEFAULT NULL,
+    STR_STLT IN NUMBER DEFAULT NULL,
+    STR_STTH IN NUMBER DEFAULT NULL,
+    STR_SOSVTD IN NUMBER DEFAULT NULL,
+    STR_MADV IN VARCHAR2 DEFAULT NULL)
+IS
+BEGIN
+    EXECUTE IMMEDIATE 'INSERT INTO C##ADMIN.N09_HOCPHAN(MAHP, TENHP, SOTC, STLT, STTH, SOSVTD, MADV) VALUES(:1, :2, :3, :4, :5, :6, :7)'
+                        USING STR_MAHP, STR_TENHP, STR_SOTC, STR_STLT, STR_STTH, STR_SOSVTD, STR_MADV;
+END;
+/
+
+-- Gán quyền thực thi thủ tục trên cho tất cả user
+GRANT EXECUTE ON N09_INSERT_HOCPHAN TO PUBLIC;
+/
+
+---- Test
+--CONN NV301/NV301;
+--SELECT * FROM C##ADMIN.N09_HOCPHAN;
+--EXECUTE C##ADMIN.N09_INSERT_HOCPHAN('HP008', 'Lập trình hướng đối tượng', 3, 2, 1, 50, 'DV001');
+--/
+
+
+
+----------------------------------------------------------------
+-- Stored Procedure Update HOCPHAN (FULL)
+-- Tham số truyền vào: MAHP, TENHP, SOTC, STLT, STTH, SOSVTD, MADV
+-- Tham số optional: Không
+----------------------------------------------------------------
+CREATE OR REPLACE PROCEDURE N09_UPDATE_HOCPHAN(
+    STR_MAHP IN VARCHAR2,
+    STR_TENHP IN VARCHAR2,
+    STR_SOTC IN NUMBER,
+    STR_STLT IN NUMBER,
+    STR_STTH IN NUMBER,
+    STR_SOSVTD IN NUMBER,
+    STR_MADV IN VARCHAR2)
+IS
+BEGIN
+    EXECUTE IMMEDIATE 'UPDATE C##ADMIN.N09_HOCPHAN SET TENHP = :1, SOTC = :2, STLT = :3, STTH = :4, SOSVTD = :5, MADV = :6 WHERE MAHP = :7'
+                        USING STR_TENHP, STR_SOTC, STR_STLT, STR_STTH, STR_SOSVTD, STR_MADV, STR_MAHP;
+END;
+/
+
+-- Gán quyền thực thi thủ tục trên cho tất cả user
+GRANT EXECUTE ON N09_UPDATE_HOCPHAN TO PUBLIC;
+/
+
+---- Test
+--CONN NV301/NV301;
+--SELECT * FROM C##ADMIN.N09_HOCPHAN;
+--EXECUTE C##ADMIN.N09_UPDATE_HOCPHAN('HP008', 'Lập trình hướng đối tượng', 3, 2, 1, 50, 'DV001');
+--/
+
+
+
+----------------------------------------------------------------
+-- Stored Procedure Insert KHMO (FULL)
+-- Tham số truyền vào: MAHP, HK, NAM, MACT
+-- Tham số optional: Không
+----------------------------------------------------------------
+CREATE OR REPLACE PROCEDURE N09_INSERT_KHMO(
+    STR_MAHP IN VARCHAR2,
+    STR_HK IN NUMBER,
+    STR_NAM IN NUMBER,
+    STR_MACT IN VARCHAR2)
+IS
+BEGIN
+    EXECUTE IMMEDIATE 'INSERT INTO C##ADMIN.N09_KHMO(MAHP, HK, NAM, MACT) VALUES(:1, :2, :3, :4)'
+                        USING STR_MAHP, STR_HK, STR_NAM, STR_MACT;
+END;
+/
+
+-- Gán quyền thực thi thủ tục trên cho tất cả user
+GRANT EXECUTE ON N09_INSERT_KHMO TO PUBLIC;
+/
+
+---- Test
+--CONN NV301/NV301;
+--SELECT * FROM C##ADMIN.N09_KHMO;
+--EXECUTE C##ADMIN.N09_INSERT_KHMO('HP008', 1, 2024, 'CQ');
+--/
+
+
+
+----------------------------------------------------------------
+-- Stored Procedure Update KHMO (FULL)
+-- Tham số truyền vào: MAHP, HK, NAM, MACT, OLD_MAHP, OLD_HK, OLD_NAM, OLD_MACT
+-- Tham số optional: Không
+----------------------------------------------------------------
+CREATE OR REPLACE PROCEDURE N09_UPDATE_KHMO(
+    STR_MAHP IN VARCHAR2,
+    STR_HK IN NUMBER,
+    STR_NAM IN NUMBER,
+    STR_MACT IN VARCHAR2,
+    STR_OLD_MAHP IN VARCHAR2,
+    STR_OLD_HK IN NUMBER,
+    STR_OLD_NAM IN NUMBER,
+    STR_OLD_MACT IN VARCHAR2)
+
+IS
+BEGIN
+    EXECUTE IMMEDIATE 'UPDATE C##ADMIN.N09_KHMO SET HK = :1, NAM = :2, MACT = :3, MAHP = :4 WHERE MAHP = :5 AND HK = :6 AND NAM = :7 AND MACT = :8'
+                        USING STR_HK, STR_NAM, STR_MACT, STR_MAHP, STR_OLD_MAHP, STR_OLD_HK, STR_OLD_NAM, STR_OLD_MACT;
+END;
+/
+
+-- Gán quyền thực thi thủ tục trên cho tất cả user
+GRANT EXECUTE ON N09_UPDATE_KHMO TO PUBLIC;
+/
+
+---- Test
+--CONN NV301/NV301;
+--SELECT * FROM C##ADMIN.N09_KHMO;
+--EXECUTE C##ADMIN.N09_UPDATE_KHMO('HP034', 6, 9009, 'CLC', 'HP034', 6, 9999, 'CLC');
+--/
+
+
+
+----------------------------------------------------------------
+-- Stored Procedure Insert NHANSU (FULL)
+-- Tham số truyền vào: MANV
+-- Tham số optional: HOTEN, PHAI, NGSINH, PHUCAP, DT, VAITRO, MADV, COSO
+----------------------------------------------------------------
+CREATE OR REPLACE PROCEDURE N09_INSERT_NHANSU
+(STR_MANV IN VARCHAR2,
+STR_HOTEN IN VARCHAR2 DEFAULT NULL,
+STR_PHAI IN VARCHAR2 DEFAULT NULL,
+STR_NGSINH IN DATE DEFAULT NULL,
+STR_PHUCAP IN NUMBER DEFAULT NULL,
+STR_DT IN VARCHAR2 DEFAULT NULL,
+STR_VAITRO IN VARCHAR2 DEFAULT NULL,
+STR_MADV IN VARCHAR2 DEFAULT NULL,
+STR_COSO IN VARCHAR2 DEFAULT NULL)
+IS
+BEGIN
+    EXECUTE IMMEDIATE 'INSERT INTO C##ADMIN.N09_NHANSU(MANV, HOTEN, PHAI, NGSINH, PHUCAP, DT, VAITRO, MADV, COSO) 
+                        VALUES(:1, :2, :3, :4, :5, :6, :7, :8, :9)'
+                        USING STR_MANV, STR_HOTEN, STR_PHAI, STR_NGSINH, STR_PHUCAP, STR_DT, STR_VAITRO, STR_MADV, STR_COSO;
+END;
+/
+
+-- Gán quyền thực thi thủ tục trên cho tất cả user
+GRANT EXECUTE ON N09_INSERT_NHANSU TO PUBLIC;
+/
+
+---- Test
+--CONN NV001/NV001;
+--SELECT * FROM C##ADMIN.N09_NHANSU;
+--EXECUTE C##ADMIN.N09_INSERT_NHANSU('NV201', 'Nguyen Van A', 'Nam', TO_DATE('01/01/2000', 'DD/MM/YYYY'), 1000000, '0123456789', 'GV', 'DV001', 'CS1');
+--/
+
+
+
+----------------------------------------------------------------
+-- Stored Procedure Update NHANSU (FULL)
+-- Tham số truyền vào: MANV, HOTEN, PHAI, NGSINH, PHUCAP, DT, VAITRO, MADV, COSO
+-- Tham số optional: Không
+----------------------------------------------------------------
+CREATE OR REPLACE PROCEDURE N09_UPDATE_NHANSU
+(STR_MANV IN VARCHAR2,
+STR_HOTEN IN VARCHAR2,
+STR_PHAI IN VARCHAR2,
+STR_NGSINH IN DATE,
+STR_PHUCAP IN NUMBER,
+STR_DT IN VARCHAR2,
+STR_VAITRO IN VARCHAR2,
+STR_MADV IN VARCHAR2,
+STR_COSO IN VARCHAR2)
+IS
+BEGIN
+    EXECUTE IMMEDIATE 'UPDATE C##ADMIN.N09_NHANSU SET HOTEN = :1, PHAI = :2, NGSINH = :3, PHUCAP = :4, DT = :5, VAITRO = :6, MADV = :7, COSO = :8 WHERE MANV = :9'
+                        USING STR_HOTEN, STR_PHAI, STR_NGSINH, STR_PHUCAP, STR_DT, STR_VAITRO, STR_MADV, STR_COSO, STR_MANV;
+END;
+/
+
+-- Gán quyền thực thi thủ tục trên cho tất cả user
+GRANT EXECUTE ON N09_UPDATE_NHANSU TO PUBLIC;
+/
+
+---- Test
+--CONN NV301/NV301;
+--SELECT * FROM C##ADMIN.N09_NHANSU;
+--EXECUTE C##ADMIN.N09_UPDATE_NHANSU('NV201', 'Nguyen Van A', 'Nam', TO_DATE('01/01/2000', 'DD/MM/YYYY'), 1000000, '0123456789', 'GV', 'DV001', 'CS1');
+--/
+
+
+
+----------------------------------------------------------------
+-- Stored Procedure DELETE DANGKY 
+-- Tham số truyền vào: MASV, MAGV, MAHP, HK, NAM, MACT
+-- Tham số optional: Không
+----------------------------------------------------------------
+CREATE OR REPLACE PROCEDURE N09_DELETE_DANGKY(
+    STR_MASV IN VARCHAR2,
+    STR_MAGV IN VARCHAR2,
+    STR_MAHP IN VARCHAR2,
+    STR_HK IN NUMBER,
+    STR_NAM IN NUMBER,
+    STR_MACT IN VARCHAR2)
+IS
+BEGIN
+    EXECUTE IMMEDIATE 'DELETE FROM C##ADMIN.N09_DANGKY WHERE MASV = :1 AND MAGV = :2 AND MAHP = :3 AND HK = :4 AND NAM = :5 AND MACT = :6'
+                        USING STR_MASV, STR_MAGV, STR_MAHP, STR_HK, STR_NAM, STR_MACT;
+END;
+/
+
+-- Gán quyền thực thi thủ tục trên cho tất cả user
+GRANT EXECUTE ON N09_DELETE_DANGKY TO PUBLIC;
+/
+
+---- Test
+--CONN NV301/NV301;
+--SELECT * FROM C##ADMIN.N09_DANGKY;
+--EXECUTE C##ADMIN.N09_DELETE_DANGKY('SV001', 'NV201', 'HP001', 1, 2024, 'CQ');
+--/
+
+
+
+

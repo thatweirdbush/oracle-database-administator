@@ -14,5 +14,13 @@ namespace oracle_database_administator.Class
 
         // Default Constructor
         public Unit() { }
+
+        // Constructor with parameters
+        public Unit(Unit other)
+        {
+            MADV = other.MADV;
+            TENDV = other.TENDV;
+            TRGDV = other.TRGDV;
+        }
     }
 }

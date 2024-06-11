@@ -18,5 +18,17 @@ namespace oracle_database_administator.Class
 
         // Default Constructor
         public Subject() { }
+
+        // Copy Constructor
+        public Subject(Subject other)
+        {
+            MAHP = other.MAHP;
+            TENHP = other.TENHP;
+            SOTC = other.SOTC;
+            STLT = other.STLT;
+            STTH = other.STTH;
+            SOSVTD = other.SOSVTD;
+            MADV = other.MADV;
+        }
     }
 }

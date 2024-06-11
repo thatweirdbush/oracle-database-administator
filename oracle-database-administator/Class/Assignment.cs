@@ -16,5 +16,15 @@ namespace oracle_database_administator.Class
 
         // Default Constructor
         public Assignment() { }
+
+        // Copy Constructor
+        public Assignment(Assignment other)
+        {
+            MAGV = other.MAGV;
+            MAHP = other.MAHP;
+            HK = other.HK;
+            NAM = other.NAM;
+            MACT = other.MACT;
+        }
     }
 }

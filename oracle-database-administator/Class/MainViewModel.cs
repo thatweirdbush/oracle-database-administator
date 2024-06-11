@@ -12,99 +12,124 @@ namespace oracle_database_administator.Class
 {
     public class MainViewModel
     {
-        OracleConnection conn = Database.Instance.Connection;
-        Database Db = Database.Instance;
+        // Singleton pattern & connection
+        private static MainViewModel _instance = null;
+        private OracleConnection conn = Database.Instance.Connection;
+        private Database Db = Database.Instance;
 
+        // Data context
         private ObservableCollection<Student> _students;
-        private ObservableCollection<Personnel> _personnel;
-        private ObservableCollection<Assignment> _assignment;
+        private ObservableCollection<Personnel> _personnels;
+        private ObservableCollection<Assignment> _assignments;
         private ObservableCollection<Registration> _registrations;
         private ObservableCollection<Subject> _subjects;
-        private ObservableCollection<Unit> _unit;
-        private ObservableCollection<CourseOpeningPlan> _courseOpeningPlan;
+        private ObservableCollection<Unit> _units;
+        private ObservableCollection<CourseOpeningPlan> _courseOpeningPlans;
 
 
         public ObservableCollection<Student> Students
         {
-            get { return _students; }
+            //get { return _students; }
+            get { return Db.LoadDataContext<Student>(Db.STUDENTS); }
             set
             {
                 _students = value;
-                OnPropertyChanged("Students");
+                OnPropertyChanged("Student");
             }
         }
 
-        public ObservableCollection<Personnel> Personnel
+        public ObservableCollection<Personnel> Personnels
         {
-            get { return _personnel; }
+            //get { return _personnels; }
+            get { return Db.LoadDataContext<Personnel>(Db.PERSONNELS); }
             set
             {
-                _personnel = value;
+                _personnels = value;
                 OnPropertyChanged("Personnel");
             }
         }
 
-        public ObservableCollection<Assignment> Assignment
+        public ObservableCollection<Assignment> Assignments
         {
-            get { return _assignment; }
+            //get { return _assignments; }
+            get { return Db.LoadDataContext<Assignment>(Db.ASSIGNMENTS); }
             set
             {
-                _assignment = value;
+                _assignments = value;
                 OnPropertyChanged("Assignment");
             }
         }
 
         public ObservableCollection<Registration> Registrations
         {
-            get { return _registrations; }
+            //get { return _registrations; }
+            get { return Db.LoadDataContext<Registration>(Db.REGISTRATIONS); }
             set
             {
                 _registrations = value;
-                OnPropertyChanged("Registrations");
+                OnPropertyChanged("Registration");
             }
         }
 
         public ObservableCollection<Subject> Subjects
         {
-            get { return _subjects; }
+            //get { return _subjects; }
+            get { return Db.LoadDataContext<Subject>(Db.SUBJECTS); }
             set
             {
                 _subjects = value;
-                OnPropertyChanged("Subjects");
+                OnPropertyChanged("Subject");
             }
         }
 
-        public ObservableCollection<Unit> Unit
+        public ObservableCollection<Unit> Units
         {
-            get { return _unit; }
+            //get { return _units; }
+            get { return Db.LoadDataContext<Unit>(Db.UNITS); }
             set
             {
-                _unit = value;
+                _units = value;
                 OnPropertyChanged("Unit");
             }
         }
 
-        public ObservableCollection<CourseOpeningPlan> CourseOpeningPlan
+        public ObservableCollection<CourseOpeningPlan> CourseOpeningPlans
         {
-            get { return _courseOpeningPlan; }
+            //get { return _courseOpeningPlans; }
+            get { return Db.LoadDataContext<CourseOpeningPlan>(Db.COURSE_OPENING_PLANS); }
             set
             {
-                _courseOpeningPlan = value;
+                _courseOpeningPlans = value;
                 OnPropertyChanged("CourseOpeningPlan");
             }
         }
 
-        public MainViewModel()
+        // Default Constructor
+        private MainViewModel()
         {
-            Students = new ObservableCollection<Student>();
-            Personnel = new ObservableCollection<Personnel>();
-            Assignment = new ObservableCollection<Assignment>();
-            Registrations = new ObservableCollection<Registration>();
-            Subjects = new ObservableCollection<Subject>();
-            Unit = new ObservableCollection<Unit>();
-            CourseOpeningPlan = new ObservableCollection<CourseOpeningPlan>();
+            //Students = Db.LoadDataContext<Student>(Db.STUDENTS);
+            //Personnels = Db.LoadDataContext<Personnel>(Db.PERSONNELS);
+            //Assignments = Db.LoadDataContext<Assignment>(Db.ASSIGNMENTS);
+            //Registrations = Db.LoadDataContext<Registration>(Db.REGISTRATIONS);
+            //Subjects = Db.LoadDataContext<Subject>(Db.SUBJECTS);
+            //Units = Db.LoadDataContext<Unit>(Db.UNITS);
+            //CourseOpeningPlans = Db.LoadDataContext<CourseOpeningPlan>(Db.COURSE_OPENING_PLANS);
         }
 
+        // Implement Singleton pattern
+        public static MainViewModel Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new MainViewModel();
+                }
+                return _instance;
+            }
+        }
+
+        // Implement INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string propertyName)
         {

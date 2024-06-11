@@ -22,9 +22,9 @@ namespace oracle_database_administator.Staff
     /// </summary>
     public partial class StaffDashboard : Page
     {
-        private OracleConnection conn = Database.Instance.Connection;
+        private MainViewModel MainViewModel = MainViewModel.Instance;
         private Database Db = Database.Instance;
-        Personnel personnel = null;
+        private Personnel personnel = null;
 
         public StaffDashboard()
         {
@@ -39,7 +39,7 @@ namespace oracle_database_administator.Staff
 
         private void GetUserDataContext()
         {
-            personnel = Db.LoadSingleLineDataContext<Personnel>(Db.STAFFS_VIEWBY_STAFF);
+            personnel = Db.LoadSingleLineDataContext<Personnel>(Db.PERSONNELS);
             Grid_DisplayData.DataContext = personnel;
         }
 
@@ -78,7 +78,7 @@ namespace oracle_database_administator.Staff
         {
             HideAllElements();
             Grid_Unit.Visibility = Visibility.Visible;
-            Table_DonVi.ItemsSource = Db.GetAnyTable(Db.UNITS);
+            Table_DonVi.ItemsSource = MainViewModel.Units;
         }
 
         private void KHHocTap_Click(object sender, RoutedEventArgs e)
@@ -87,28 +87,28 @@ namespace oracle_database_administator.Staff
             Grid_AcademicPlan.Visibility = Visibility.Visible;
             Table_KeHoachMo.Visibility = Visibility.Collapsed;
             Table_DsHocPhan.Visibility = Visibility.Visible;
-            Table_DsHocPhan.ItemsSource = Db.GetAnyTable(Db.SUBJECTS);
+            Table_DsHocPhan.ItemsSource = MainViewModel.Subjects;
         }
 
         private void DSHocPhan_Click(object sender, RoutedEventArgs e)
         {
             Table_KeHoachMo.Visibility = Visibility.Collapsed;
             Table_DsHocPhan.Visibility = Visibility.Visible;
-            Table_DsHocPhan.ItemsSource = Db.GetAnyTable(Db.SUBJECTS);
+            Table_DsHocPhan.ItemsSource = MainViewModel.Subjects;
         }
 
         private void KeHoachMo_Click(object sender, RoutedEventArgs e)
         {
             Table_DsHocPhan.Visibility = Visibility.Collapsed;
             Table_KeHoachMo.Visibility = Visibility.Visible;
-            Table_KeHoachMo.ItemsSource = Db.GetAnyTable(Db.COURSE_OPENING_PLANS);
+            Table_KeHoachMo.ItemsSource = MainViewModel.CourseOpeningPlans;
         }
 
         private void DSSinhVien_Click(object sender, RoutedEventArgs e)
         {
             HideAllElements();
             Grid_StudentList.Visibility = Visibility.Visible;
-            Table_DsSinhVien.ItemsSource = Db.GetAnyTable(Db.STUDENTS);
+            Table_DsSinhVien.ItemsSource = MainViewModel.Students;
         }
 
         private void ThongBao_Click(object sender, RoutedEventArgs e)
@@ -130,7 +130,7 @@ namespace oracle_database_administator.Staff
             // Update the database
             string column = "DT";
             string newPhoneNumber = TextBox_SDT.Text;
-            int result = Db.UpdateStaff(column, newPhoneNumber, personnel.MANV);
+            int result = Db.UpdateStaffPhoneNo(column, newPhoneNumber, personnel.MANV);
 
             if (result != -1)
                 return;

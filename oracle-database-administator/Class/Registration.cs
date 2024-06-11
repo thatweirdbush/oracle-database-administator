@@ -14,12 +14,28 @@ namespace oracle_database_administator.Class
         public Int64 HK { get; set; }
         public Int64 NAM { get; set; }
         public string MACT { get; set; }
-        public Int64 DIEMTH { get; set; }
-        public Int64 DIEMQT { get; set; }
-        public Int64 DIEMCK { get; set; }
-        public Int64 DIEMTK { get; set; }
+        public double DIEMTH { get; set; }
+        public double DIEMQT { get; set; }
+        public double DIEMCK { get; set; }
+        public double DIEMTK { get; set; }
 
         // Default Constructor
         public Registration() { }
+
+        // Copy Constructor
+        public Registration(Registration other)
+        {
+            MASV = other.MASV;
+            MAGV = other.MAGV;
+            MAHP = other.MAHP;
+            HK = other.HK;
+            NAM = other.NAM;
+            MACT = other.MACT;
+            DIEMTH = other.DIEMTH;
+            DIEMQT = other.DIEMQT;
+            DIEMCK = other.DIEMCK;
+            DIEMTK = other.DIEMTK;
+        }
+
     }
 }
