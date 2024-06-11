@@ -1,0 +1,693 @@
+﻿<Page x:Class="oracle_database_administator.DepartmentHead.DepartmentHeadDashboard"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:oracle_database_administator.DepartmentHead"
+      mc:Ignorable="d" 
+      d:DesignHeight="800" d:DesignWidth="1200"
+      Loaded="Page_Loaded"
+      Title="DepartmentHeadDashboard">
+    <Page.Background>
+        <ImageBrush ImageSource="/images/background.jpg"/>
+    </Page.Background>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="180" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="40" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="40" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="40" />
+        </Grid.ColumnDefinitions>
+
+        <Image Grid.Column="1" HorizontalAlignment="Left" Height="80" Margin="0,20,0,0" VerticalAlignment="Top" Width="80" Source="/images/cloud-database.png"/>
+        <Label Grid.Column="1" Content="TRƯỜNG ĐẠI HỌC X" FontFamily="Segoe UI Black" FontSize="32" HorizontalAlignment="Left" Height="43" Margin="90,20,0,0" VerticalAlignment="Top" Width="800" Foreground="#FF190E64" FontWeight="Bold" Padding="0,0,0,0"/>
+        <Label Grid.Column="1" Content="Hệ Thống Quản Lý Nội Bộ" FontSize="20" HorizontalAlignment="Left" Height="27" VerticalAlignment="Top" Width="315" Margin="90,68,0,0" Padding="0,0,0,0" FontWeight="Bold" Foreground="#FFFF5C0F"/>
+
+        <Button Grid.Row="0" Grid.Column="1" x:Name="LogoutButton" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="22" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="50" Width="160" Click="LogoutButton_Click" RenderTransformOrigin="-2.052,5.949" Margin="0,40,0,0" HorizontalAlignment="Right" VerticalAlignment="Top" Cursor="Hand" Foreground="GhostWhite" >
+            <StackPanel Orientation="Horizontal">
+                <Image Source="/images/exit-white.png" Width="30" Height="25" Margin="0,0,5,0" />
+                <TextBlock Text="Thoát" Width="65"/>
+            </StackPanel>
+            <Button.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="CornerRadius" Value="4"/>
+                </Style>
+            </Button.Resources>
+            <Button.Background>
+                <SolidColorBrush Color="#FF0B1215" Opacity="1"/>
+            </Button.Background>
+            <Button.Effect>
+                <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
+            </Button.Effect>
+        </Button>
+
+        <Button Grid.Column="1" x:Name="DsNhanSu" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="22" BorderThickness="0" Height="50" Width="184" Click="DsNhanSu_Click" VerticalAlignment="Bottom" HorizontalAlignment="Left" Cursor="Hand" >
+            <Button.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="CornerRadius" Value="24,24,0,0"/>
+                </Style>
+            </Button.Resources>
+            <Button.Background>
+                <SolidColorBrush Color="#F7EEDD" Opacity="0.75"/>
+            </Button.Background>
+            <Button.Effect>
+                <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
+            </Button.Effect>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Thông tin Nhân sự" FontSize="18" FontFamily="Segoe UI Semibold"/>
+            </StackPanel>
+        </Button>
+
+        <Button Grid.Column="1" x:Name="DsDonVi" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="22" BorderThickness="0" Height="50" Width="183" Click="TTDonVi_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="184,0,0,0" Cursor="Hand" >
+            <Button.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="CornerRadius" Value="24,24,0,0"/>
+                </Style>
+            </Button.Resources>
+            <Button.Background>
+                <SolidColorBrush Color="#ACE2E1" Opacity="0.75"/>
+            </Button.Background>
+            <Button.Effect>
+                <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
+            </Button.Effect>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Thông tin Đơn vị" FontSize="18"/>
+            </StackPanel>
+
+        </Button>
+        <Button Grid.Column="1" x:Name="KHHocTap" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="22" BorderThickness="0" Height="50" Width="184" Click="KHHocTap_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="367,0,0,0" Cursor="Hand" >
+            <Button.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="CornerRadius" Value="24,24,0,0"/>
+                </Style>
+            </Button.Resources>
+            <Button.Background>
+                <SolidColorBrush Color="#7DEBFF" Opacity="0.75"/>
+            </Button.Background>
+            <Button.Effect>
+                <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
+            </Button.Effect>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Kế hoạch Học tập" FontSize="18"/>
+            </StackPanel>
+
+        </Button>
+        <Button Grid.Column="1" x:Name="DsSinhVien" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="22" BorderThickness="0" Height="50" Width="184" Click="DSSinhVien_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="551,0,0,0" Cursor="Hand" >
+            <Button.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="CornerRadius" Value="24,24,0,0"/>
+                </Style>
+            </Button.Resources>
+            <Button.Background>
+                <SolidColorBrush Color="#75CEFF" Opacity="0.75"/>
+            </Button.Background>
+            <Button.Effect>
+                <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
+            </Button.Effect>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Danh sách Sinh viên" FontSize="18"/>
+            </StackPanel>
+        </Button>
+        <Button Grid.Column="1" x:Name="ThongBao" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="22" BorderThickness="0" Height="50" Width="184" Click="ThongBao_Click" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="735,0,0,0" Cursor="Hand" >
+            <Button.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="CornerRadius" Value="24,24,0,0"/>
+                </Style>
+            </Button.Resources>
+            <Button.Background>
+                <SolidColorBrush Color="#FFFF75C1" Opacity="0.75"/>
+            </Button.Background>
+            <Button.Effect>
+                <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
+            </Button.Effect>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Thông báo" FontSize="18"/>
+            </StackPanel>
+        </Button>
+
+        <!-- Main Grid - Dành để hiển thị dữ liệu khác nhau khi nhấn các Button -->
+        <Grid x:Name="Grid_DisplayData" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Grid.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="CornerRadius" Value="10"/>
+                    <Setter Property="BorderBrush" Value="AliceBlue"/>
+                    <Setter Property="BorderThickness" Value="2"/>
+                </Style>
+            </Grid.Resources>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="39*"/>
+                <ColumnDefinition Width="521*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.Background>
+                <SolidColorBrush Color="#FFD4EBFF" Opacity="0.8"/>
+            </Grid.Background>
+
+            <!-- Default Grid - Danh sách Nhân sự -->
+            <Grid x:Name="Grid_Personnel" Visibility="Visible" Grid.ColumnSpan="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="4*" />
+                    <RowDefinition Height="20*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="20*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Label - Danh sách Nhân sự -->
+                <Label Grid.Column="1" x:Name="Label_NhanSu" Content="DANH SÁCH NHÂN SỰ" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#333" FontSize="30" FontWeight="Bold"/>
+
+                <!-- DataGrid - Thông tin Nhân sự-->
+                <DataGrid Grid.Row="1" Grid.Column="1" x:Name="Table_DsNhanSu" ColumnWidth="*" ItemsSource="{Binding YourData}" AutoGenerateColumns="False" FontWeight="Medium" BorderBrush="{x:Null}" Background="{x:Null}" VerticalScrollBarVisibility="Hidden" GridLinesVisibility="None" SelectionChanged="Table_DsNhanSu_SelectionChanged" Cursor="Hand" RowEditEnding="Table_DsNhanSu_RowEditEnding">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Mã Nhân Viên" Binding="{Binding MANV}"/>
+                        <DataGridTextColumn Header="Họ Tên" Binding="{Binding HOTEN}"/>
+                        <DataGridTextColumn Header="Giới Tính" Binding="{Binding PHAI}"/>
+                        <DataGridTextColumn Header="Ngày Sinh" Binding="{Binding NGSINH}"/>
+                        <DataGridTextColumn Header="Phụ Cấp" Binding="{Binding PHUCAP}"/>
+                        <DataGridTextColumn Header="Điện Thoại" Binding="{Binding DT}"/>
+                        <DataGridTextColumn Header="Vai Trò" Binding="{Binding VAITRO}"/>
+                        <DataGridTextColumn Header="Mã Đơn Vị" Binding="{Binding MADV}"/>
+                        <DataGridTextColumn Header="Cơ Sở" Binding="{Binding COSO}"/>
+                    </DataGrid.Columns>
+
+                    <DataGrid.RowBackground>
+                        <SolidColorBrush Color="#FFA3BDD2" Opacity="0.6"/>
+                    </DataGrid.RowBackground>
+                    <DataGrid.ColumnHeaderStyle>
+                        <Style TargetType="{x:Type DataGridColumnHeader}">
+                            <Setter Property="ContentTemplate">
+                                <Setter.Value>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding}" FontFamily="Segoe UI" FontSize="16" Foreground="AliceBlue" Background="#FF173D7B" Padding="5"/>
+                                    </DataTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="Background" Value="#FF173D7B"/>
+                        </Style>
+                    </DataGrid.ColumnHeaderStyle>
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="Height" Value="40"/>
+                            <Setter Property="FontSize" Value="14"/>
+                        </Style>
+                    </DataGrid.RowStyle>
+                </DataGrid>
+
+                <!-- Button - Xem Danh sách Nhân sự-->
+                <Button Grid.Column="1" x:Name="Button_MyProfile" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="22" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="50" Width="160" Click="Button_MyProfile_Click" Margin="0,-75,0,0" HorizontalAlignment="Right" VerticalAlignment="Top" Cursor="Hand" Grid.ColumnSpan="2" >
+                    <Button.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius" Value="4"/>
+                        </Style>
+                    </Button.Resources>
+                    <Button.Background>
+                        <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.HighlightColorKey}}" Opacity="0.75"/>
+                    </Button.Background>
+                    <Button.Effect>
+                        <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
+                    </Button.Effect>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/images/user-searching.png" Width="29" Height="27" Margin="0,0,5,0" />
+                        <TextBlock Text="Cá Nhân" VerticalAlignment="Center" Width="88"/>
+                    </StackPanel>
+                </Button>
+
+                <!-- Button - Xóa Đăng Ký Học Phần -->
+                <Button Grid.Column="1" x:Name="Button_DeletePersonnel" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="22" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="50" Width="132" Click="Button_DeletePersonnel_Click" HorizontalAlignment="Right" VerticalAlignment="Center" Cursor="Hand">
+                    <Button.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius" Value="4"/>
+                        </Style>
+                    </Button.Resources>
+                    <Button.Background>
+                        <SolidColorBrush Color="#FFFF0F30" Opacity="0.75"/>
+                    </Button.Background>
+                    <Button.Effect>
+                        <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
+                    </Button.Effect>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/images/trash.png" Width="34" Height="27" Margin="0,0,5,0" />
+                        <TextBlock Text="Xóa" VerticalAlignment="Center" Width="54"/>
+                    </StackPanel>
+                </Button>
+            </Grid>
+
+            <!-- Grid - Thông tin cá nhân -->
+            <Grid x:Name="Grid_UserInfo" Visibility="Collapsed" Grid.ColumnSpan="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Left Grid -->
+                <Grid x:Name="Grid_Left_ProfileInfo" Grid.Column="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="3*"/>
+                        <RowDefinition Height="5*" />
+                    </Grid.RowDefinitions>
+
+                    <!-- Profile Picture Grid - Avatar -->
+                    <Grid HorizontalAlignment="Center" VerticalAlignment="Bottom">
+                        <Ellipse Fill="White" Width="180" Height="180"/>
+                        <Ellipse Stroke="White" Width="180" Height="180" StrokeThickness="4" Cursor="Hand" Focusable="True">
+                            <Ellipse.Fill>
+                                <ImageBrush ImageSource="/images/user-icon-512px.png" Stretch="UniformToFill"/>
+                            </Ellipse.Fill>
+                        </Ellipse>
+                    </Grid>
+
+                    <!-- Profile Key Data Grid - Tên & Vai trò -->
+                    <Grid Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top" >
+                        <Label x:Name="Label_Fullname" Content="{Binding HOTEN}" HorizontalAlignment="Center" VerticalAlignment="Top" Foreground="#333" HorizontalContentAlignment="Center" FontSize="30" FontWeight="Bold"/>
+                        <Label x:Name="Label_Rolename" Content="{Binding VAITRO}" HorizontalAlignment="Center" VerticalAlignment="Top" Foreground="#333" HorizontalContentAlignment="Center" FontSize="24" FontWeight="Bold" Margin="0,50,0,0"/>
+                    </Grid>
+                </Grid>
+
+                <!-- Right Grid -->
+                <Grid x:Name="Grid_Right_ProfileInfo" Grid.Column="1">
+                    <!-- Label - Thông tin Cá nhân-->
+                    <Label Grid.Column="1" x:Name="Label_TTCN" Content="THÔNG TIN CÁ NHÂN" HorizontalAlignment="Left" Margin="20,40,0,0" VerticalAlignment="Top" Foreground="#333" Background="{x:Null}" Grid.ColumnSpan="2" Width="328" Padding="0,0,0,0" FontSize="30" FontWeight="Bold"/>
+
+                    <!-- Grid - Thông tin Cá nhân-->
+                    <Grid Grid.Column="1" x:Name="Grid_TTCN" Margin="0,120,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="3*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- StackPanel - Label-->
+                        <StackPanel Orientation="Vertical" Margin="20,0,0,0">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Mã nhân viên " FontWeight="Bold" FontSize="20"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                                <TextBlock Text="Phái " FontWeight="Bold" FontSize="20"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                                <TextBlock Text="Ngày sinh " FontWeight="Bold" FontSize="20"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                                <TextBlock Text="Phụ cấp " FontWeight="Bold" FontSize="20"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                                <TextBlock Text="Số điện thoại " FontWeight="Bold" FontSize="20"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                <TextBlock Text="Đơn vị " FontWeight="Bold" FontSize="20"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <!-- StackPanel - Binding Data-->
+                        <StackPanel Grid.Column="1" Orientation="Vertical">
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
+                                <TextBlock Text="{Binding MANV}" FontWeight="SemiBold" FontSize="20"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                                <TextBlock Text="{Binding PHAI}" FontWeight="SemiBold" FontSize="20"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                                <TextBlock Text="{Binding NGSINH}" FontWeight="SemiBold" FontSize="20"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                                <TextBlock Text="{Binding PHUCAP}" FontWeight="SemiBold" FontSize="20"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                                <TextBlock x:Name="TextBlock_SDT" Text="{Binding DT, UpdateSourceTrigger=PropertyChanged}" FontWeight="SemiBold" FontSize="20" Visibility="Visible" IsHitTestVisible="False" Focusable="False"/>
+                                <TextBox x:Name="TextBox_SDT" Text="{Binding DT, UpdateSourceTrigger=PropertyChanged}" FontWeight="SemiBold" FontSize="20" Visibility="Collapsed" Width="Auto">
+                                    <TextBox.Background>
+                                        <SolidColorBrush Color="AliceBlue" Opacity="0.6"/>
+                                    </TextBox.Background>
+                                </TextBox>
+                                <Button x:Name="Button_EditSDT" Click="Button_EditSDT_Click" Margin="10,0,0,0" BorderBrush="{x:Null}" Width="28" Height="28" Background="{x:Null}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="/images/edit.png"/>
+                                    </StackPanel>
+                                </Button>
+                                <Button x:Name="Button_SaveSDT" Click="Button_SaveSDT_Click" Margin="10,0,0,0" BorderBrush="{x:Null}" Width="28" Height="28" Background="{x:Null}" Visibility="Collapsed">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="/images/save.png"/>
+                                    </StackPanel>
+                                </Button>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                <TextBlock Text="{Binding MADV}" FontWeight="SemiBold" FontSize="20"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+
+                <!-- Button - Quay lại sau khi Xem Danh sách Nhân sự -->
+                <Button Grid.Column="1" x:Name="Button_BackToPersonnelList" Visibility="Visible" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="22" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="50" Width="160" Click="Button_BackToPersonnelList_Click" RenderTransformOrigin="-2.052,5.949" Margin="0,-75,0,0" HorizontalAlignment="Right" VerticalAlignment="Top" Cursor="Hand" >
+                    <Button.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius" Value="4"/>
+                        </Style>
+                    </Button.Resources>
+                    <Button.Background>
+                        <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.HighlightColorKey}}" Opacity="0.75"/>
+                    </Button.Background>
+                    <Button.Effect>
+                        <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
+                    </Button.Effect>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/images/back-icon.png" Width="29" Height="27" Margin="0,0,5,0" />
+                        <TextBlock Text="Trở Về" VerticalAlignment="Center" Width="73"/>
+                    </StackPanel>
+                </Button>
+            </Grid>
+
+            <!-- Grid Danh sách đơn vị -->
+            <Grid x:Name="Grid_Unit" Visibility="Collapsed" Grid.ColumnSpan="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="4*" />
+                    <RowDefinition Height="20*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="20*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Label - Danh sách Đơn vị -->
+                <Label Grid.Column="1" x:Name="Label_DonVi" Content="DANH SÁCH ĐƠN VỊ" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#333" FontSize="30" FontWeight="Bold"/>
+
+                <!-- DataGrid - Thông tin Đơn vị-->
+                <DataGrid Grid.Row="1" Grid.Column="1" x:Name="Table_DonVi" ColumnWidth="*" ItemsSource="{Binding YourData}" AutoGenerateColumns="False" FontWeight="Medium" BorderBrush="{x:Null}" Background="{x:Null}" VerticalScrollBarVisibility="Hidden" GridLinesVisibility="None" SelectionChanged="Table_DonVi_SelectionChanged" Cursor="Hand">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Mã Đơn Vị" Binding="{Binding MADV}"/>
+                        <DataGridTextColumn Header="Tên Đơn Vị" Binding="{Binding TENDV}"/>
+                        <DataGridTextColumn Header="Trưởng Đơn Vị" Binding="{Binding TRGDV}"/>
+                    </DataGrid.Columns>
+
+                    <DataGrid.RowBackground>
+                        <SolidColorBrush Color="#FFA3BDD2" Opacity="0.6"/>
+                    </DataGrid.RowBackground>
+                    <DataGrid.ColumnHeaderStyle>
+                        <Style TargetType="{x:Type DataGridColumnHeader}">
+                            <Setter Property="ContentTemplate">
+                                <Setter.Value>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding}" FontFamily="Segoe UI" FontSize="16" Foreground="AliceBlue" Background="#FF173D7B" Padding="5"/>
+                                    </DataTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="Background" Value="#FF173D7B"/>
+                        </Style>
+                    </DataGrid.ColumnHeaderStyle>
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="Height" Value="40"/>
+                            <Setter Property="FontSize" Value="14"/>
+                        </Style>
+                    </DataGrid.RowStyle>
+                </DataGrid>
+            </Grid>
+
+            <!-- Grid Kế hoạch học tập -->
+            <Grid x:Name="Grid_AcademicPlan" Visibility="Collapsed" Grid.ColumnSpan="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="4*"/>
+                    <RowDefinition Height="20*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="20*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid x:Name="Grid_Header" Grid.Column="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Label - Kế hoạch Học tập -->
+                    <Label Grid.Column="0" x:Name="Label_KHHT" Content="KẾ HOẠCH HỌC TẬP" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="#333" Background="{x:Null}" FlowDirection="RightToLeft" FontSize="30" FontWeight="Bold"/>
+
+                    <Grid x:Name="Grid_Header_Functions" Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+
+                        <!-- Default TextBlock - Danh sách học phần -->
+                        <TextBlock x:Name="TextBlock_DSHocPhan" HorizontalAlignment="Right" VerticalAlignment="Center" FontFamily="Segoe UI Semibold" FontSize="22" Foreground="#333" TextDecorations="Underline">
+                        <Hyperlink Click="DSHocPhan_Click" Foreground="#333" FontSize="22" TextDecorations="None">
+                            DS Học phần
+                        </Hyperlink>
+                        </TextBlock>
+
+                        <TextBlock Grid.Column="1" x:Name="TextBlock_KeHoachMo" HorizontalAlignment="Right" VerticalAlignment="Center" FontFamily="Segoe UI Semibold" FontSize="22" Foreground="#FF190E64" TextDecorations="Underline">
+                        <Hyperlink Click="KeHoachMo_Click" Foreground="#333" FontSize="22" TextDecorations="None">
+                            DS Kế hoạch
+                        </Hyperlink>
+                        </TextBlock>
+
+                        <TextBlock Grid.Column="2" x:Name="TextBlock_PhanCongGiangDay" HorizontalAlignment="Right" VerticalAlignment="Center" FontFamily="Segoe UI Semibold" FontSize="22" Foreground="#FF190E64" TextDecorations="Underline">
+                        <Hyperlink Click="PhanCong_Click" Foreground="#333" FontSize="22" TextDecorations="None">
+                            DS Phân công
+                        </Hyperlink>
+                        </TextBlock>
+
+                        <TextBlock Grid.Column="3" x:Name="TextBlock_DangKy" HorizontalAlignment="Right" VerticalAlignment="Center" FontFamily="Segoe UI Semibold" FontSize="22" Foreground="#FF190E64" TextDecorations="Underline">
+                        <Hyperlink Click="DangKy_Click" Foreground="#333" FontSize="22" TextDecorations="None">
+                            DS Đăng Ký
+                        </Hyperlink>
+                        </TextBlock>
+                    </Grid>
+                </Grid>
+
+                <!-- Default DataGrid - Danh sách học phần -->
+                <DataGrid Grid.Row="1" Grid.Column="1" x:Name="Table_DsHocPhan" ColumnWidth="*" ItemsSource="{Binding YourData}" AutoGenerateColumns="False" FontWeight="Medium" BorderBrush="{x:Null}" Background="{x:Null}" VerticalScrollBarVisibility="Hidden" GridLinesVisibility="None" SelectionChanged="Table_DsHocPhan_SelectionChanged" Cursor="Hand">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Mã Học Phần" Binding="{Binding MAHP}"/>
+                        <DataGridTextColumn Header="Tên Học Phần" Binding="{Binding TENHP}"/>
+                        <DataGridTextColumn Header="Số Tín Chỉ" Binding="{Binding SOTC}"/>
+                        <DataGridTextColumn Header="Số Tiết Lý Thuyết" Binding="{Binding STLT}"/>
+                        <DataGridTextColumn Header="Số Tiết Thực Hành" Binding="{Binding STTH}"/>
+                        <DataGridTextColumn Header="Số SV Tối Đa" Binding="{Binding SOSVTD}"/>
+                        <DataGridTextColumn Header="Đơn Vị" Binding="{Binding MADV}"/>
+                    </DataGrid.Columns>
+
+                    <DataGrid.RowBackground>
+                        <SolidColorBrush Color="#FFA3BDD2" Opacity="0.6"/>
+                    </DataGrid.RowBackground>
+                    <DataGrid.ColumnHeaderStyle>
+                        <Style TargetType="{x:Type DataGridColumnHeader}">
+                            <Setter Property="ContentTemplate">
+                                <Setter.Value>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding}" FontFamily="Segoe UI" FontSize="16" Foreground="AliceBlue" Background="#FF173D7B" Padding="5"/>
+                                    </DataTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="Background" Value="#FF173D7B"/>
+                        </Style>
+                    </DataGrid.ColumnHeaderStyle>
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="Height" Value="40"/>
+                            <Setter Property="FontSize" Value="14"/>
+                        </Style>
+                    </DataGrid.RowStyle>
+                </DataGrid>
+
+                <!-- DataGrid - Kế hoạch mở môn-->
+                <DataGrid Grid.Row="1" Grid.Column="1" x:Name="Table_KeHoachMo" ColumnWidth="*" Visibility="Collapsed" ItemsSource="{Binding YourData}" AutoGenerateColumns="False" FontWeight="Medium" BorderBrush="{x:Null}" Background="{x:Null}" VerticalScrollBarVisibility="Hidden" GridLinesVisibility="None" SelectionChanged="Table_KeHoachMo_SelectionChanged" Cursor="Hand">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Mã Học Phần" Binding="{Binding MAHP}"/>
+                        <DataGridTextColumn Header="Học Kỳ" Binding="{Binding HK}"/>
+                        <DataGridTextColumn Header="Năm Học" Binding="{Binding NAM}"/>
+                        <DataGridTextColumn Header="Chương Trình" Binding="{Binding MACT}"/>
+                    </DataGrid.Columns>
+
+                    <DataGrid.RowBackground>
+                        <SolidColorBrush Color="#FFA3BDD2" Opacity="0.6"/>
+                    </DataGrid.RowBackground>
+                    <DataGrid.ColumnHeaderStyle>
+                        <Style TargetType="{x:Type DataGridColumnHeader}">
+                            <Setter Property="ContentTemplate">
+                                <Setter.Value>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding}" FontFamily="Segoe UI" FontSize="16" Foreground="AliceBlue" Background="#FF173D7B" Padding="5"/>
+                                    </DataTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="Background" Value="#FF173D7B"/>
+                        </Style>
+                    </DataGrid.ColumnHeaderStyle>
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="Height" Value="40"/>
+                            <Setter Property="FontSize" Value="14"/>
+                        </Style>
+                    </DataGrid.RowStyle>
+                </DataGrid>
+
+                <!-- DataGrid - Phân công Giảng dạy-->
+                <DataGrid Grid.Row="1" Grid.Column="1" x:Name="Table_PhanCong" ColumnWidth="*" Visibility="Collapsed" ItemsSource="{Binding YourData}" AutoGenerateColumns="False" FontWeight="Medium" BorderBrush="{x:Null}" Background="{x:Null}" VerticalScrollBarVisibility="Hidden" GridLinesVisibility="None" SelectionChanged="Table_PhanCong_SelectionChanged" RowEditEnding="Table_PhanCong_RowEditEnding" Cursor="Hand">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Mã Giảng Viên" Binding="{Binding MAGV}"/>
+                        <DataGridTextColumn Header="Mã Học Phần" Binding="{Binding MAHP}"/>
+                        <DataGridTextColumn Header="Học Kỳ" Binding="{Binding HK}"/>
+                        <DataGridTextColumn Header="Năm Học" Binding="{Binding NAM}"/>
+                        <DataGridTextColumn Header="Chương Trình" Binding="{Binding MACT}"/>
+                    </DataGrid.Columns>
+
+                    <DataGrid.RowBackground>
+                        <SolidColorBrush Color="#FFA3BDD2" Opacity="0.6"/>
+                    </DataGrid.RowBackground>
+                    <DataGrid.ColumnHeaderStyle>
+                        <Style TargetType="{x:Type DataGridColumnHeader}">
+                            <Setter Property="ContentTemplate">
+                                <Setter.Value>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding}" FontFamily="Segoe UI" FontSize="16" Foreground="AliceBlue" Background="#FF173D7B" Padding="5"/>
+                                    </DataTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="Background" Value="#FF173D7B"/>
+                        </Style>
+                    </DataGrid.ColumnHeaderStyle>
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="Height" Value="40"/>
+                            <Setter Property="FontSize" Value="14"/>
+                        </Style>
+                    </DataGrid.RowStyle>
+                </DataGrid>
+
+                <!-- DataGrid - Đăng ký Học phần-->
+                <DataGrid Grid.Row="1" Grid.Column="1" x:Name="Table_DangKy" ColumnWidth="*" Visibility="Collapsed" ItemsSource="{Binding YourData}" AutoGenerateColumns="False" FontWeight="Medium" BorderBrush="{x:Null}" Background="{x:Null}" VerticalScrollBarVisibility="Hidden" GridLinesVisibility="None" SelectionChanged="Table_DangKy_SelectionChanged" RowEditEnding="Table_DangKy_RowEditEnding" Cursor="Hand">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Mã Sinh Viên" Binding="{Binding MASV}"/>
+                        <DataGridTextColumn Header="Mã Giảng Viên" Binding="{Binding MAGV}"/>
+                        <DataGridTextColumn Header="Mã Học Phần" Binding="{Binding MAHP}"/>
+                        <DataGridTextColumn Header="Học Kỳ" Binding="{Binding HK}"/>
+                        <DataGridTextColumn Header="Năm Học" Binding="{Binding NAM}"/>
+                        <DataGridTextColumn Header="Chương Trình" Binding="{Binding MACT}"/>
+                        <DataGridTextColumn Header="Điểm Thực Hành" Binding="{Binding DIEMTH}"/>
+                        <DataGridTextColumn Header="Điểm Quá Trình" Binding="{Binding DIEMQT}"/>
+                        <DataGridTextColumn Header="Điểm Cuối Kỳ" Binding="{Binding DIEMCK}"/>
+                        <DataGridTextColumn Header="Điểm Tổng Kết" Binding="{Binding DIEMTK}"/>
+                    </DataGrid.Columns>
+
+                    <DataGrid.RowBackground>
+                        <SolidColorBrush Color="#FFA3BDD2" Opacity="0.6"/>
+                    </DataGrid.RowBackground>
+                    <DataGrid.ColumnHeaderStyle>
+                        <Style TargetType="{x:Type DataGridColumnHeader}">
+                            <Setter Property="ContentTemplate">
+                                <Setter.Value>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding}" FontFamily="Segoe UI" FontSize="16" Foreground="AliceBlue" Background="#FF173D7B" Padding="5"/>
+                                    </DataTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="Background" Value="#FF173D7B"/>
+                        </Style>
+                    </DataGrid.ColumnHeaderStyle>
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="Height" Value="40"/>
+                            <Setter Property="FontSize" Value="14"/>
+                        </Style>
+                    </DataGrid.RowStyle>
+                </DataGrid>
+
+                <!-- Button - Xóa Phân Công Giảng Dạy -->
+                <Button Grid.Column="1" x:Name="Button_DeleteAssignment" Visibility="Collapsed" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="22" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="50" Width="160" Click="Button_DeleteAssignment_Click" Margin="0,-75,0,0" HorizontalAlignment="Right" VerticalAlignment="Top" Cursor="Hand" Grid.ColumnSpan="2" >
+                    <Button.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius" Value="4"/>
+                        </Style>
+                    </Button.Resources>
+                    <Button.Background>
+                        <SolidColorBrush Color="#FFFF0F30" Opacity="0.75"/>
+                    </Button.Background>
+                    <Button.Effect>
+                        <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
+                    </Button.Effect>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/images/trash.png" Width="34" Height="27" Margin="0,0,5,0" />
+                        <TextBlock Text="Xóa" VerticalAlignment="Center" Width="54"/>
+                    </StackPanel>
+                </Button>
+            </Grid>
+
+            <!-- Grid Danh sách sinh viên -->
+            <Grid x:Name="Grid_StudentList" Visibility="Collapsed" Grid.ColumnSpan="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="4*" />
+                    <RowDefinition Height="20*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="20*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Label - Danh sách sinh viên -->
+                <Label Grid.Column="1" x:Name="Label_DsSinhVien" Content="DANH SÁCH SINH VIÊN" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#333" FontSize="30" FontWeight="Bold"/>
+
+                <!-- DataGrid - Danh sách sinh viên -->
+                <DataGrid Grid.Row="1" Grid.Column="1" x:Name="Table_DsSinhVien" ColumnWidth="*" ItemsSource="{Binding YourData}" AutoGenerateColumns="False" FontWeight="Medium" BorderBrush="{x:Null}" Background="{x:Null}" VerticalScrollBarVisibility="Hidden" GridLinesVisibility="None" SelectionChanged="Table_DsSinhVien_SelectionChanged" CanUserDeleteRows="False" Cursor="Hand">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Mã Sinh Viên" Binding="{Binding MASV}"/>
+                        <DataGridTextColumn Header="Họ Tên" Binding="{Binding HOTEN}"/>
+                        <DataGridTextColumn Header="Giới Tính" Binding="{Binding PHAI}"/>
+                        <DataGridTextColumn Header="Ngày Sinh" Binding="{Binding NGSINH}"/>
+                        <DataGridTextColumn Header="Địa Chỉ" Binding="{Binding DIACHI}"/>
+                        <DataGridTextColumn Header="SĐT" Binding="{Binding DT}"/>
+                        <DataGridTextColumn Header="Chương Trình" Binding="{Binding MACT}"/>
+                        <DataGridTextColumn Header="Ngành" Binding="{Binding MANGANH}"/>
+                        <DataGridTextColumn Header="Tín Chỉ" Binding="{Binding SOTCTL}"/>
+                        <DataGridTextColumn Header="Điểm TB" Binding="{Binding DTBTL}"/>
+                        <DataGridTextColumn Header="Cơ Sở" Binding="{Binding COSO}"/>
+                    </DataGrid.Columns>
+
+                    <DataGrid.RowBackground>
+                        <SolidColorBrush Color="#FFA3BDD2" Opacity="0.6"/>
+                    </DataGrid.RowBackground>
+                    <DataGrid.ColumnHeaderStyle>
+                        <Style TargetType="{x:Type DataGridColumnHeader}">
+                            <Setter Property="ContentTemplate">
+                                <Setter.Value>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding}" FontFamily="Segoe UI" FontSize="16" Foreground="AliceBlue" Background="#FF173D7B" Padding="5"/>
+                                    </DataTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="Background" Value="#FF173D7B"/>
+                        </Style>
+                    </DataGrid.ColumnHeaderStyle>
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="Height" Value="40"/>
+                            <Setter Property="FontSize" Value="14"/>
+                        </Style>
+                    </DataGrid.RowStyle>
+                </DataGrid>
+            </Grid>
+        </Grid>
+        <Label Grid.Row="2" Grid.Column="1" Content="*Hướng dẫn: Thêm, Xóa, Sửa dữ liệu trực tiếp trên bảng." FontSize="16" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0,0,0,0" Foreground="#FF173D7B" FontFamily="Segoe UI Semibold" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Width="477"/>
+    </Grid>
+</Page>
+    

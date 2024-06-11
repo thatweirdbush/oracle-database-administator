@@ -110,7 +110,7 @@
                 </Grid.Background>
 
                 <!-- Default Grid - Thông tin cá nhân -->
-                <Grid x:Name="Grid_UserInfo" Visibility="Collapsed">
+                <Grid x:Name="Grid_UserInfo" Visibility="Visible">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="2*"/>
@@ -254,7 +254,7 @@
             </Grid>                
 
                 <!-- Grid Kế hoạch học tập -->
-                <Grid x:Name="Grid_AcademicPlan" Visibility="Visible">
+                <Grid x:Name="Grid_AcademicPlan" Visibility="Collapsed">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="4*"/>
                         <RowDefinition Height="20*"/>

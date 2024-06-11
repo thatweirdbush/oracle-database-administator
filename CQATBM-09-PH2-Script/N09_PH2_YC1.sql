@@ -1224,34 +1224,31 @@ END;
 GRANT INSERT, DELETE ON C##ADMIN.N09_DANGKY TO N09_RL_SINHVIEN;
 /
 
---TEST
--- Kiểm tra xóa dữ liệu (đảm bảo ngày hiện tại nằm trong 14 ngày kể từ ngày bắt đầu học kỳ)
-CONN SV001/SV001;
-SELECT * FROM C##ADMIN.N09_DANGKY;
-/
-
--- Xóa Học phần HP003, Học kỳ 3, Năm 2024 (1/9/2024), Ngày hiện tại 10/6/2024: Thành công
-CONN SV001/SV001;
-DELETE FROM C##ADMIN.N09_DANGKY WHERE MASV = 'SV001' AND MAHP = 'HP003' AND MAGV = 'NV201' AND HK = 3 AND NAM = 2024;
-/
-
--- Xóa Học phần HP001, Học kỳ 1, Năm 2024 (1/1/2024), Ngày hiện tại 10/6/2024: Không thành công
-CONN SV001/SV001;
-DELETE FROM C##ADMIN.N09_DANGKY WHERE MASV = 'SV001' AND MAHP = 'HP001' AND MAGV = 'NV201' AND HK = 1 AND NAM = 2024;
-/
-
--- Thêm Học phần HP003, Học kỳ 3, Năm 2024 (1/9/2024), Ngày hiện tại 10/6/2024: Thành công
-CONN SV001/SV001;
-INSERT INTO C##ADMIN.N09_DANGKY VALUES('SV001', 'NV201', 'HP003', 3, 2024, 'CQ', NULL, NULL, NULL, NULL);
-/
-
--- Thêm Học phần HP001, Học kỳ 1, Năm 2024 (1/1/2024), Ngày hiện tại 10/6/2024: Không thành công
-CONN SV001/SV001;
-EXECUTE C##ADMIN.N09_INSERT_DANGKY()
-
-INSERT INTO C##ADMIN.N09_DANGKY VALUES('SV001', 'NV202', 'HP001', 2, 2024, 'CLC', NULL, NULL, NULL, NULL);
-/
-
+----TEST
+---- Kiểm tra xóa dữ liệu (đảm bảo ngày hiện tại nằm trong 14 ngày kể từ ngày bắt đầu học kỳ)
+--CONN SV001/SV001;
+--SELECT * FROM C##ADMIN.N09_DANGKY;
+--/
+--
+---- Xóa Học phần HP003, Học kỳ 3, Năm 2024 (1/9/2024), Ngày hiện tại 10/6/2024: Thành công
+--CONN SV001/SV001;
+--DELETE FROM C##ADMIN.N09_DANGKY WHERE MASV = 'SV001' AND MAHP = 'HP003' AND MAGV = 'NV201' AND HK = 3 AND NAM = 2024;
+--/
+--
+---- Xóa Học phần HP001, Học kỳ 1, Năm 2024 (1/1/2024), Ngày hiện tại 10/6/2024: Không thành công
+--CONN SV001/SV001;
+--DELETE FROM C##ADMIN.N09_DANGKY WHERE MASV = 'SV001' AND MAHP = 'HP001' AND MAGV = 'NV201' AND HK = 1 AND NAM = 2024;
+--/
+--
+---- Thêm Học phần HP003, Học kỳ 3, Năm 2024 (1/9/2024), Ngày hiện tại 10/6/2024: Thành công
+--CONN SV001/SV001;
+--INSERT INTO C##ADMIN.N09_DANGKY VALUES('SV001', 'NV201', 'HP003', 3, 2024, 'CQ', NULL, NULL, NULL, NULL);
+--/
+--
+---- Thêm Học phần HP001, Học kỳ 1, Năm 2024 (1/1/2024), Ngày hiện tại 10/6/2024: Không thành công
+--CONN SV001/SV001;
+--INSERT INTO C##ADMIN.N09_DANGKY VALUES('SV001', 'NV202', 'HP001', 2, 2024, 'CLC', NULL, NULL, NULL, NULL);
+--/
 
 
 

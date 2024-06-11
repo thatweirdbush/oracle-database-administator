@@ -1523,4 +1523,62 @@ GRANT EXECUTE ON N09_DELETE_DANGKY TO PUBLIC;
 
 
 
+----------------------------------------------------------------
+-- Stored Procedure DELETE NHANSU 
+-- Tham số truyền vào: MANV
+-- Tham số optional: Không
+----------------------------------------------------------------
+CREATE OR REPLACE PROCEDURE N09_DELETE_NHANSU(
+    STR_MANV IN VARCHAR2)
+IS
+BEGIN
+    EXECUTE IMMEDIATE 'DELETE FROM C##ADMIN.N09_NHANSU WHERE MANV = :1'
+                        USING STR_MANV;
+END;
+/
+
+-- Gán quyền thực thi thủ tục trên cho tất cả user
+GRANT EXECUTE ON N09_DELETE_NHANSU TO PUBLIC;
+/
+
+---- Test
+--CONN NV001/NV001;
+--SELECT * FROM C##ADMIN.N09_NHANSU;
+--EXECUTE C##ADMIN.N09_DELETE_NHANSU('NV201');
+--/
+
+
+
+----------------------------------------------------------------
+-- Stored Procedure DELETE PHANCONG 
+-- Tham số truyền vào: MAGV, MAHP, HK, NAM, MACT
+-- Tham số optional: Không
+----------------------------------------------------------------
+CREATE OR REPLACE PROCEDURE N09_DELETE_PHANCONG(
+    STR_MAGV IN VARCHAR2,
+    STR_MAHP IN VARCHAR2,
+    STR_HK IN NUMBER,
+    STR_NAM IN NUMBER,
+    STR_MACT IN VARCHAR2)
+IS
+BEGIN
+    EXECUTE IMMEDIATE 'DELETE FROM C##ADMIN.N09_PHANCONG WHERE MAGV = :1 AND MAHP = :2 AND HK = :3 AND NAM = :4 AND MACT = :5'
+                        USING STR_MAGV, STR_MAHP, STR_HK, STR_NAM, STR_MACT;
+END;
+/
+
+-- Gán quyền thực thi thủ tục trên cho tất cả user
+GRANT EXECUTE ON N09_DELETE_PHANCONG TO PUBLIC;
+/
+
+---- Test
+--CONN NV301/NV301;
+--SELECT * FROM C##ADMIN.N09_PHANCONG;
+--EXECUTE C##ADMIN.N09_DELETE_PHANCONG('NV201', 'HP001', 1, 2024, 'CQ');
+--/
+
+
+
+
+
 

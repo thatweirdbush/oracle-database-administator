@@ -207,9 +207,6 @@ namespace oracle_database_administator.Ministry
 
             if (result == -1)
             {
-                // Delete the selected registration from database
-                Db.DeleteRegistration(selectedRegistration);
-
                 // Update the binding source
                 Table_DangKy.ItemsSource = MainViewModel.Registrations;
                 selectedRegistration = null;

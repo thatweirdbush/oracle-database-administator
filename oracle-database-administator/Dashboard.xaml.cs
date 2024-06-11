@@ -1,4 +1,5 @@
 ﻿using Oracle.ManagedDataAccess.Client;
+using oracle_database_administator.DepartmentHead;
 using oracle_database_administator.Ministry;
 using oracle_database_administator.Role;
 using oracle_database_administator.Staff;
@@ -62,14 +63,14 @@ namespace oracle_database_administator
                     }
                 case "N09_RL_TRUONG_DONVI":
                     {
-                        //MinistryDashboard ministryDashboard = new MinistryDashboard();
-                        //NavigationService.Navigate(ministryDashboard);
+                        //DepartmentUnitDashboard departmentUnitDashboard = new DepartmentUnitDashboard();
+                        //NavigationService.Navigate(departmentUnitDashboard);
                         break;
                     }
                 case "N09_RL_TRUONG_KHOA":
                     {
-                        //MinistryDashboard ministryDashboard = new MinistryDashboard();
-                        //NavigationService.Navigate(ministryDashboard);
+                        DepartmentHeadDashboard departmentHeadDashboard = new DepartmentHeadDashboard();
+                        NavigationService.Navigate(departmentHeadDashboard);
                         break;
                     }
                 case "N09_RL_SINHVIEN":

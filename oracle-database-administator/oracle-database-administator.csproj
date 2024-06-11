@@ -117,6 +117,9 @@
       <DependentUpon>Dashboard.xaml</DependentUpon>
     </Compile>
     <Compile Include="Database.cs" />
+    <Compile Include="DepartmentHead\DepartmentHeadDashboard.xaml.cs">
+      <DependentUpon>DepartmentHeadDashboard.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Ministry\MinistryDashboard.xaml.cs">
       <DependentUpon>MinistryDashboard.xaml</DependentUpon>
     </Compile>
@@ -162,6 +165,10 @@
       <DependentUpon>ViewUserList.xaml</DependentUpon>
     </Compile>
     <Page Include="Dashboard.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DepartmentHead\DepartmentHeadDashboard.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -327,7 +334,6 @@
     <Resource Include="images\graduate.png" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="DepartmentHead\" />
     <Folder Include="UnitHead\" />
   </ItemGroup>
   <ItemGroup>

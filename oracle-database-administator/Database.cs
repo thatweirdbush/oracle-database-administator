@@ -560,6 +560,8 @@ namespace oracle_database_administator
         public string INSERT_REGISTRATION = $"{ADMIN_PREFIX}INSERT_DANGKY";
         public string UPDATE_REGISTRATION = $"{ADMIN_PREFIX}UPDATE_DANGKY";
         public string DELETE_REGISTRATION = $"{ADMIN_PREFIX}DELETE_DANGKY";
+        public string DELETE_PERSONNEL = $"{ADMIN_PREFIX}DELETE_NHANSU";
+        public string DELETE_ASSIGNMENT= $"{ADMIN_PREFIX}DELETE_PHANCONG";
 
 
 
@@ -1407,7 +1409,7 @@ namespace oracle_database_administator
         }
 
         /// <summary>
-        /// Delete assignment from database
+        /// Delete registration from database
         /// </summary>
         /// <param name="registration"></param>
         /// <returns>-1 if success</returns>
@@ -1431,6 +1433,53 @@ namespace oracle_database_administator
             catch (Exception ex)
             {
                 MessageBox.Show("Error: " + ex.Message, "Delete Registration Error", MessageBoxButton.OK, MessageBoxImage.Information);
+                return 0;
+            }
+        }
+
+        /// <summary>
+        /// Delete personnel from database
+        /// </summary>
+        /// <param name="personnel"></param>
+        /// <returns>-1 if success</returns>
+        public int DeletePersonnel(Personnel personnel)
+        {
+            try
+            {
+                using (OracleCommand command = new OracleCommand(DELETE_PERSONNEL, Connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("STR_MANV", OracleDbType.Varchar2).Value = personnel.MANV;
+
+                    return command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message, "Delete Personnel Error", MessageBoxButton.OK, MessageBoxImage.Information);
+                return 0;
+            }
+        }
+
+        public int DeleteAssignment(Assignment assignment)
+        {
+            try
+            {
+                using (OracleCommand command = new OracleCommand(DELETE_ASSIGNMENT, Connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("STR_MAGV", OracleDbType.Varchar2).Value = assignment.MAGV;
+                    command.Parameters.Add("STR_MAHP", OracleDbType.Varchar2).Value = assignment.MAHP;
+                    command.Parameters.Add("STR_HK", OracleDbType.Int64).Value = assignment.HK;
+                    command.Parameters.Add("STR_NAM", OracleDbType.Int64).Value = assignment.NAM;
+                    command.Parameters.Add("STR_MACT", OracleDbType.Varchar2).Value = assignment.MACT;
+
+                    return command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message, "Delete Assignment Error", MessageBoxButton.OK, MessageBoxImage.Information);
                 return 0;
             }
         }
