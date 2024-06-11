@@ -46,7 +46,7 @@
             </Button.Effect>
         </Button>
 
-        <Button Grid.Column="1" x:Name="DsNhanSu" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="22" BorderThickness="0" Height="50" Width="184" Click="DsNhanSu_Click" VerticalAlignment="Bottom" HorizontalAlignment="Left" Cursor="Hand" >
+        <Button Grid.Column="1" x:Name="TTCaNhan" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="22" BorderThickness="0" Height="50" Width="184" Click="DsNhanSu_Click" VerticalAlignment="Bottom" HorizontalAlignment="Left" Cursor="Hand" >
             <Button.Resources>
                 <Style TargetType="{x:Type Border}">
                     <Setter Property="CornerRadius" Value="24,24,0,0"/>
@@ -150,9 +150,9 @@
             <!-- Default Grid - Danh sách Nhân sự -->
             <Grid x:Name="Grid_Personnel" Visibility="Visible" Grid.ColumnSpan="2">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="4*" />
-                    <RowDefinition Height="20*" />
-                    <RowDefinition Height="*" />
+                    <RowDefinition Height="4*"/>
+                    <RowDefinition Height="20*"/>
+                    <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
                 <Grid.ColumnDefinitions>
@@ -201,7 +201,7 @@
                     </DataGrid.RowStyle>
                 </DataGrid>
 
-                <!-- Button - Xem Danh sách Nhân sự-->
+                <!-- Button - Xem Thông tin Cá nhân-->
                 <Button Grid.Column="1" x:Name="Button_MyProfile" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="22" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="50" Width="160" Click="Button_MyProfile_Click" Margin="0,-75,0,0" HorizontalAlignment="Right" VerticalAlignment="Top" Cursor="Hand" Grid.ColumnSpan="2" >
                     <Button.Resources>
                         <Style TargetType="{x:Type Border}">

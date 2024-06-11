@@ -227,12 +227,7 @@ namespace oracle_database_administator.DepartmentHead
             // Delete the registration from the database
             int result = Db.DeleteAssignment(selectedAssignment);
 
-            // Check if the row still exists
-            if (Db.IsExistAssignment(selectedAssignment))
-            {
-                MessageBox.Show("No permission to delete this row!", "Delete Denied", MessageBoxButton.OK, MessageBoxImage.Information);
-                return;
-            }
+            // No need to check exist afrer delete because the store procedure is set to return exception in all cases
 
             // Update the binding source
             Table_PhanCong.ItemsSource = MainViewModel.Assignments;
@@ -255,12 +250,7 @@ namespace oracle_database_administator.DepartmentHead
             // Delete the registration from the database
             int result = Db.DeletePersonnel(selectedPersonnel);
 
-            // Check if the row still exists
-            if (Db.IsExistPersonnel(selectedPersonnel.MANV))
-            {
-                MessageBox.Show("No permission to delete this row!", "Delete Denied", MessageBoxButton.OK, MessageBoxImage.Information);
-                return;
-            }
+            // No need to check exist afrer delete because the store procedure is set to return exception in all cases
 
             // Update the binding source
             Table_DsNhanSu.ItemsSource = MainViewModel.Personnels;

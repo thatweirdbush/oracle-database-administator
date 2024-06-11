@@ -148,6 +148,9 @@
     <Compile Include="Teacher\TeacherDashboard.xaml.cs">
       <DependentUpon>TeacherDashboard.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UnitHead\UnitHeadDashboard.xaml.cs">
+      <DependentUpon>UnitHeadDashboard.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UniversityDashboard.xaml.cs">
       <DependentUpon>UniversityDashboard.xaml</DependentUpon>
     </Compile>
@@ -224,6 +227,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Teacher\TeacherDashboard.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UnitHead\UnitHeadDashboard.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -333,9 +340,7 @@
     <Resource Include="images\cloud-database.png" />
     <Resource Include="images\graduate.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="UnitHead\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Resource Include="images\tick.png" />
   </ItemGroup>

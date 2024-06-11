@@ -372,6 +372,7 @@ namespace oracle_database_administator.Ministry
                     }
                     // Update the binding source to the previous value
                     Table_DangKy.ItemsSource = MainViewModel.Registrations;
+
                 }, System.Windows.Threading.DispatcherPriority.Background);
             }
         }

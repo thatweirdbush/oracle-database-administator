@@ -5,6 +5,7 @@ using oracle_database_administator.Role;
 using oracle_database_administator.Staff;
 using oracle_database_administator.Student;
 using oracle_database_administator.Teacher;
+using oracle_database_administator.UnitHead;
 using oracle_database_administator.User;
 using System;
 using System.Collections.Generic;
@@ -63,8 +64,8 @@ namespace oracle_database_administator
                     }
                 case "N09_RL_TRUONG_DONVI":
                     {
-                        //DepartmentUnitDashboard departmentUnitDashboard = new DepartmentUnitDashboard();
-                        //NavigationService.Navigate(departmentUnitDashboard);
+                        UnitHeadDashboard departmentUnitDashboard = new UnitHeadDashboard();
+                        NavigationService.Navigate(departmentUnitDashboard);
                         break;
                     }
                 case "N09_RL_TRUONG_KHOA":

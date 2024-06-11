@@ -212,6 +212,7 @@ namespace oracle_database_administator.Teacher
                     var regist = e.Row.Item as Registration;
                     int result = 0;
 
+                    // Only UPDATE (Diem)
                     result = Db.UpdateRegistration(regist);
                     MessageBox.Show("Executed!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
 

@@ -152,12 +152,18 @@ BEGIN
     IF INSTR(USERNAME, 'NV2') > 0 THEN
         RETURN 'MAGV = ''' || USERNAME || '''';
     
-    -- Các nhân sự có mã NV thuộc về Trưởng đơn vị (vd: NV101)
+    -- Các nhân sự có mã NV thuộc về Trưởng đơn vị (vd: NV101):
+    -- Xem dữ liệu phân công giảng dạy của các giảng viên thuộc đơn vị mà mình làm trưởng (4b.)
+    -- VÀ các học phần được phụ trách chuyên môn bởi đơn vị mà mình làm trưởng (4c.)
     ELSIF INSTR(USERNAME, 'NV1') > 0 THEN
         RETURN 'MAGV IN (SELECT ns.MANV
                          FROM N09_NHANSU ns
                          JOIN N09_DONVI dv ON ns.MADV = dv.MADV
-                         WHERE dv.TRGDV = ''' || USERNAME || ''')';
+                         WHERE dv.TRGDV = ''' || USERNAME || ''')
+               OR MAHP IN (SELECT hp.MAHP
+                           FROM N09_HOCPHAN hp
+                           JOIN N09_DONVI dv ON hp.MADV = dv.MADV
+                           WHERE dv.TRGDV = ''' || USERNAME || ''')';
     ELSE
         RETURN NULL;
     END IF;
@@ -491,7 +497,7 @@ GRANT SELECT ON UV_N09_KHMO TO N09_RL_TRUONG_DONVI;
 
 -- 2c. Xem dữ liệu trên quan hệ ĐANGKY liên quan đến các lớp học phần mà giảng viên được phân công giảng dạy.
 -- <NOTE>
--- Vì Trưởng đơn vị không tham gia giảng dạy (không có MAGV) nên khi xem View này sẽ không có dữ liệu.
+-- Vì Trưởng đơn vị không tham gia giảng dạy (không có MAGV) nên khi xem View/Table này sẽ không có dữ liệu.
 -- </NOTE>
 GRANT SELECT ON UV_N09_DANGKY TO N09_RL_TRUONG_DONVI;
 GRANT SELECT ON N09_DANGKY TO N09_RL_TRUONG_DONVI;
@@ -512,11 +518,11 @@ GRANT SELECT ON N09_DANGKY TO N09_RL_TRUONG_DONVI;
 GRANT UPDATE (DIEMTH, DIEMQT, DIEMCK, DIEMTK) ON N09_DANGKY TO N09_RL_TRUONG_DONVI;
 /
 
--- -- Test
--- -- Cập nhật dữ liệu trên quan hệ ĐANGKY: Không thành công
--- CONN NV101/NV101;
--- UPDATE C##ADMIN.N09_DANGKY SET DIEMTH = 10, DIEMQT = 10, DIEMCK = 10, DIEMTK = 10 WHERE MASV = 'SV001' AND MAHP = 'HP001' AND HK = 1 AND NAM = 2024 AND MACT = 'CQ';
--- /
+---- Test
+---- Cập nhật dữ liệu trên quan hệ ĐANGKY: Không thành công
+--CONN NV101/NV101;
+--UPDATE C##ADMIN.N09_DANGKY SET DIEMTH = 10, DIEMQT = 10, DIEMCK = 10, DIEMTK = 10 WHERE MASV = 'SV001' AND MAHP = 'HP001' AND HK = 1 AND NAM = 2024 AND MACT = 'CQ';
+--/
 
 
 -----------------------------------------------------------------
@@ -609,7 +615,7 @@ GRANT INSERT, DELETE, UPDATE ON N09_PHANCONG TO N09_RL_TRUONG_DONVI;
 --
 ---- INSERT thành công
 --CONN NV102/NV102;
---INSERT INTO C##ADMIN.N09_PHANCONG VALUES('NV220', 'HP007', 1, 2024, 'CTTT');
+--INSERT INTO C##ADMIN.N09_PHANCONG VALUES('NV220', 'HP003', 1, 2024, 'CQ');
 --/
 --
 ---- DELETE KHÔNG thành công
@@ -619,7 +625,7 @@ GRANT INSERT, DELETE, UPDATE ON N09_PHANCONG TO N09_RL_TRUONG_DONVI;
 --
 --CONN NV102/NV102;
 ---- DELETE thành công
---DELETE FROM C##ADMIN.N09_PHANCONG WHERE MAGV = 'NV220' AND MAHP = 'HP007' AND HK = 1 AND NAM = 2024 AND MACT = 'CTTT';
+--DELETE FROM C##ADMIN.N09_PHANCONG WHERE MAGV = 'NV220' AND MAHP = 'HP003' AND HK = 1 AND NAM = 2024 AND MACT = 'CQ';
 --/
 
 
@@ -656,32 +662,9 @@ GRANT SELECT ON N09_NHANSU TO N09_RL_TRUONG_KHOA;
 
 
 -- 1a.(cont). Có thể chỉnh sửa số điện thoại (ĐT) của chính mình (nếu số điện thoại có thay đổi).
--- Tạo trigger khi UPDATE số điện thoại (DT) của chính mình
 -- <NOTE>
--- A. Vì Trưởng khoa được xem dữ liệu trên toàn bộ lược đồ CSDL phải kiểm tra khi UPDATE số điện thoại
--- B. Trong Trigger không được dùng lại table/view của cùng tên table đang cài trigger
--- nếu không sẽ gặp lỗi `ORA-04091: table is mutating, trigger/function may not see it error during execution of oracle trigger`
+-- A. Vì Trưởng khoa CÓ TOÀN QUYỀN thao tác dữ liệu trên bảng NHANSU nên không cần kiểm tra cột DT.
 -- </NOTE>
-CREATE OR REPLACE TRIGGER N09_TRG_UPDATE_SDT_NHANSU_BY_TRUONGKHOA
-AFTER UPDATE OF DT ON N09_NHANSU
-FOR EACH ROW
-DECLARE
-    l_is_truongdonvi NUMBER;
-BEGIN
-    -- Kiểm tra nếu người dùng hiện tại là Trưởng khoa
-    SELECT COUNT (*)    
-    INTO l_is_truongdonvi
-    FROM USER_ROLE_PRIVS
-    WHERE GRANTED_ROLE = 'N09_RL_TRUONG_KHOA';
-
-    IF l_is_truongdonvi > 0 THEN
-        IF SYS_CONTEXT('userenv', 'session_user') <> :OLD.MANV THEN
-            RAISE_APPLICATION_ERROR(-20001, 'Bạn không thể thay đổi số điện thoại của người khác.');
-        END IF;
-    END IF;
-END;
-/
-
 GRANT UPDATE (DT) ON N09_NHANSU TO N09_RL_TRUONG_KHOA;
 /
 
@@ -694,16 +677,6 @@ GRANT UPDATE (DT) ON N09_NHANSU TO N09_RL_TRUONG_KHOA;
 ---- UPDATE SDT của chính mình: Thành công
 --CONN NV001/NV001;
 --UPDATE C##ADMIN.N09_NHANSU SET DT = '0987654321' WHERE MANV = 'NV001';
---/
---
----- UPDATE các trường khác của chính mình: Không thành công
---CONN NV001/NV001;
---UPDATE C##ADMIN.N09_NHANSU SET HOTEN = 'Phạm Nguyễn Phúc Bảo' WHERE MANV = 'NV001';
---/
---
----- UPDATE SDT của người khác: Không thành công
---CONN NV001/NV001;
---UPDATE C##ADMIN.N09_NHANSU SET DT = '0987654321' WHERE MANV = 'NV101';
 --/
 
 
