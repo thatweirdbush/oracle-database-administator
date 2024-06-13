@@ -11,7 +11,7 @@
 ----------------------------------------------------------------
 -- Tạo User ADMIN với quyền hạn gần tương đương SYS
 ----------------------------------------------------------------
--- Xóa user ADMIN nếu trước khi tạo mới lại
+-- Xóa user ADMIN trước khi tạo mới lại
 ALTER SESSION SET "_ORACLE_SCRIPT" = TRUE;
 DROP USER C##ADMIN CASCADE;
 /

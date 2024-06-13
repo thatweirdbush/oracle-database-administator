@@ -60,7 +60,7 @@
                 <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
             </Button.Effect>
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Thông tin Cá nhân" FontSize="18" FontFamily="Segoe UI Semibold"/>
+                <TextBlock Text="Standard Audit" FontSize="18" FontFamily="Segoe UI Semibold"/>
             </StackPanel>
         </Button>
 
@@ -77,7 +77,7 @@
                 <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
             </Button.Effect>
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Thông tin Đơn vị" FontSize="18"/>
+                <TextBlock Text="Fine-grained Audit" FontSize="18"/>
             </StackPanel>
 
         </Button>

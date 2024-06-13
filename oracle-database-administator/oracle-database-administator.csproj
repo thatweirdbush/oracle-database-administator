@@ -139,6 +139,15 @@
     <Compile Include="Role\ViewRoleList.xaml.cs">
       <DependentUpon>ViewRoleList.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SecurityAdmin\BackupAndRecovery.xaml.cs">
+      <DependentUpon>BackupAndRecovery.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SecurityAdmin\SecurityAdminDashboard.xaml.cs">
+      <DependentUpon>SecurityAdminDashboard.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SecurityAdmin\SystemLog.xaml.cs">
+      <DependentUpon>SystemLog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Staff\StaffDashboard.xaml.cs">
       <DependentUpon>StaffDashboard.xaml</DependentUpon>
     </Compile>
@@ -176,6 +185,18 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Ministry\MinistryDashboard.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SecurityAdmin\BackupAndRecovery.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SecurityAdmin\SecurityAdminDashboard.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SecurityAdmin\SystemLog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -2,6 +2,7 @@
 using oracle_database_administator.DepartmentHead;
 using oracle_database_administator.Ministry;
 using oracle_database_administator.Role;
+using oracle_database_administator.SecurityAdmin;
 using oracle_database_administator.Staff;
 using oracle_database_administator.Student;
 using oracle_database_administator.Teacher;
@@ -78,6 +79,12 @@ namespace oracle_database_administator
                     {
                         StudentDashboard studentDashboard = new StudentDashboard();
                         NavigationService.Navigate(studentDashboard);
+                        break;
+                    }
+                case "N09_RL_SEC_MGR":
+                    {
+                        SecurityAdminDashboard securityAdminDashboard = new SecurityAdminDashboard();
+                        NavigationService.Navigate(securityAdminDashboard);
                         break;
                     }
                 default:
