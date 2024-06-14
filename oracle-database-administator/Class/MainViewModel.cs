@@ -17,7 +17,7 @@ namespace oracle_database_administator.Class
         private OracleConnection conn = Database.Instance.Connection;
         private Database Db = Database.Instance;
 
-        // Data context
+        // Common data context
         private ObservableCollection<Student> _students;
         private ObservableCollection<Personnel> _personnels;
         private ObservableCollection<Assignment> _assignments;
@@ -25,6 +25,11 @@ namespace oracle_database_administator.Class
         private ObservableCollection<Subject> _subjects;
         private ObservableCollection<Unit> _units;
         private ObservableCollection<CourseOpeningPlan> _courseOpeningPlans;
+
+        // Metadata context
+        private ObservableCollection<StandardAudit> standardAudits;
+        private ObservableCollection<FGA> fgas;
+        private ObservableCollection<AuditObject> auditObjects;
 
 
         public ObservableCollection<Student> Students
@@ -101,6 +106,36 @@ namespace oracle_database_administator.Class
             {
                 _courseOpeningPlans = value;
                 OnPropertyChanged("CourseOpeningPlan");
+            }
+        }
+
+        public ObservableCollection<StandardAudit> StandardAudits
+        {
+            get { return Db.LoadDataContext<StandardAudit>(Db.STANDARD_AUDIT); }
+            set
+            {
+                standardAudits = value;
+                OnPropertyChanged("StandardAudit");
+            }
+        }
+
+        public ObservableCollection<FGA> FGAs
+        {
+            get { return Db.LoadDataContext<FGA>(Db.FGA); }
+            set
+            {
+                fgas = value;
+                OnPropertyChanged("FGA");
+            }
+        }
+
+        public ObservableCollection<AuditObject> AuditObjects
+        {
+            get { return Db.LoadDataContext<AuditObject>(Db.AUDIT_OBJECTS); }
+            set
+            {
+                auditObjects = value;
+                OnPropertyChanged("AuditObject");
             }
         }
 

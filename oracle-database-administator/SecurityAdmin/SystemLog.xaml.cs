@@ -24,7 +24,6 @@ namespace oracle_database_administator.SecurityAdmin
     {
         private MainViewModel MainViewModel = MainViewModel.Instance;
         private Database Db = Database.Instance;
-        private Personnel personnel = null;
 
         public SystemLog()
         {
@@ -34,21 +33,14 @@ namespace oracle_database_administator.SecurityAdmin
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            GetUserDataContext();
-        }
-
-        private void GetUserDataContext()
-        {
-            personnel = Db.LoadSingleLineDataContext<Personnel>(Db.PERSONNELS);
-            Grid_DisplayData.DataContext = personnel;
+            ButtonStdAudit_Click(null, null);
         }
 
         private void HideAllElements()
         {
-            Grid_UserInfo.Visibility = Visibility.Collapsed;
-            Grid_Unit.Visibility = Visibility.Collapsed;
-            Grid_AcademicPlan.Visibility = Visibility.Collapsed;
-            Grid_StudentList.Visibility = Visibility.Collapsed;
+            Grid_StandardAudit.Visibility = Visibility.Hidden;
+            Grid_FGA.Visibility = Visibility.Hidden;
+            Grid_AuditObjects.Visibility = Visibility.Hidden;
         }
 
         private void LogoutButton_Click(object sender, RoutedEventArgs e)
@@ -68,99 +60,33 @@ namespace oracle_database_administator.SecurityAdmin
             }
         }
 
-        private void TTCN_Click(object sender, RoutedEventArgs e)
+        private void ButtonStdAudit_Click(object sender, RoutedEventArgs e)
         {
             HideAllElements();
-            Grid_UserInfo.Visibility = Visibility.Visible;
+            Grid_StandardAudit.Visibility = Visibility.Visible;
+            Table_StandardAudit.ItemsSource = MainViewModel.StandardAudits;
         }
 
-        private void TTDonVi_Click(object sender, RoutedEventArgs e)
+        private void ButtonFGA_Click(object sender, RoutedEventArgs e)
         {
             HideAllElements();
-            Grid_Unit.Visibility = Visibility.Visible;
-            Table_DonVi.ItemsSource = MainViewModel.Units;
+            Grid_FGA.Visibility = Visibility.Visible;
+            Table_FGA.ItemsSource = MainViewModel.FGAs;
         }
 
-        private void KHHocTap_Click(object sender, RoutedEventArgs e)
+        private void ButtonAuditObject_Click(object sender, RoutedEventArgs e)
         {
             HideAllElements();
-            Grid_AcademicPlan.Visibility = Visibility.Visible;
-            Table_KeHoachMo.Visibility = Visibility.Collapsed;
-            Table_DsHocPhan.Visibility = Visibility.Visible;
-            Table_DsHocPhan.ItemsSource = MainViewModel.Subjects;
+            Grid_AuditObjects.Visibility = Visibility.Visible;
+            Table_AuditObjects.ItemsSource = MainViewModel.AuditObjects;
         }
 
-        private void DSHocPhan_Click(object sender, RoutedEventArgs e)
-        {
-            Table_KeHoachMo.Visibility = Visibility.Collapsed;
-            Table_DsHocPhan.Visibility = Visibility.Visible;
-            Table_DsHocPhan.ItemsSource = MainViewModel.Subjects;
-        }
-
-        private void KeHoachMo_Click(object sender, RoutedEventArgs e)
-        {
-            Table_DsHocPhan.Visibility = Visibility.Collapsed;
-            Table_KeHoachMo.Visibility = Visibility.Visible;
-            Table_KeHoachMo.ItemsSource = MainViewModel.CourseOpeningPlans;
-        }
-
-        private void DSSinhVien_Click(object sender, RoutedEventArgs e)
-        {
-            HideAllElements();
-            Grid_StudentList.Visibility = Visibility.Visible;
-            Table_DsSinhVien.ItemsSource = MainViewModel.Students;
-        }
-
-        private void ThongBao_Click(object sender, RoutedEventArgs e)
+        private void Table_StandardAudit_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
         }
 
-        private void Button_EditSDT_Click(object sender, RoutedEventArgs e)
-        {
-            TextBlock_SDT.Visibility = Visibility.Collapsed;
-            TextBox_SDT.Visibility = Visibility.Visible;
-            Button_EditSDT.Visibility = Visibility.Collapsed;
-            Button_SaveSDT.Visibility = Visibility.Visible;
-            TextBox_SDT.Focus();
-        }
-
-        private void Button_SaveSDT_Click(object sender, RoutedEventArgs e)
-        {
-            // Update the database
-            string column = "DT";
-            string newPhoneNumber = TextBox_SDT.Text;
-            int result = Db.UpdateStaffPhoneNo(column, newPhoneNumber, personnel.MANV);
-
-            if (result != -1)
-                return;
-
-            // Update the binding source if necessary
-            var binding = TextBox_SDT.GetBindingExpression(TextBox.TextProperty);
-            binding?.UpdateSource();
-
-            TextBlock_SDT.Visibility = Visibility.Visible;
-            TextBox_SDT.Visibility = Visibility.Collapsed;
-            Button_EditSDT.Visibility = Visibility.Visible;
-            Button_SaveSDT.Visibility = Visibility.Collapsed;
-        }
-
-        private void Table_DsHocPhan_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
-        }
-
-        private void Table_DonVi_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
-        }
-
-        private void Table_KeHoachMo_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
-        }
-
-        private void Table_DsSinhVien_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void Table_FGA_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
         }

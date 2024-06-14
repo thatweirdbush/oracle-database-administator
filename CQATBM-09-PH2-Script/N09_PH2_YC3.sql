@@ -27,7 +27,8 @@ Yêu cầu 3: Ghi nhật ký hệ thống
     
 ****************************************************************/
 -- Xóa user SEC_MGR trước khi tạo mới lại
-CONN SYS/244466666 AS SYSDBA
+-- Kết nối bằng quyền SYS AS SYSDBA
+--CONN SYS/244466666 AS SYSDBA
 ALTER SESSION SET "_ORACLE_SCRIPT" = TRUE;
 DROP USER SEC_MGR CASCADE;
 DROP ROLE N09_RL_SEC_MGR;
@@ -54,6 +55,55 @@ GRANT SELECT ANY DICTIONARY TO N09_RL_SEC_MGR;
 GRANT N09_RL_SEC_MGR TO SEC_MGR;
 /
 
+/***************************************************************/
+-- Tạo các View để lấy dữ liệu từ DBA_AUDIT_TRAIL và DBA_FGA_AUDIT_TRAIL (Dành để xử lý trên App)
+-- Xóa view cũ trước khi tạo mới
+DROP VIEW N09_AUDIT_TRAIL;
+DROP VIEW N09_FGA;
+DROP VIEW N09_AUDIT_OBJECTS;
+/
+
+-- Tạo View từ DBA_AUDIT_TRAIL
+CREATE OR REPLACE VIEW N09_AUDIT_TRAIL AS
+SELECT 
+    USERNAME, 
+    TO_CHAR(Timestamp, 'DD-MON-YYYY HH24:MI:SS') AS TIME, 
+    OBJ_NAME, 
+    ACTION_NAME, 
+    SQL_TEXT
+FROM DBA_AUDIT_TRAIL;
+/
+
+-- Gán quyền cho SEC_MGR
+GRANT SELECT ON N09_AUDIT_TRAIL TO SEC_MGR;
+/
+
+-- Tạo View từ DBA_FGA_AUDIT_TRAIL
+CREATE OR REPLACE VIEW N09_FGA AS
+SELECT 
+    DB_USER, 
+    TO_CHAR(Timestamp, 'DD-MON-YYYY HH24:MI:SS') AS TIME, 
+    OBJECT_NAME, 
+    STATEMENT_TYPE, 
+    SQL_TEXT
+FROM DBA_FGA_AUDIT_TRAIL;
+/
+
+-- Gán quyền cho SEC_MGR
+GRANT SELECT ON N09_FGA TO SEC_MGR;
+/
+
+-- Tạo View từ DBA_OBJ_AUDIT_OPTS
+CREATE OR REPLACE VIEW N09_AUDIT_OBJECTS AS
+SELECT *
+FROM DBA_OBJ_AUDIT_OPTS
+WHERE OWNER = 'C##ADMIN'
+/
+
+-- Gán quyền cho SEC_MGR
+GRANT SELECT ON N09_AUDIT_OBJECTS TO SEC_MGR;
+/
+
 -- Kết nối với user mới và thực hiện script
 CONNECT SEC_MGR/123;
 /
@@ -70,27 +120,37 @@ CONNECT SEC_MGR/123;
 -- 2. Thực hiện ghi nhật ký hệ thống dùng Standard audit:
 --
 -- Standard Audit tất cả các hành vi trên Table 
-AUDIT ALL ON C##ADMIN.N09_NHANSU BY ACCESS;
-AUDIT ALL ON C##ADMIN.N09_SINHVIEN BY ACCESS;
-AUDIT ALL ON C##ADMIN.N09_DONVI BY ACCESS;
-AUDIT ALL ON C##ADMIN.N09_HOCPHAN BY ACCESS;
-AUDIT ALL ON C##ADMIN.N09_KHMO BY ACCESS;
-AUDIT ALL ON C##ADMIN.N09_PHANCONG BY ACCESS;
-AUDIT ALL ON C##ADMIN.N09_DANGKY BY ACCESS;
+AUDIT ALL ON C##ADMIN.N09_NHANSU BY ACCESS WHENEVER NOT SUCCESSFUL;
+AUDIT UPDATE, DELETE ON C##ADMIN.N09_DANGKY BY ACCESS;
+AUDIT INSERT ON C##ADMIN.N09_SINHVIEN BY ACCESS;
+AUDIT UPDATE ON C##ADMIN.N09_KHMO BY ACCESS;
+
+-- Standard Audit các hành vi trên View
+-- Không sử dụng View trong đồ án này
+
+-- Standard Audit các hành vi trên Function
+-- Chỉ mới có quyền audit trên procedure
+
+-- Standard Audit các hành vi trên Stored Procedure
+AUDIT EXECUTE ON C##ADMIN.N09_UPDATE_DANGKY BY ACCESS;
+AUDIT EXECUTE ON C##ADMIN.N09_DELETE_DANGKY BY ACCESS;
+AUDIT EXECUTE ON C##ADMIN.N09_INSERT_SINHVIEN BY ACCESS;
+AUDIT EXECUTE ON C##ADMIN.N09_UPDATE_KHMO BY ACCESS;
 /
 
--- Standard Audit tất cả các hành vi trên Stored Procedure và Function
-BEGIN
-    FOR REC IN (
-        SELECT OBJECT_NAME, OBJECT_TYPE
-        FROM ALL_OBJECTS
-        WHERE OWNER = 'N09_RL_SEC_MGR'
-        AND OBJECT_TYPE IN ('PROCEDURE', 'FUNCTION')
-    ) LOOP
-        EXECUTE IMMEDIATE 'AUDIT EXECUTE ON N09_RL_SEC_MGR.' || REC.OBJECT_NAME || ' BY ACCESS';
-    END LOOP;
-END;
-/
+---- Standard Audit tất cả các hành vi trên Stored Procedure và Function
+-- BEGIN
+--     FOR REC IN (
+--         SELECT OBJECT_NAME, OBJECT_TYPE
+--         FROM ALL_OBJECTS
+--         WHERE OWNER = 'C##ADMIN'
+--         AND OBJECT_TYPE IN ('PROCEDURE', 'FUNCTION')
+--     ) LOOP
+--         EXECUTE IMMEDIATE 'AUDIT EXECUTE ON C##ADMIN.' || REC.OBJECT_NAME || ' BY ACCESS';
+--     END LOOP;
+-- END;
+-- /
+
 
 ---- Tạo ngữ cảnh để có thể ghi vết được (Gỡ comment để thực hiện)
 --CONN SV001/SV001;
@@ -117,7 +177,7 @@ END;
 --/
 
 -- Xem dữ liệu Standard Audit
-SELECT USERNAME, TO_CHAR(Timestamp, 'DD-MON-YYYY HH24:MI:SS') AS AUDIT_TIME, OWNER, OBJ_NAME, ACTION_NAME, SQL_TEXT 
+SELECT USERNAME, TO_CHAR(Timestamp, 'DD-MON-YYYY HH24:MI:SS') AS TIME, OBJ_NAME, ACTION_NAME, SQL_TEXT
 FROM DBA_AUDIT_TRAIL
 WHERE OBJ_NAME LIKE '%N09%';
 /
@@ -127,7 +187,8 @@ DELETE FROM SYS.AUD$;
 DELETE FROM SYS.FGA_LOG$;
 COMMIT;
 
-
+SELECT * FROM SYS.N09_AUDIT_TRAIL
+SELECT * FROM SYS.N09_FGA
 
 /***************************************************************
 3. Thực hiện Fine-grained Audit các tình huống sau và tạo ngữ cảnh để có thể ghi vết
@@ -180,7 +241,9 @@ END;
 --/
 
 -- Kiểm tra việc ghi dữ liệu FGA (1 row - DB_USER: NV001)
-SELECT * FROM DBA_FGA_AUDIT_TRAIL;
+SELECT DB_USER, TO_CHAR(Timestamp, 'DD-MON-YYYY HH24:MI:SS') AS TIME, OBJECT_NAME, STATEMENT_TYPE, SQL_TEXT
+FROM DBA_FGA_AUDIT_TRAIL
+WHERE OBJECT_NAME LIKE '%N09%';
 /
 
 
@@ -234,14 +297,10 @@ SELECT * FROM DBA_FGA_AUDIT_TRAIL;
 3. Kiểm tra (đọc xuất) dữ liệu nhật ký hệ thống.
 
 ****************************************************************/ 
--- COLUMN USERNAME FORMAT A9
--- COLUMN OWNER FORMAT A5
--- COLUMN OBJ_NAME FORMAT A10
--- COLUMN ACTION_NAME FORMAT A11
--- COLUMN SQL_TEXT FORMAT A40
+-- Các TEST ở trên đã thực hiện việc kiểm tra dữ liệu nhật ký hệ thống
 
--- <NOTE>
--- NOT FINISHED
--- </NOTE>
+
+
+
 
 

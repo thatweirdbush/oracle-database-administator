@@ -563,7 +563,10 @@ namespace oracle_database_administator
         public string DELETE_PERSONNEL = $"{ADMIN_PREFIX}DELETE_NHANSU";
         public string DELETE_ASSIGNMENT= $"{ADMIN_PREFIX}DELETE_PHANCONG";
 
-
+        // Table's name for Security Admin
+        public string STANDARD_AUDIT = $"{COMBINED_PREFIX}AUDIT_TRAIL";
+        public string FGA = $"{COMBINED_PREFIX}FGA";
+        public string AUDIT_OBJECTS = $"{COMBINED_PREFIX}AUDIT_OBJECTS";
 
 
 
