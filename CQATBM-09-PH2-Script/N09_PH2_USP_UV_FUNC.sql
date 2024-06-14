@@ -1579,59 +1579,6 @@ GRANT EXECUTE ON N09_DELETE_PHANCONG TO PUBLIC;
 
 
 
-----------------------------------------------------------------
--- Stored Procedure SELECT AUDIT TRAIL (Dành cho SEC_MGR)
--- Tham số truyền vào: Không
--- Tham số optional: Không
-----------------------------------------------------------------
-CREATE OR REPLACE PROCEDURE N09_SELECT_AUDIT_TRAIL(
-    OUTPUT OUT SYS_REFCURSOR)
-AS
-BEGIN
-    OPEN OUTPUT FOR 'SELECT DB_USER, TO_CHAR(Timestamp, ''DD-MON-YYYY HH24:MI:SS'') AS TIME, OBJECT_NAME, STATEMENT_TYPE, SQL_TEXT
-                        FROM DBA_FGA_AUDIT_TRAIL
-                        WHERE SQL_TEXT LIKE ''%N09%''';
-END;
-/
-
--- Gán quyền thực thi thủ tục trên cho SEC_MGR
-GRANT EXECUTE ON N09_SELECT_AUDIT_TRAIL TO SEC_MGR;
-/
-
----- Test
--- CONN SEC_MGR/123;
--- VARIABLE rc REFCURSOR;
--- EXECUTE C##ADMIN.N09_SELECT_AUDIT_TRAIL(:rc);
--- PRINT rc;
--- /
-
-
-
-----------------------------------------------------------------
--- Stored Procedure SELECT FINE-GRAINED AUDIT TRAIL (Dành cho SEC_MGR)
--- Tham số truyền vào: Không
--- Tham số optional: Không
-----------------------------------------------------------------
-CREATE OR REPLACE PROCEDURE N09_SELECT_FGA(
-    OUTPUT OUT SYS_REFCURSOR)
-AS
-BEGIN
-    OPEN OUTPUT FOR 'SELECT DB_USER, TO_CHAR(TIMESTAMP, ''DD-MON-YYYY HH24:MI:SS'') AS TIME, OBJECT_NAME, STATEMENT_TYPE, SQL_TEXT
-                        FROM DBA_FGA_AUDIT_TRAIL
-                        WHERE SQL_TEXT LIKE ''%N09%''';
-END;
-/
-
--- Gán quyền thực thi thủ tục trên cho SEC_MGR
-GRANT EXECUTE ON N09_SELECT_FGA TO SEC_MGR;
-/
-
----- Test
-CONN SEC_MGR/123;
-VARIABLE rc REFCURSOR;
-EXECUTE C##ADMIN.N09_SELECT_FGA(:rc);
-PRINT rc;
-/
 
 
 
