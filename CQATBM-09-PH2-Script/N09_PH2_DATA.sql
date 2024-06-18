@@ -8,8 +8,8 @@
 
 
 
--- CONNECT vào C##ADMIN để tạo CSDL trên Schema C##ADMIN 
-CONN C##ADMIN/123@//localhost:1521/TEST;
+-- CONNECT vào N09_ADMIN để tạo CSDL trên Schema N09_ADMIN 
+CONN N09_ADMIN/123@//localhost:1521/PDB_N09;
 ----------------------------------------------------------------
 -- Chèn dữ liệu vào bảng N09_DONVI
 ----------------------------------------------------------------

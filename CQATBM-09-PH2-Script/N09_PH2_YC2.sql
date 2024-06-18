@@ -26,17 +26,6 @@ Yêu cầu 2: Vận dụng mô hình điều khiển truy cập OLS
     để hệ thống có thể đáp ứng các yêu cầu sau. Đồng thời, cài đặt chức năng minh hoạ trên ứng dụng.
 
 ****************************************************************/
--- Chuyển đổi sang PDB để có thể thực hiện OLS vì hạn chế của Oracle 21C XE
-ALTER PLUGGABLE DATABASE TEST OPEN;
-ALTER SESSION SET CONTAINER = TEST;
-ALTER SESSION SET "_ORACLE_SCRIPT" = TRUE;
-/
-
--- Xem tên PDB & tên container hiện tại
-SELECT name, pdb FROM v$services ORDER BY name;
-SHOW CON_NAME;
-/
-
 -- Kiểm tra xem OLS đã được cài đặt chưa
 SELECT * FROM DBA_REGISTRY WHERE COMP_ID = 'OLS';
 /
@@ -51,33 +40,33 @@ END;
 /
 
 /***************************************************************
-Connect to LBACSYS user to grant the necessary privileges to the C##ADMIN user.
-    The C##ADMIN user will perform all the OLS administration duties.
+Connect to LBACSYS user to grant the necessary privileges to the N09_ADMIN user.
+    The N09_ADMIN user will perform all the OLS administration duties.
         The following privileges are therefore required:
 
 ****************************************************************/
 ALTER USER LBACSYS IDENTIFIED BY LBACSYS ACCOUNT UNLOCK;
-CONN LBACSYS/LBACSYS;
-GRANT EXECUTE ON SA_COMPONENTS TO C##ADMIN;
-GRANT EXECUTE ON SA_LABEL_ADMIN TO C##ADMIN;
-GRANT EXECUTE ON SA_USER_ADMIN TO C##ADMIN;
-GRANT EXECUTE ON SA_POLICY_ADMIN TO C##ADMIN;
-GRANT EXECUTE ON SA_AUDIT_ADMIN TO C##ADMIN;
-GRANT EXECUTE ON CHAR_TO_LABEL TO C##ADMIN;
-GRANT EXECUTE ON SA_SYSDBA TO C##ADMIN;
-GRANT EXECUTE ON TO_LBAC_DATA_LABEL TO C##ADMIN;
-GRANT LBAC_DBA TO C##ADMIN;
+CONN LBACSYS/LBACSYS@//localhost:1521/PDB_N09;
+GRANT EXECUTE ON SA_COMPONENTS TO N09_ADMIN;
+GRANT EXECUTE ON SA_LABEL_ADMIN TO N09_ADMIN;
+GRANT EXECUTE ON SA_USER_ADMIN TO N09_ADMIN;
+GRANT EXECUTE ON SA_POLICY_ADMIN TO N09_ADMIN;
+GRANT EXECUTE ON SA_AUDIT_ADMIN TO N09_ADMIN;
+GRANT EXECUTE ON CHAR_TO_LABEL TO N09_ADMIN;
+GRANT EXECUTE ON SA_SYSDBA TO N09_ADMIN;
+GRANT EXECUTE ON TO_LBAC_DATA_LABEL TO N09_ADMIN;
+GRANT LBAC_DBA TO N09_ADMIN;
 /
 
 /***************************************************************
-Connect to C##ADMIN and Create the policy
+Connect to N09_ADMIN and Create the policy
     The policy will be created with the name "N09_POLICY_THONGBAO".
     The policy will be applied to the "N09_THONGBAO" table.
     The policy will be created with the column "ROW_LABEL".
-    The role "N09_POLICY_THONGBAO_DBA" will be granted to the C##ADMIN user.
+    The role "N09_POLICY_THONGBAO_DBA" will be granted to the N09_ADMIN user.
 
 ****************************************************************/
-CONN C##ADMIN/123@//localhost:1521/TEST;
+CONN N09_ADMIN/123@//localhost:1521/PDB_N09;
 BEGIN
     SA_SYSDBA.DROP_POLICY (
         policy_name => 'N09_POLICY_THONGBAO'
@@ -94,7 +83,7 @@ END;
 /
 
 -- Grant privs and authorization to administer the THONGBAO policy
-GRANT N09_POLICY_THONGBAO_DBA TO C##ADMIN;
+GRANT N09_POLICY_THONGBAO_DBA TO N09_ADMIN;
 /
 
 /***************************************************************
@@ -103,7 +92,7 @@ PHAN CHIA LEVEL CHO POLICY
         CHIA 6 LEVEL: Truong khoa > Truong don vi > Giang vien > Giao vu > Nhan vien > Sinh vien.
 
 ****************************************************************/
-CONN C##ADMIN/123@//localhost:1521/TEST;
+CONN N09_ADMIN/123@//localhost:1521/PDB_N09;
 BEGIN
     -- Level 9000: Truong khoa
     SA_COMPONENTS.CREATE_LEVEL(
@@ -290,7 +279,7 @@ Create the user authorizations
         “ALL_EXECS”: for executives.
 
 ****************************************************************/
-CONN C##ADMIN/123@//localhost:1521/TEST;
+CONN N09_ADMIN/123@//localhost:1521/PDB_N09;
 -- Store procedure thiết lập nhãn cho Sinh viên dựa trên vị trí (COSO) và ngành học (MANGANH)
 CREATE OR REPLACE PROCEDURE SET_LABELS_FOR_SINHVIEN AS
 BEGIN
@@ -327,7 +316,7 @@ END;
 
 -- Store procedure thiết lập nhãn cho Nhân sự dựa trên vị trí (COSO) và lĩnh vực hoạt động (ns.VAITRO & dv.TENDV)
 -- NOTE: Ngoại trừ Trưởng khoa & Trưởng đơn vị
-CONN C##ADMIN/123@//localhost:1521/TEST;
+CONN N09_ADMIN/123@//localhost:1521/PDB_N09;
 CREATE OR REPLACE PROCEDURE SET_LABELS_FOR_NHANSU AS
 BEGIN
     FOR ns_record IN (
@@ -460,33 +449,33 @@ Specific authorizations of OLS
 NOTE: This section is currently not required for the assignment.
 
 ****************************************************************/
--- -- The C##ADMIN user can now set the OLS security profile to be any one of 6 authorization “users” just defined.
--- CONN LBACSYS/LBACSYS@//localhost:1521/TEST;
--- EXECUTE SA_USER_ADMIN.SET_USER_PRIVS('N09_POLICY_THONGBAO', 'C##ADMIN', 'PROFILE_ACCESS');
--- EXECUTE SA_USER_ADMIN.SET_USER_PRIVS('N09_POLICY_THONGBAO', 'C##ADMIN', 'FULL');
+-- -- The N09_ADMIN user can now set the OLS security profile to be any one of 6 authorization “users” just defined.
+-- CONN LBACSYS/LBACSYS@//localhost:1521/PDB_N09;
+-- EXECUTE SA_USER_ADMIN.SET_USER_PRIVS('N09_POLICY_THONGBAO', 'N09_ADMIN', 'PROFILE_ACCESS');
+-- EXECUTE SA_USER_ADMIN.SET_USER_PRIVS('N09_POLICY_THONGBAO', 'N09_ADMIN', 'FULL');
 -- /
 
--- -- C##ADMIN user resets own profile to NV001 - Truong khoa
+-- -- N09_ADMIN user resets own profile to NV001 - Truong khoa
 -- EXECUTE SA_SESSION.SET_ACCESS_PROFILE('N09_POLICY_THONGBAO', 'NV001');
 -- /
 
 -- -- Test relogging
--- CONN C##ADMIN/123@//localhost:1521/TEST;
+-- CONN N09_ADMIN/123@//localhost:1521/PDB_N09;
 -- SELECT *
 -- FROM N09_THONGBAO;
 -- /
 
--- -- C##ADMIN user resets own profile to SV001 - Sinh vien
+-- -- N09_ADMIN user resets own profile to SV001 - Sinh vien
 -- EXECUTE SA_SESSION.SET_ACCESS_PROFILE('N09_POLICY_THONGBAO', 'SV001');
 
 -- -- Test relogging
--- CONN C##ADMIN/123@//localhost:1521/TEST;
+-- CONN N09_ADMIN/123@//localhost:1521/PDB_N09;
 -- SELECT *
 -- FROM N09_THONGBAO;
 -- /
 
 -- -- To get the label of the current user (NV001 - Truong khoa)
--- CONN NV001/123@//localhost:1521/TEST;
+-- CONN NV001/123@//localhost:1521/PDB_N09;
 -- COL "Read Label" format a25
 -- SELECT SA_SESSION.READ_LABEL('N09_POLICY_THONGBAO') "Read Label"
 -- FROM DUAL;
@@ -506,7 +495,7 @@ APPLY_TABLE_POLICY procedure of the SA_POLICY_ADMIN package.
 BEGIN
     SA_POLICY_ADMIN.REMOVE_TABLE_POLICY (
         policy_name     => 'N09_POLICY_THONGBAO',
-        schema_name     => 'C##ADMIN',
+        schema_name     => 'N09_ADMIN',
         table_name      => 'N09_THONGBAO');
 END;
 /
@@ -514,7 +503,7 @@ END;
 BEGIN
     SA_POLICY_ADMIN.APPLY_TABLE_POLICY(
         policy_name     => 'N09_POLICY_THONGBAO',
-        schema_name     => 'C##ADMIN',
+        schema_name     => 'N09_ADMIN',
         table_name      => 'N09_THONGBAO',
         table_options   => 'NO_CONTROL');
 END;
@@ -522,7 +511,7 @@ END;
 
 /***************************************************************
 Update the OLS labels in the THONGBAO table.
-    C##ADMIN user will set the values for records by one of the following ways:
+    N09_ADMIN user will set the values for records by one of the following ways:
         • C1: Assigns manually by using INSERT or UPDATE.
         • C2: Use the option LABEL_DEFAULT.
         • C3: Use the function to assign the labels for records automatically.
@@ -579,7 +568,7 @@ Re-applying the OLS policy (labels) to the table.
 BEGIN
     SA_POLICY_ADMIN.REMOVE_TABLE_POLICY (
         policy_name     => 'N09_POLICY_THONGBAO',
-        schema_name     => 'C##ADMIN',
+        schema_name     => 'N09_ADMIN',
         table_name      => 'N09_THONGBAO');
 END;
 /
@@ -587,7 +576,7 @@ END;
 BEGIN
     SA_POLICY_ADMIN.APPLY_TABLE_POLICY (
         policy_name     => 'N09_POLICY_THONGBAO',
-        schema_name     => 'C##ADMIN',
+        schema_name     => 'N09_ADMIN',
         table_name      => 'N09_THONGBAO',
         table_options   => 'LABEL_DEFAULT,READ_CONTROL,WRITE_CONTROL,CHECK_CONTROL');
 END;
@@ -615,33 +604,33 @@ h) Em hãy cho thêm 3 chính sách phát tán dòng dữ liệu nữa trên mô
 
 ****************************************************************/
 -- As Truong khoa
-CONN NV001/NV001@//localhost:1521/TEST;
-SELECT * FROM C##ADMIN.N09_THONGBAO;
+CONN NV001/NV001@//localhost:1521/PDB_N09;
+SELECT * FROM N09_ADMIN.N09_THONGBAO;
 /
 
 -- As Truong don vi
-CONN NV101/NV101@//localhost:1521/TEST;
-SELECT * FROM C##ADMIN.N09_THONGBAO;
+CONN NV101/NV101@//localhost:1521/PDB_N09;
+SELECT * FROM N09_ADMIN.N09_THONGBAO;
 /
 
 -- As Giang vien
-CONN NV202/NV202@//localhost:1521/TEST;
-SELECT * FROM C##ADMIN.N09_THONGBAO;
+CONN NV202/NV202@//localhost:1521/PDB_N09;
+SELECT * FROM N09_ADMIN.N09_THONGBAO;
 /
 
 -- As Giao vu
-CONN NV303/NV303@//localhost:1521/TEST;
-SELECT * FROM C##ADMIN.N09_THONGBAO;
+CONN NV303/NV303@//localhost:1521/PDB_N09;
+SELECT * FROM N09_ADMIN.N09_THONGBAO;
 /
 
 -- As Nhan vien
-CONN NV405/NV405@//localhost:1521/TEST;
-SELECT * FROM C##ADMIN.N09_THONGBAO;
+CONN NV405/NV405@//localhost:1521/PDB_N09;
+SELECT * FROM N09_ADMIN.N09_THONGBAO;
 /
 
 -- As Sinh vien
-CONN SV019/SV019@//localhost:1521/TEST;
-SELECT * FROM C##ADMIN.N09_THONGBAO;
+CONN SV019/SV019@//localhost:1521/PDB_N09;
+SELECT * FROM N09_ADMIN.N09_THONGBAO;
 /
 
 
