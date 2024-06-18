@@ -9,7 +9,7 @@
 
 
 -- CONNECT vào C##ADMIN để tạo CSDL trên Schema C##ADMIN 
-CONN C##ADMIN/123;
+CONN C##ADMIN/123@//localhost:1521/TEST;
 ----------------------------------------------------------------
 -- Script tạo các Role trong Database
 ------------------------------------------------------------------ 
@@ -150,7 +150,7 @@ BEGIN
          FETCH CUR INTO USR; 
          EXIT WHEN CUR%NOTFOUND; 
          
-         STRSQL := 'CREATE USER '|| USR ||' IDENTIFIED BY '|| USR; 
+         STRSQL := 'CREATE USER '|| USR ||' IDENTIFIED BY '|| USR || ' CONTAINER = CURRENT'; 
          EXECUTE IMMEDIATE(STRSQL); 
          STRSQL := 'GRANT CONNECT TO ' || USR; 
          EXECUTE IMMEDIATE(STRSQL); 
@@ -181,7 +181,7 @@ BEGIN
          FETCH CUR INTO USR; 
          EXIT WHEN CUR%NOTFOUND; 
          
-         STRSQL := 'CREATE USER '|| USR ||' IDENTIFIED BY '|| USR; 
+         STRSQL := 'CREATE USER '|| USR ||' IDENTIFIED BY '|| USR || ' CONTAINER = CURRENT';
          EXECUTE IMMEDIATE(STRSQL); 
          STRSQL := 'GRANT CONNECT TO ' || USR; 
          EXECUTE IMMEDIATE(STRSQL); 
@@ -1577,6 +1577,69 @@ GRANT EXECUTE ON N09_DELETE_PHANCONG TO PUBLIC;
 --EXECUTE C##ADMIN.N09_DELETE_PHANCONG('NV201', 'HP001', 1, 2024, 'CQ');
 --/
 
+
+
+
+/***************************************************************
+* Stored Procedure cấp quyền tùy chọn trên bảng THONGBAO cho tất cả Nhân sự  - YC2
+****************************************************************/
+CREATE OR REPLACE PROCEDURE N09_GRANT_NHANSU_PRIV_THONGBAO(
+    STR_PRIV IN VARCHAR2)
+AS 
+    CURSOR CUR IS (SELECT MANV
+                    FROM N09_NHANSU
+                    WHERE MANV IN (SELECT USERNAME FROM ALL_USERS)); 
+    STRSQL VARCHAR(2000); 
+    USR VARCHAR2(5); 
+BEGIN
+    FOR REC IN CUR LOOP
+        USR := REC.MANV; 
+        STRSQL := 'GRANT ' || STR_PRIV || ' ON C##ADMIN.N09_THONGBAO TO ' || USR; 
+        EXECUTE IMMEDIATE STRSQL; 
+    END LOOP; 
+END;
+/
+
+-- Gán quyền thực thi thủ tục trên cho tất cả user
+GRANT EXECUTE ON N09_GRANT_NHANSU_PRIV_THONGBAO TO PUBLIC;
+/
+
+
+
+/***************************************************************
+* Stored Procedure cấp quyền tùy chọn trên bảng THONGBAO cho tất cả Sinh viên - YC2
+****************************************************************/
+CREATE OR REPLACE PROCEDURE N09_GRANT_SINHVIEN_PRIV_THONGBAO(
+    STR_PRIV IN VARCHAR2)
+AS 
+    CURSOR CUR IS (SELECT MASV
+                    FROM N09_SINHVIEN
+                    WHERE MASV IN (SELECT USERNAME FROM ALL_USERS)); 
+    STRSQL VARCHAR(2000); 
+    USR VARCHAR2(5); 
+BEGIN
+    FOR REC IN CUR LOOP
+        USR := REC.MASV; 
+        STRSQL := 'GRANT ' || STR_PRIV || ' ON C##ADMIN.N09_THONGBAO TO ' || USR; 
+        EXECUTE IMMEDIATE STRSQL; 
+    END LOOP; 
+END;
+/
+
+-- Gán quyền thực thi thủ tục trên cho tất cả user
+GRANT EXECUTE ON N09_GRANT_NHANSU_PRIV_THONGBAO TO PUBLIC;
+/
+
+
+
+/***************************************************************
+* Thực thi Stored Procedure cấp quyền tùy chọn
+* trên bảng THONGBAO cho tất cả Nhân sự & Sinh viên - YC2
+****************************************************************/
+CONN C##ADMIN/123@//localhost:1521/TEST;
+EXEC N09_GRANT_NHANSU_PRIV_THONGBAO('SELECT');
+EXEC N09_GRANT_SINHVIEN_PRIV_THONGBAO('SELECT');
+/
 
 
 

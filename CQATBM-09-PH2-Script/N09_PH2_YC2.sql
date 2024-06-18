@@ -9,22 +9,39 @@
 
 
 /***************************************************************
-CHU Y KHONG TAO BANG N09_THONGBAO TRUOC. PHAI TAO POLICY DAU TIEN
-    TAO USER OLS_TEST
+Yêu cầu 2: Vận dụng mô hình điều khiển truy cập OLS
+    •   Giả sử nhân sự của khoa được bổ sung thêm người để vận hành tại 2 cơ sở khác nhau gồm:
+    Cơ sở 1 và Cơ sở 2. Khoa muốn thiết lập cho hệ thống chức năng phát tán thông báo, được
+    lưu ở bảng THÔNGBÁO(NỘIDUNG), đến những người dùng trong hệ thống tùy vào cấp
+    bậc, lĩnh vực hoạt động và vị trí địa lý.
+    
+    •   Cho biết nhân sự và các dòng thông báo được chia ra làm các cấp bậc sau: Trưởng khoa,
+    Trưởng đơn vị, Giảng viên, Giáo vụ và Nhân viên; Độ ưu tiên giảm dần tương ứng là: 
+    Trưởng khoa > Trưởng đơn vị > Giảng viên > Giáo vụ > Nhân viên > Sinh viên.
+
+    •   Nội dung thông báo thường tùy thuộc vào lĩnh vực hoạt động của các bộ môn có liên quan,
+    gồm: HTTT, CNPM, KHMT, CNTT, TGMT, MMT.
+
+    •   Hãy thiết lập hệ thống nhãn gồm 03 thành phần và điều chỉnh mô hình dữ liệu (nếu cần thiết)
+    để hệ thống có thể đáp ứng các yêu cầu sau. Đồng thời, cài đặt chức năng minh hoạ trên ứng dụng.
 
 ****************************************************************/
-CONN SYS/244466666@XE AS SYSDBA;
-ALTER SESSION SET CONTAINER = CDB$ROOT;
+-- Chuyển đổi sang PDB để có thể thực hiện OLS vì hạn chế của Oracle 21C XE
+ALTER PLUGGABLE DATABASE TEST OPEN;
+ALTER SESSION SET CONTAINER = TEST;
+ALTER SESSION SET "_ORACLE_SCRIPT" = TRUE;
 /
-CONN OLS_TEST/1@//localhost:1521/TEST
+
+-- Xem tên PDB & tên container hiện tại
 SELECT name, pdb FROM v$services ORDER BY name;
 SHOW CON_NAME;
 /
--- KIEM TRA XEM OLS DA DUOC CAI DAT CHUA
+
+-- Kiểm tra xem OLS đã được cài đặt chưa
 SELECT * FROM DBA_REGISTRY WHERE COMP_ID = 'OLS';
 /
--- NEU CHUA KHOI TAO OLS THI CHAY 2 DONG NAY
--- NEU KHONG THE CHAY DUOC 2 DONG NAY THI KIEM TRA XEM ORACLE 21C DA BAT DUOC OLS CHUA
+
+-- Nếu chưa, cần chạy 2 dòng dưới
 BEGIN
     -- This procedure registers Oracle Label Security.
     LBACSYS.CONFIGURE_OLS;
@@ -34,54 +51,33 @@ END;
 /
 
 /***************************************************************
-Create the OLS_TEST user
-    The OLS_TEST user will be used to create the policy and the labels.
-    The user will also be used to create the levels, compartments, and groups.
-    The user will be granted the necessary privileges to administer the policy.
-
-****************************************************************/
-CONN SYS/244466666@//localhost:1521/TEST AS SYSDBA;
-ALTER SESSION SET CONTAINER = TEST;
-/
-ALTER SESSION SET "_ORACLE_SCRIPT" = TRUE;
-/
-DROP USER OLS_TEST CASCADE;
-/
-CREATE USER OLS_TEST IDENTIFIED BY 1 CONTAINER = CURRENT
-DEFAULT TABLESPACE users
-TEMPORARY TABLESPACE temp
-/
-GRANT CONNECT, RESOURCE, SELECT_CATALOG_ROLE TO OLS_TEST;
-/
-
-/***************************************************************
-Connect to LBACSYS user to grant the necessary privileges to the OLS_TEST user.
-The SEC_MGR will perform all the OLS administration duties.
-    The following privileges are therefore required:
+Connect to LBACSYS user to grant the necessary privileges to the C##ADMIN user.
+    The C##ADMIN user will perform all the OLS administration duties.
+        The following privileges are therefore required:
 
 ****************************************************************/
 ALTER USER LBACSYS IDENTIFIED BY LBACSYS ACCOUNT UNLOCK;
 CONN LBACSYS/LBACSYS;
-GRANT EXECUTE ON SA_COMPONENTS TO OLS_TEST;
-GRANT EXECUTE ON SA_LABEL_ADMIN TO OLS_TEST;
-GRANT EXECUTE ON SA_USER_ADMIN TO OLS_TEST;
-GRANT EXECUTE ON SA_POLICY_ADMIN TO OLS_TEST;
-GRANT EXECUTE ON SA_AUDIT_ADMIN TO OLS_TEST;
-GRANT EXECUTE ON CHAR_TO_LABEL TO OLS_TEST;
-GRANT EXECUTE ON SA_SYSDBA TO OLS_TEST;
-GRANT EXECUTE ON TO_LBAC_DATA_LABEL TO OLS_TEST;
-GRANT LBAC_DBA TO OLS_TEST;
+GRANT EXECUTE ON SA_COMPONENTS TO C##ADMIN;
+GRANT EXECUTE ON SA_LABEL_ADMIN TO C##ADMIN;
+GRANT EXECUTE ON SA_USER_ADMIN TO C##ADMIN;
+GRANT EXECUTE ON SA_POLICY_ADMIN TO C##ADMIN;
+GRANT EXECUTE ON SA_AUDIT_ADMIN TO C##ADMIN;
+GRANT EXECUTE ON CHAR_TO_LABEL TO C##ADMIN;
+GRANT EXECUTE ON SA_SYSDBA TO C##ADMIN;
+GRANT EXECUTE ON TO_LBAC_DATA_LABEL TO C##ADMIN;
+GRANT LBAC_DBA TO C##ADMIN;
 /
 
 /***************************************************************
-Connect to OLS_TEST and Create the policy
+Connect to C##ADMIN and Create the policy
     The policy will be created with the name "N09_POLICY_THONGBAO".
     The policy will be applied to the "N09_THONGBAO" table.
     The policy will be created with the column "ROW_LABEL".
-    The role "N09_POLICY_THONGBAO_DBA" will be granted to the OLS_TEST user.
+    The role "N09_POLICY_THONGBAO_DBA" will be granted to the C##ADMIN user.
 
 ****************************************************************/
-CONN OLS_TEST/1@//localhost:1521/TEST;
+CONN C##ADMIN/123@//localhost:1521/TEST;
 BEGIN
     SA_SYSDBA.DROP_POLICY (
         policy_name => 'N09_POLICY_THONGBAO'
@@ -89,8 +85,6 @@ BEGIN
 END;
 /
 
-CONN OLS_TEST/1@//localhost:1521/TEST;
-CONN LBACSYS/LBACSYS@//localhost:1521/TEST;
 BEGIN
     SA_SYSDBA.CREATE_POLICY (
         policy_name => 'N09_POLICY_THONGBAO',
@@ -100,8 +94,7 @@ END;
 /
 
 -- Grant privs and authorization to administer the THONGBAO policy
-CONN LBACSYS/LBACSYS@//localhost:1521/TEST;
-GRANT N09_POLICY_THONGBAO_DBA TO OLS_TEST;
+GRANT N09_POLICY_THONGBAO_DBA TO C##ADMIN;
 /
 
 /***************************************************************
@@ -110,24 +103,50 @@ PHAN CHIA LEVEL CHO POLICY
         CHIA 6 LEVEL: Truong khoa > Truong don vi > Giang vien > Giao vu > Nhan vien > Sinh vien.
 
 ****************************************************************/
-CONN OLS_TEST/1@//localhost:1521/TEST;
--- TRUONG KHOA
-EXECUTE SA_COMPONENTS.CREATE_LEVEL('N09_POLICY_THONGBAO', 9000, 'TKHOA', 'Truong Khoa'); 
-/
--- TRUONG DON VI
-EXECUTE SA_COMPONENTS.CREATE_LEVEL('N09_POLICY_THONGBAO', 8000, 'TDONVI', 'Truong Don Vi'); 
-/
--- GIANG VIEN
-EXECUTE SA_COMPONENTS.CREATE_LEVEL('N09_POLICY_THONGBAO', 7000, 'GVIEN', 'Giang Vien');
-/
--- GIAO VU
-EXECUTE SA_COMPONENTS.CREATE_LEVEL('N09_POLICY_THONGBAO', 6000, 'GVU', 'Giao Vu'); 
-/
--- NHAN VIEN
-EXECUTE SA_COMPONENTS.CREATE_LEVEL('N09_POLICY_THONGBAO', 5000, 'NVIEN', 'Nhan Vien'); 
-/
--- SINH VIEN
-EXECUTE SA_COMPONENTS.CREATE_LEVEL('N09_POLICY_THONGBAO', 4000, 'SVIEN', 'Sinh Vien'); 
+CONN C##ADMIN/123@//localhost:1521/TEST;
+BEGIN
+    -- Level 9000: Truong khoa
+    SA_COMPONENTS.CREATE_LEVEL(
+        policy_name => 'N09_POLICY_THONGBAO',
+        long_name => 'Truong Khoa',
+        short_name => 'TKHOA',
+        level_num => 9000);
+
+    -- Level 8000: Truong don vi
+    SA_COMPONENTS.CREATE_LEVEL(
+        policy_name => 'N09_POLICY_THONGBAO',
+        long_name => 'Truong Don Vi',
+        short_name => 'TDONVI',
+        level_num => 8000);
+
+    -- Level 7000: Giang vien
+    SA_COMPONENTS.CREATE_LEVEL(
+        policy_name => 'N09_POLICY_THONGBAO',
+        long_name => 'Giang Vien',
+        short_name => 'GVIEN',
+        level_num => 7000);
+
+    -- Level 6000: Giao vu
+    SA_COMPONENTS.CREATE_LEVEL(
+        policy_name => 'N09_POLICY_THONGBAO',
+        long_name => 'Giao Vu',
+        short_name => 'GVU',
+        level_num => 6000);
+
+    -- Level 5000: Nhan vien
+    SA_COMPONENTS.CREATE_LEVEL(
+        policy_name => 'N09_POLICY_THONGBAO',
+        long_name => 'Nhan Vien',
+        short_name => 'NVIEN',
+        level_num => 5000);
+
+    -- Level 4000: Sinh vien
+    SA_COMPONENTS.CREATE_LEVEL(
+        policy_name => 'N09_POLICY_THONGBAO',
+        long_name => 'Sinh Vien',
+        short_name => 'SVIEN',
+        level_num => 4000);
+END;
 /
 
 /***************************************************************
@@ -137,49 +156,48 @@ PHAN CHIA COMPARTMENT CHO POLICY
             CAC SO 100, 200,... QUI DINH THU TU HIEN THI
 
 ****************************************************************/
-CONN OLS_TEST/1@//localhost:1521/TEST;
 BEGIN
-  SA_COMPONENTS.CREATE_COMPARTMENT (
+    -- Compartment 100: He Thong Thong Tin
+    SA_COMPONENTS.CREATE_COMPARTMENT(
     policy_name      => 'N09_POLICY_THONGBAO',
     long_name        => 'He Thong Thong Tin',
     short_name       => 'HTTT',
     comp_num         =>  100);
 
-  SA_COMPONENTS.CREATE_COMPARTMENT (
+    -- Compartment 200: Cong Nghe Phan Mem
+    SA_COMPONENTS.CREATE_COMPARTMENT(
     policy_name      => 'N09_POLICY_THONGBAO',
     long_name        => 'Cong Nghe Phan Mem',
     short_name       => 'CNPM',
     comp_num         =>  200);
 
-    SA_COMPONENTS.CREATE_COMPARTMENT (
+    -- Compartment 300: Khoa Hoc May Tinh
+    SA_COMPONENTS.CREATE_COMPARTMENT(
     policy_name      => 'N09_POLICY_THONGBAO',
     long_name        => 'Khoa Hoc May Tinh',
     short_name       => 'KHMT',
     comp_num         =>  300);
 
-    SA_COMPONENTS.CREATE_COMPARTMENT (
+    -- Compartment 400: Cong Nghe Thong Tin
+    SA_COMPONENTS.CREATE_COMPARTMENT(
     policy_name      => 'N09_POLICY_THONGBAO',
     long_name        => 'Cong Nghe Thong Tin',
     short_name       => 'CNTT',
     comp_num         =>  400);
 
-    SA_COMPONENTS.CREATE_COMPARTMENT (
+    -- Compartment 500: Thi Giac May Tinh
+    SA_COMPONENTS.CREATE_COMPARTMENT(
     policy_name      => 'N09_POLICY_THONGBAO',
     long_name        => 'Thi Giac May Tinh',
     short_name       => 'TGMT',
     comp_num         =>  500);
 
-    SA_COMPONENTS.CREATE_COMPARTMENT (
+    -- Compartment 600: Mang May Tinh
+    SA_COMPONENTS.CREATE_COMPARTMENT(
     policy_name      => 'N09_POLICY_THONGBAO',
     long_name        => 'Mang May Tinh',
     short_name       => 'MMT',
     comp_num         =>  600);
-
-    -- SA_COMPONENTS.CREATE_COMPARTMENT (
-    -- policy_name      => 'N09_POLICY_THONGBAO',
-    -- long_name        => 'Tat ca',
-    -- short_name       => 'ALL',
-    -- comp_num         =>  700);
 END;
 /
 
@@ -191,8 +209,8 @@ PHAN CHIA GROUP CHO POLICY
                 CAC SO 100, 200 CHI THU TU HIEN THI
 
 ****************************************************************/
-CONN OLS_TEST/1@//localhost:1521/TEST;
 BEGIN
+    -- Group 1: HCMUS (Parent group)
     SA_COMPONENTS.CREATE_GROUP (
         policy_name      => 'N09_POLICY_THONGBAO',
         group_num        => 1,
@@ -200,6 +218,7 @@ BEGIN
         long_name        => 'Truong_DH_Khoa_Hoc_Tu_Nhien_VNUHCM',
         parent_name      => NULL);
 
+    -- Group 100: Co So 1 (Child group of HCMUS)
     SA_COMPONENTS.CREATE_GROUP (
         policy_name      => 'N09_POLICY_THONGBAO',
         group_num        => 100,
@@ -207,52 +226,55 @@ BEGIN
         long_name        => 'Co_So_1',
         parent_name      => 'HCMUS');
     
+    -- Group 200: Co So 2 (Child group of HCMUS)
     SA_COMPONENTS.CREATE_GROUP (
         policy_name      => 'N09_POLICY_THONGBAO',
         group_num        => 200,
         short_name       => 'CS2',
         long_name        => 'Co_So_2',
         parent_name      => 'HCMUS');
-    
-    -- SA_COMPONENTS.CREATE_GROUP (
-    -- policy_name      => 'N09_POLICY_THONGBAO',
-    -- group_num        => 300,
-    -- short_name       => 'A',
-    -- long_name        => 'ALL');
 END;
 /
 
 /***************************************************************
 Create the labels
+    The actual labels are created using the SA_LABEL_ADMIN package.
+    The labels are created with the policy name, the tag, and the value.
+    The labels are created for the levels, compartments, and groups.
 
 ****************************************************************/
-CONN OLS_TEST/1@//localhost:1521/TEST;
 BEGIN
+    -- Label 1: Truong Khoa
     SA_LABEL_ADMIN.CREATE_LABEL(
         policy_name => 'N09_POLICY_THONGBAO',
         label_tag   => 1,
         label_value  => 'TKHOA');
 
+    -- Label 2: Truong Don Vi
     SA_LABEL_ADMIN.CREATE_LABEL(
         policy_name => 'N09_POLICY_THONGBAO',
         label_tag   => 2,
         label_value  => 'TDONVI');
 
+    -- Label 3: Giang Vien
     SA_LABEL_ADMIN.CREATE_LABEL(
         policy_name => 'N09_POLICY_THONGBAO',
         label_tag   => 3,
         label_value  => 'GVIEN');
 
+    -- Label 4: Giao Vu
     SA_LABEL_ADMIN.CREATE_LABEL(
         policy_name => 'N09_POLICY_THONGBAO',
         label_tag   => 4,
         label_value  => 'GVU');
 
+    -- Label 5: Nhan Vien
     SA_LABEL_ADMIN.CREATE_LABEL(
         policy_name => 'N09_POLICY_THONGBAO',
         label_tag   => 5,
         label_value  => 'NVIEN');
 
+    -- Label 6: Sinh Vien
     SA_LABEL_ADMIN.CREATE_LABEL(
         policy_name => 'N09_POLICY_THONGBAO',
         label_tag   => 6,
@@ -262,63 +284,167 @@ END;
 
 /***************************************************************
 Create the user authorizations
-    3 authorizations will be created:
+    For example, 3 authorizations will be created:
         “ALL_EMPLOYEES”: representing general employees.
         “ALL_MANAGERS”: for managers.
         “ALL_EXECS”: for executives.
 
 ****************************************************************/
-CONN OLS_TEST/1@//localhost:1521/TEST;
+CONN C##ADMIN/123@//localhost:1521/TEST;
+-- Store procedure thiết lập nhãn cho Sinh viên dựa trên vị trí (COSO) và ngành học (MANGANH)
+CREATE OR REPLACE PROCEDURE SET_LABELS_FOR_SINHVIEN AS
 BEGIN
+    FOR sv_record IN (
+        SELECT sv.MASV, sv.COSO, sv.MANGANH
+        FROM N09_SINHVIEN sv
+    ) LOOP
+        DECLARE
+            v_label VARCHAR2(100);
+            v_coso VARCHAR2(30);
+        BEGIN
+            -- Lấy giá trị của COSO
+            IF sv_record.COSO = 'Cơ sở 1' THEN
+                v_coso := 'CS1';
+            ELSIF sv_record.COSO = 'Cơ sở 2' THEN
+                v_coso := 'CS2';
+            ELSE
+                v_coso := 'HCMUS';
+            END IF;
+
+            -- Tạo nhãn dựa trên COSO và MANGANH
+            v_label := 'SVIEN:' || sv_record.MANGANH || ':' || v_coso;
+            
+            -- Gọi procedure SET_USER_LABELS để thiết lập nhãn cho user
+            SA_USER_ADMIN.SET_USER_LABELS(
+                policy_name => 'N09_POLICY_THONGBAO',
+                user_name   => sv_record.MASV,
+                max_read_label => v_label
+            );
+        END;
+    END LOOP;
+END;
+/
+
+-- Store procedure thiết lập nhãn cho Nhân sự dựa trên vị trí (COSO) và lĩnh vực hoạt động (ns.VAITRO & dv.TENDV)
+-- NOTE: Ngoại trừ Trưởng khoa & Trưởng đơn vị
+CONN C##ADMIN/123@//localhost:1521/TEST;
+CREATE OR REPLACE PROCEDURE SET_LABELS_FOR_NHANSU AS
+BEGIN
+    FOR ns_record IN (
+        SELECT nh.MANV, nh.COSO, nh.VAITRO, dv.TENDV
+        FROM N09_NHANSU nh
+        JOIN N09_DONVI dv ON nh.MADV = dv.MADV
+    ) LOOP
+        DECLARE
+            v_label VARCHAR2(100);
+            v_vaitro VARCHAR2(30);
+            v_coso VARCHAR2(30);
+            v_donvi VARCHAR2(30);
+        BEGIN        
+            -- Bỏ qua nếu là Trưởng khoa
+            IF ns_record.VAITRO = 'Trưởng khoa' OR ns_record.VAITRO = 'Trưởng đơn vị' THEN
+                CONTINUE;
+            END IF;
+
+            -- Lấy giá trị của VAITRO
+            IF ns_record.VAITRO = 'Giảng viên' THEN
+                v_vaitro := 'GVIEN';
+            ELSIF ns_record.VAITRO = 'Giáo vụ' THEN
+                v_vaitro := 'GVU';
+            ELSIF ns_record.VAITRO = 'Nhân viên' THEN
+                v_vaitro := 'NVIEN';
+            END IF;            
+
+            -- Lấy giá trị của COSO
+            IF ns_record.COSO = 'Cơ sở 1' THEN
+                v_coso := 'CS1';
+            ELSIF ns_record.COSO = 'Cơ sở 2' THEN
+                v_coso := 'CS2';
+            ELSE 
+                v_coso := 'HCMUS';
+            END IF;
+
+            -- Lấy giá trị của TENDV
+            IF ns_record.TENDV LIKE '%HTTT%' THEN
+                v_donvi := 'HTTT';
+            ELSIF ns_record.TENDV LIKE '%CNPM%' THEN
+                v_donvi := 'CNPM';
+            ELSIF ns_record.TENDV LIKE '%KHMT%' THEN
+                v_donvi := 'KHMT';
+            ELSIF ns_record.TENDV LIKE '%CNTT%' THEN
+                v_donvi := 'CNTT';
+            ELSIF ns_record.TENDV LIKE '%TGMT%' THEN
+                v_donvi := 'TGMT';
+            ELSIF ns_record.TENDV LIKE '%MMT%' THEN
+                v_donvi := 'MMT';
+            END IF;
+
+            -- Tạo nhãn dựa trên COSO, VAITRO và TENDV
+            v_label := v_vaitro || ':' || v_donvi || ':' || v_coso;
+            
+            -- Gọi procedure SET_USER_LABELS để thiết lập nhãn cho user
+            SA_USER_ADMIN.SET_USER_LABELS(
+                policy_name => 'N09_POLICY_THONGBAO',
+                user_name   => ns_record.MANV,
+                max_read_label => v_label
+            );
+        END;
+    END LOOP;
+END;
+/
+
+-- Thiết lập nhãn cho riêng Trưởng khoa & Trưởng đơn vị
+BEGIN
+    -- Label: Truong Khoa
     SA_USER_ADMIN.SET_USER_LABELS(
         policy_name => 'N09_POLICY_THONGBAO',
         user_name   => 'NV001',
         max_read_label => 'TKHOA:HTTT,CNPM,KHMT,CNTT,TGMT,MMT:HCMUS');
 
+    -- Label: Truong Don Vi 1 - HTTT - CS2 
     SA_USER_ADMIN.SET_USER_LABELS(
         policy_name => 'N09_POLICY_THONGBAO',
         user_name   => 'NV101',
-        max_read_label => 'TDONVI');
+        max_read_label => 'TDONVI:HTTT:CS2');
 
+    -- Label: Truong Don Vi 2 - CNPM & MMT - CS1
     SA_USER_ADMIN.SET_USER_LABELS(
         policy_name => 'N09_POLICY_THONGBAO',
-        user_name   => 'NV201',
-        max_read_label => 'GVIEN');
+        user_name   => 'NV102',
+        max_read_label => 'TDONVI:CNPM,MMT:CS1');
 
+    -- Label: Truong Don Vi 3 - KHMT - CS2
     SA_USER_ADMIN.SET_USER_LABELS(
         policy_name => 'N09_POLICY_THONGBAO',
-        user_name   => 'NV301',
-        max_read_label => 'GVU');
+        user_name   => 'NV103',
+        max_read_label => 'TDONVI:KHMT:CS2');
 
+    -- Label: Truong Don Vi 4 - CNTT - CS1
     SA_USER_ADMIN.SET_USER_LABELS(
         policy_name => 'N09_POLICY_THONGBAO',
-        user_name   => 'NV401',
-        max_read_label => 'NVIEN');
+        user_name   => 'NV104',
+        max_read_label => 'TDONVI:CNTT:CS1');
 
+    -- Label: Truong Don Vi 5 - TGMT - CS2
     SA_USER_ADMIN.SET_USER_LABELS(
         policy_name => 'N09_POLICY_THONGBAO',
-        user_name   => 'SV001',
-        max_read_label => 'SVIEN');
+        user_name   => 'NV105',
+        max_read_label => 'TDONVI:TGMT:CS2');
+
+    -- Label: Truong Don Vi 6 - MMT - CS1
+    SA_USER_ADMIN.SET_USER_LABELS(
+        policy_name => 'N09_POLICY_THONGBAO',
+        user_name   => 'NV106',
+        max_read_label => 'TDONVI:MMT:CS1');
 END;
 /
 
-/***************************************************************
-Authorizations for Compartments & Groups
-    For TRUONGKHOA, modify the current authorization to add 
-    the new compartments & groups using SA_USER_ADMIN package
-****************************************************************/
-CONN OLS_TEST/1@//localhost:1521/TEST;
-BEGIN
-    SA_USER_ADMIN.ADD_COMPARTMENTS(
-        policy_name => 'N09_POLICY_THONGBAO',
-        user_name   => 'NV001',
-        comps => 'HTTT,CNPM,KHMT,CNTT,TGMT,MMT');
+-- Thiết lập nhãn cho các Nhân sự còn lại
+EXECUTE SET_LABELS_FOR_NHANSU;
+/
 
-    SA_USER_ADMIN.ADD_GROUPS(
-        policy_name => 'N09_POLICY_THONGBAO',
-        user_name   => 'NV001',
-        groups => 'HCMUS');
-END;
+-- Thiết lập nhãn cho tất cả Sinh viên
+EXECUTE SET_LABELS_FOR_SINHVIEN;
 /
 
 /***************************************************************
@@ -331,241 +457,194 @@ Specific authorizations of OLS
         - WRITE Allows the user to override the OLS protections for each of the label components.
         - FULL This is the shortcut for granting both read and write privileges.
 
+NOTE: This section is currently not required for the assignment.
+
 ****************************************************************/
--- The SEC_MGR can now set the OLS security profile to be any one of 6 authorization “users” just defined.
-CONN LBACSYS/LBACSYS;
-EXECUTE SA_USER_ADMIN.SET_USER_PRIVS('N09_POLICY_THONGBAO', 'OLS_TEST', 'PROFILE_ACCESS');
-EXECUTE SA_USER_ADMIN.SET_USER_PRIVS('N09_POLICY_THONGBAO', 'OLS_TEST', 'FULL');
-/
+-- -- The C##ADMIN user can now set the OLS security profile to be any one of 6 authorization “users” just defined.
+-- CONN LBACSYS/LBACSYS@//localhost:1521/TEST;
+-- EXECUTE SA_USER_ADMIN.SET_USER_PRIVS('N09_POLICY_THONGBAO', 'C##ADMIN', 'PROFILE_ACCESS');
+-- EXECUTE SA_USER_ADMIN.SET_USER_PRIVS('N09_POLICY_THONGBAO', 'C##ADMIN', 'FULL');
+-- /
 
--- SEC_MGR resets own profile to ALL_NHANVIEN
-EXECUTE SA_SESSION.SET_ACCESS_PROFILE('N09_POLICY_THONGBAO', 'ALL_NHANVIEN');
-/
+-- -- C##ADMIN user resets own profile to NV001 - Truong khoa
+-- EXECUTE SA_SESSION.SET_ACCESS_PROFILE('N09_POLICY_THONGBAO', 'NV001');
+-- /
 
--- Test relogging
-CONN OLS_TEST/1@//localhost:1521/TEST;
-SELECT *
-FROM N09_THONGBAO;
-/
+-- -- Test relogging
+-- CONN C##ADMIN/123@//localhost:1521/TEST;
+-- SELECT *
+-- FROM N09_THONGBAO;
+-- /
 
--- SEC_MGR resets own profile to ALL_TRUONGDONVI
-EXECUTE SA_SESSION.SET_ACCESS_PROFILE('N09_POLICY_THONGBAO', 'ALL_TRUONGDONVI');
+-- -- C##ADMIN user resets own profile to SV001 - Sinh vien
+-- EXECUTE SA_SESSION.SET_ACCESS_PROFILE('N09_POLICY_THONGBAO', 'SV001');
 
--- Test relogging
-CONN OLS_TEST/1@//localhost:1521/TEST;
-SELECT *
-FROM N09_THONGBAO;
-/
+-- -- Test relogging
+-- CONN C##ADMIN/123@//localhost:1521/TEST;
+-- SELECT *
+-- FROM N09_THONGBAO;
+-- /
 
--- To get the label of the current user
-COL "Read Label" format a25
-SELECT SA_SESSION.READ_LABEL('N09_POLICY_THONGBAO') "Read Label"
-FROM DUAL;
-/
+-- -- To get the label of the current user (NV001 - Truong khoa)
+-- CONN NV001/123@//localhost:1521/TEST;
+-- COL "Read Label" format a25
+-- SELECT SA_SESSION.READ_LABEL('N09_POLICY_THONGBAO') "Read Label"
+-- FROM DUAL;
+-- /
 
+/***************************************************************
+Applying the OLS policy (labels) to the table by executing the
+APPLY_TABLE_POLICY procedure of the SA_POLICY_ADMIN package.
 
-
-
-
-----------------------------
--- NEU KHONG INSERT DUOC VAO BANG N09_THONGBAO THI CHAY DONG NAY
--- ALTER USER OLS_TEST quota unlimited on USERS;
-----------------------------
-CONN SYS/244466666@//localhost:1521/TEST  AS SYSDBA
-ALTER USER OLS_TEST quota unlimited on USERS;
-
-
--- CAI POLICY XONG MOI TAO BANG
-CONN OLS_TEST/1@//localhost:1521/TEST;
-DROP TABLE N09_THONGBAO CASCADE CONSTRAINTS;
-
-
--- DROP TABLE N09_THONGBAO CASCADE CONSTRAINTS;
--- TAO BANG LUU THONG BAO
-CREATE TABLE N09_THONGBAO
-(
-    MATB CHAR(5),
-    TENTB NVARCHAR2(100),
-    NGAYGUI DATE,
-    NGUOINHAN NVARCHAR2(100),
-    LINHVUC CHAR(4),
-    COSO NVARCHAR2(30),
-    NOIDUNG NVARCHAR2(1000),
+    •   To begin, choose the ‘NO_CONTROL’ option indicating that you don’t want
+    OLS to enforce any security.
+    •   Until the label column values are populated, you’ll not be able to access any
+    of the data. That is, OLS returns no records when the label values are
+    undefined or are null.
     
-    PRIMARY KEY(MATB)
-);
-
-
-CONN OLS_TEST/1@//localhost:1521/TEST;
-GRANT SELECT, INSERT, UPDATE, DELETE ON N09_THONGBAO TO PUBLIC;
-
-
-CONN OLS_TEST/1@//localhost:1521/TEST;
-INSERT INTO N09_THONGBAO (MATB, TENTB, NGAYGUI, NGUOINHAN, LINHVUC, COSO, NOIDUNG) VALUES ('TB001', 'THONG BAO NGHI HOC TUAN 2', TO_DATE('2024-06-03', 'YYYY-MM-DD'), 'SINH VIEN', 'HTTT', 'Cơ sở 2', 'DO NHA TRUONG DANG TO CHUC BUOI VAN DAP BAO VE DO AN NEN SINH VIEN, GIANG VIEN KHOA HTTT DUOC NGHI VAO TUAN 2');
-INSERT INTO N09_THONGBAO (MATB, TENTB, NGAYGUI, NGUOINHAN, LINHVUC, COSO, NOIDUNG) VALUES ('TB002', 'THONG BAO HOP NHAN SU NGAY 24/6/2024', TO_DATE('2024-06-03', 'YYYY-MM-DD'), 'NHAN VIEN', 'ALL', NULL, 'HOP NHAN SU GAP VAO NGAY 24/6/2024 LUC 17H. DE NGHI CAC NHAN VIEN DEN DAY DU');
-INSERT INTO N09_THONGBAO (MATB, TENTB, NGAYGUI, NGUOINHAN, LINHVUC, COSO, NOIDUNG) VALUES ('TB003', 'THONG BAO NOP BAO CAO TINH HINH HOC TAP SINH VIEN', TO_DATE('2024-06-03', 'YYYY-MM-DD'), 'GIAO VU', 'ALL', NULL, 'BO PHAN GIAO VU NOP BANG THONG KE TINH HINH HOC TAP SINH VIEN VAO TUAN SAU');
-INSERT INTO N09_THONGBAO (MATB, TENTB, NGAYGUI, NGUOINHAN, LINHVUC, COSO, NOIDUNG) VALUES ('TB004', 'THONG BAO NOP BANG DIEM BO MON CNPM', TO_DATE('2024-06-03', 'YYYY-MM-DD'), 'GIANG VIEN', 'CNPM', NULL, 'CAC GIANG VIEN BO MON CNPM NOP LAI BANG DIEM CUOI KI TRUOC NGAY 30/6/2024');
-INSERT INTO N09_THONGBAO (MATB, TENTB, NGAYGUI, NGUOINHAN, LINHVUC, COSO, NOIDUNG) VALUES ('TB005', 'THONG BAO HOP TRUONG DON VI', TO_DATE('2024-06-03', 'YYYY-MM-DD'), 'TRUONG DON VI', 'ALL', NULL, 'CAC TRUONG DON VI CUA CAC KHOA HOP GAP NGAY HOM NAY');
-INSERT INTO N09_THONGBAO (MATB, TENTB, NGAYGUI, NGUOINHAN, LINHVUC, COSO, NOIDUNG) VALUES ('TB006', 'THONG BAO HOP TRUONG KHOA', TO_DATE('2024-06-03', 'YYYY-MM-DD'), 'TRUONG KHOA', 'ALL', NULL, 'CAC TRUONG KHOA HOP GAP NGAY HOM NAY');
-INSERT INTO N09_THONGBAO (MATB, TENTB, NGAYGUI, NGUOINHAN, LINHVUC, COSO, NOIDUNG) VALUES ('TB007', 'THONG BAO NGHI HOC TUAN 3', TO_DATE('2024-06-03', 'YYYY-MM-DD'), 'SINH VIEN', 'CNTT', 'Cơ sở 1', 'DO NHA TRUONG DANG TO CHUC BUOI VAN DAP BAO VE DO AN NEN SINH VIEN, GIANG VIEN KHOA CNTT DUOC NGHI VAO TUAN 3');
-
-CONN OLS_TEST/1@//localhost:1521/TEST;
-COMMIT;
-
-
-
-
-CONN OLS_TEST/1@//localhost:1521/TEST;
--- TAO CHUC NANG CUA LABEL
-CREATE OR REPLACE FUNCTION UF_N09_GET_NOTI_LABEL(
-    P_NGNHAN IN NVARCHAR2,
-    P_LINHVUC IN CHAR,
-    P_COSO IN CHAR
-    )
-    RETURN LBACSYS.LBAC_LABEL AS 
-    P_LABEL VARCHAR2(50);
-    BEGIN
-        -- LABEL NGUOI NHAN
-        IF P_NGNHAN = 'TRUONG KHOA' THEN
-            P_LABEL := 'LVLTK:';
-        ELSIF P_NGNHAN = 'TRUONG DON VI' THEN
-            P_LABEL := 'LVLTDV:';
-        ELSIF P_NGNHAN = 'GIANG VIEN' THEN
-            P_LABEL := 'LVLGVIEN:';
-        ELSIF P_NGNHAN = 'GIAO VU' THEN
-            P_LABEL := 'LVLGVU:';
-        ELSIF P_NGNHAN = 'NHAN VIEN' THEN
-            P_LABEL := 'LVLNV:';
-        ELSE 
-            P_LABEL := 'LVLSV:';
-        END IF;
-        -- LABEL LINH VUC
-        IF P_LINHVUC = 'HTTT' THEN
-            P_LABEL := P_LABEL || 'H:';
-        ELSIF P_LINHVUC = 'CNPM' THEN
-            P_LABEL := P_LABEL || 'CP:';
-        ELSIF P_LINHVUC = 'KHMT' THEN
-            P_LABEL := P_LABEL || 'K:';
-        ELSIF P_LINHVUC = 'CNTT' THEN
-            P_LABEL := P_LABEL || 'CT:';
-        ELSIF P_LINHVUC = 'TGMT' THEN
-            P_LABEL := P_LABEL || 'T:';
-        ELSIF P_LINHVUC = 'MMT' THEN
-            P_LABEL := P_LABEL || 'M:';
-        ELSE 
-            P_LABEL := P_LABEL || 'A:';
-        END IF;
-        -- LABEL CO SO
-        IF P_COSO = 'CS1' THEN
-            P_LABEL := P_LABEL || 'CS1';
-        ELSIF P_COSO = 'CS2' THEN
-            P_LABEL := P_LABEL || 'CS2';
-        ELSE
-            P_LABEL := P_LABEL || 'A';
-        END IF;
-        RETURN TO_LBAC_DATA_LABEL('N09_POLICY_THONGBAO', P_LABEL);
-    END UF_N09_GET_NOTI_LABEL;
+****************************************************************/
+BEGIN
+    SA_POLICY_ADMIN.REMOVE_TABLE_POLICY (
+        policy_name     => 'N09_POLICY_THONGBAO',
+        schema_name     => 'C##ADMIN',
+        table_name      => 'N09_THONGBAO');
+END;
 /
 
--- AP DUNG POLICY CHO BANG N09_THONGBAO
-CONN OLS_TEST/1@//localhost:1521/TEST;
 BEGIN
     SA_POLICY_ADMIN.APPLY_TABLE_POLICY(
         policy_name     => 'N09_POLICY_THONGBAO',
-        schema_name     => 'OLS_TEST',
+        schema_name     => 'C##ADMIN',
         table_name      => 'N09_THONGBAO',
         table_options   => 'NO_CONTROL');
 END;
 /
 
+/***************************************************************
+Update the OLS labels in the THONGBAO table.
+    C##ADMIN user will set the values for records by one of the following ways:
+        • C1: Assigns manually by using INSERT or UPDATE.
+        • C2: Use the option LABEL_DEFAULT.
+        • C3: Use the function to assign the labels for records automatically.
+    The function will be executed when there are INSERT or UPDATE
+    command on the data:
+    • We use C1 from now on.
 
-
-
-CONN OLS_TEST/1@//localhost:1521/TEST;
--- KHOI TAO NHAN
+****************************************************************/
+-- Set all records to lowest level
 UPDATE N09_THONGBAO
-SET NOTI_LABEL = CHAR_TO_LABEL('N09_POLICY_THONGBAO', 'LVLTK');
+SET ROW_LABEL = CHAR_TO_LABEL('N09_POLICY_THONGBAO', 'SVIEN');
+/
+
+-- Increase level for Nhan vien's records
+UPDATE N09_THONGBAO
+SET ROW_LABEL = CHAR_TO_LABEL('N09_POLICY_THONGBAO', 'NVIEN')
+WHERE NGUOINHAN = 'NHAN VIEN';
+/
+
+-- Increase level for Giang vien's records
+UPDATE N09_THONGBAO
+SET ROW_LABEL = CHAR_TO_LABEL('N09_POLICY_THONGBAO', 'GVIEN')
+WHERE NGUOINHAN = 'GIANG VIEN';
+/
+
+-- Increase level for Giao vu's records
+UPDATE N09_THONGBAO
+SET ROW_LABEL = CHAR_TO_LABEL('N09_POLICY_THONGBAO', 'GVU')
+WHERE NGUOINHAN = 'GIAO VU';
+/
+
+-- Increase level for Truong don vi's records
+UPDATE N09_THONGBAO
+SET ROW_LABEL = CHAR_TO_LABEL('N09_POLICY_THONGBAO', 'TDONVI')
+WHERE NGUOINHAN = 'TRUONG DON VI';
+/
+
+-- Increase level for Truong khoa's records
+UPDATE N09_THONGBAO
+SET ROW_LABEL = CHAR_TO_LABEL('N09_POLICY_THONGBAO', 'TKHOA')
+WHERE NGUOINHAN = 'TRUONG KHOA';
+/
+
 COMMIT;
+/
 
+/***************************************************************
+Re-applying the OLS policy (labels) to the table.
+    To change the policy enforcement options, you have to first
+    remove the policy with NO_CONTROL enforcement and then re-add it with the
+    READ_CONTROL,... enforcement options, which will restrict all select,... operations on the table.
 
-
-
-CONN OLS_TEST/1@//localhost:1521/TEST;
--- AP DUNG LAI CHINH SACH
+****************************************************************/
 BEGIN
-    SA_POLICY_ADMIN.REMOVE_TABLE_POLICY(
+    SA_POLICY_ADMIN.REMOVE_TABLE_POLICY (
         policy_name     => 'N09_POLICY_THONGBAO',
-        schema_name     => 'OLS_TEST',
+        schema_name     => 'C##ADMIN',
         table_name      => 'N09_THONGBAO');
 END;
+/
 
-
-
--- Test
-CONN OLS_TEST/1@//localhost:1521/TEST;
-SELECT * FROM N09_THONGBAO
-
-
-
-CONN OLS_TEST/1@//localhost:1521/TEST;
-GRANT SELECT ON LBACSYS.OLS$POLICY_LABELS TO OLS_TEST;
-GRANT SELECT, INSERT, UPDATE ON N09_THONGBAO TO OLS_TEST;
-
-
-
-CONN OLS_TEST/1@//localhost:1521/TEST;
 BEGIN
     SA_POLICY_ADMIN.APPLY_TABLE_POLICY (
         policy_name     => 'N09_POLICY_THONGBAO',
-        schema_name     => 'OLS_TEST',
+        schema_name     => 'C##ADMIN',
         table_name      => 'N09_THONGBAO',
-        table_options   => 'LABEL_DEFAULT,READ_CONTROL,WRITE_CONTROL,CHECK_CONTROL',
-        label_function  => 'OLS_TEST.UF_N09_GET_NOTI_LABEL',
-        predicate       => NULL);
+        table_options   => 'LABEL_DEFAULT,READ_CONTROL,WRITE_CONTROL,CHECK_CONTROL');
 END;
 /
 
+/***************************************************************
+Test the OLS policy
+    To test the OLS policy, you can connect to every role-based user and
+    execute the SELECT statement on the THONGBAO table.
+    The OLS policy will enforce the security and return only the records
+    that the user is authorized to see.
 
-------------------------
-CONN OLS_TEST/1@//localhost:1521/TEST;
-DECLARE
-    P_NGNHAN NVARCHAR2(100) := 'TRUONG KHOA'; 
-    P_LINHVUC CHAR(4) := 'HTTT'; 
-    P_COSO CHAR(3) := 'CS1';
-    P_RESULT LBACSYS.LBAC_LABEL;
-BEGIN
-    P_RESULT := UF_N09_GET_NOTI_LABEL(P_NGNHAN, P_LINHVUC, P_COSO);
-END;
+Yêu cầu:
+a) Hãy gán nhãn cho người dùng là Trưởng khoa có thể đọc được toàn bộ thông báo.
+b) Hãy gán nhãn cho các Trưởng bộ môn phụ trách Cơ sở 2 có thể đọc được toàn bộ thông
+báo. dành cho trưởng bộ môn không phân biệt vị trí địa lý.
+c) Hãy gán nhãn cho 01 Giáo vụ có thể đọc toàn bộ thông báo dành cho giáo vụ.
+d) Hãy cho biết nhãn của dòng thông báo t1 để t1 được phát tán (đọc) bởi tất cả Trưởng đơn vị.
+e) Hãy cho biết nhãn của dòng thông báo t2 để phát tán t2 đến Sinh viên thuộc ngành
+HTTT học ở Cơ sở 1.
+f) Hãy cho biết nhãn của dòng thông báo t3 để phát tán t3 đến Trưởng bộ môn KHMT ở Cơ sở 1.
+g) Cho biết nhãn của dòng thông báo t4 để phát tán t4 đến Trưởng bộ môn KHMT ở Cơ
+sở 1 và Cơ sở 2.
+h) Em hãy cho thêm 3 chính sách phát tán dòng dữ liệu nữa trên mô hình OLS đã cài đặt.
+
+****************************************************************/
+-- As Truong khoa
+CONN NV001/NV001@//localhost:1521/TEST;
+SELECT * FROM C##ADMIN.N09_THONGBAO;
 /
-------------------------
 
-
-
-
-CONN SYS/244466666 AS SYSDBA
-GRANT CONNECT TO NV001, NV101, NV102, NV103, NV104, NV105;
+-- As Truong don vi
+CONN NV101/NV101@//localhost:1521/TEST;
+SELECT * FROM C##ADMIN.N09_THONGBAO;
 /
 
---CONN OLS_TEST/1@//localhost:1521/TEST;
---CREATE USER NV001 IDENTIFIED BY NV001;
---CREATE USER NV101 IDENTIFIED BY NV001;
---GRANT CONNECT TO NV001;
---GRANT CONNECT TO NV001;
----------------------------
-
-
-
-
-
--- CAU D
--- CHO BIET LABEL CUA DONG THONG BAO DUOC DOC BOI TAT CA TRUONG DON VI
-CONN NV101/NV101
-SELECT * FROM N09_THONGBAO;
+-- As Giang vien
+CONN NV202/NV202@//localhost:1521/TEST;
+SELECT * FROM C##ADMIN.N09_THONGBAO;
 /
--- INSERT INTO N09_SINHVIEN (MASV, HOTEN, PHAI, NGSINH, DIACHI, DT, MACT, MANGANH, SOTCTL, DTBTL) VALUES ('SV031', 'Nguy?n Th? Lan', 'N?', TO_DATE('2000-01-01', 'YYYY-MM-DD'), '123 L� L?i, Ph� Nhu?n, TP. H? Ch� Minh', '0911234588', 'CQ', 'HTTT', 100, 8.5);
--- CAU E
--- CHO BIET LABEL CUA DONG THONG BAO PHAT TAN DEN SV HTTT CS1
--- GIA SU SV031 HOC NGANH HTTT TAI CS1
-CONN SV031/SV031
-SELECT * FROM N09_THONGBAO;
+
+-- As Giao vu
+CONN NV303/NV303@//localhost:1521/TEST;
+SELECT * FROM C##ADMIN.N09_THONGBAO;
+/
+
+-- As Nhan vien
+CONN NV405/NV405@//localhost:1521/TEST;
+SELECT * FROM C##ADMIN.N09_THONGBAO;
+/
+
+-- As Sinh vien
+CONN SV019/SV019@//localhost:1521/TEST;
+SELECT * FROM C##ADMIN.N09_THONGBAO;
+/
+
+
+
+
 

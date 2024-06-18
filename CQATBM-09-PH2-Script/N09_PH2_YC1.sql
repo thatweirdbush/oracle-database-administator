@@ -12,7 +12,7 @@
 *  YÊU CẦU 1: CẤP QUYỀN TRUY CẬP
 ****************************************************************/
 -- CONNECT vào C##ADMIN để tạo CSDL trên Schema C##ADMIN 
-CONN C##ADMIN/123;
+CONN C##ADMIN/123@//localhost:1521/TEST;
 /***************************************************************
 CS#1: Người dùng có VAITRO là “Nhân viên cơ bản” có quyền truy cập dữ liệu:
     - Xem dòng dữ liệu của chính mình trong quan hệ NHANSU, có thể chỉnh sửa số điện
