@@ -551,6 +551,59 @@
                     </DataGrid.RowStyle>
                 </DataGrid>
             </Grid>
+
+            <!-- Grid Danh sách Thông báo -->
+            <Grid x:Name="Grid_Notification" Visibility="Collapsed" Grid.ColumnSpan="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="4*" />
+                    <RowDefinition Height="20*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="20*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Label - Danh sách Thông báo -->
+                <Label Grid.Column="1" x:Name="Label_Notification" Content="THÔNG BÁO" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#333" FontSize="30" FontWeight="Bold"/>
+
+                <!-- DataGrid - Danh sách Thông báo -->
+                <DataGrid Grid.Row="1" Grid.Column="1" x:Name="Table_DsThongBao" ItemsSource="{Binding YourData}" AutoGenerateColumns="False" FontWeight="Medium" BorderBrush="{x:Null}" Background="{x:Null}" VerticalScrollBarVisibility="Hidden" GridLinesVisibility="None" SelectionChanged="Table_DsThongBao_SelectionChanged" CanUserDeleteRows="False" Cursor="Hand">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="ID" Binding="{Binding MATB}" Width="1.5*"/>
+                        <DataGridTextColumn Header="Tên Thông Báo" Binding="{Binding TENTB}" Width="4*"/>
+                        <DataGridTextColumn Header="Ngày Gửi" Binding="{Binding NGAYGUI}" Width="4*"/>
+                        <DataGridTextColumn Header="Người Nhận" Binding="{Binding NGUOINHAN}" Width="3*"/>
+                        <DataGridTextColumn Header="Lĩnh Vực" Binding="{Binding LINHVUC}" Width="2*"/>
+                        <DataGridTextColumn Header="Cơ Sở" Binding="{Binding COSO}" Width="2*"/>
+                        <DataGridTextColumn Header="Nội Dung" Binding="{Binding NOIDUNG}" Width="8*"/>
+                    </DataGrid.Columns>
+
+                    <DataGrid.RowBackground>
+                        <SolidColorBrush Color="#FFA3BDD2" Opacity="0.6"/>
+                    </DataGrid.RowBackground>
+                    <DataGrid.ColumnHeaderStyle>
+                        <Style TargetType="{x:Type DataGridColumnHeader}">
+                            <Setter Property="ContentTemplate">
+                                <Setter.Value>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding}" FontFamily="Segoe UI" FontSize="16" Foreground="AliceBlue" Background="#FF173D7B" Padding="5"/>
+                                    </DataTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="Background" Value="#FF173D7B"/>
+                        </Style>
+                    </DataGrid.ColumnHeaderStyle>
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="Height" Value="40"/>
+                            <Setter Property="FontSize" Value="14"/>
+                        </Style>
+                    </DataGrid.RowStyle>
+                </DataGrid>
+            </Grid>
         </Grid>
     </Grid>
 </Page>
