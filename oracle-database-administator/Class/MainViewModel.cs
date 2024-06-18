@@ -25,6 +25,7 @@ namespace oracle_database_administator.Class
         private ObservableCollection<Subject> _subjects;
         private ObservableCollection<Unit> _units;
         private ObservableCollection<CourseOpeningPlan> _courseOpeningPlans;
+        private ObservableCollection<Notification> _notifications;
 
         // Metadata context
         private ObservableCollection<StandardAudit> standardAudits;
@@ -109,6 +110,17 @@ namespace oracle_database_administator.Class
             }
         }
 
+        public ObservableCollection<Notification> Notifications
+        {
+            //get { return _notifications; }
+            get { return Db.LoadDataContext<Notification>(Db.NOTIFICATIONS); }
+            set
+            {
+                _notifications = value;
+                OnPropertyChanged("Notification");
+            }
+        }
+
         public ObservableCollection<StandardAudit> StandardAudits
         {
             get { return Db.LoadDataContext<StandardAudit>(Db.STANDARD_AUDIT); }
@@ -149,6 +161,10 @@ namespace oracle_database_administator.Class
             //Subjects = Db.LoadDataContext<Subject>(Db.SUBJECTS);
             //Units = Db.LoadDataContext<Unit>(Db.UNITS);
             //CourseOpeningPlans = Db.LoadDataContext<CourseOpeningPlan>(Db.COURSE_OPENING_PLANS);
+            //Notifications = Db.LoadDataContext<Notification>(Db.NOTIFICATIONS);
+            //StandardAudits = Db.LoadDataContext<StandardAudit>(Db.STANDARD_AUDIT);
+            //FGAs = Db.LoadDataContext<FGA>(Db.FGA);
+            //AuditObjects = Db.LoadDataContext<AuditObject>(Db.AUDIT_OBJECTS);
         }
 
         // Implement Singleton pattern

@@ -65,7 +65,7 @@ namespace oracle_database_administator
                         {
                             SYSDBA_OPTION = "DBA PRIVILEGE=SYSDBA;";
                         }
-                        string connectionString = $"DATA SOURCE=localhost:1521/XE;{SYSDBA_OPTION}PERSIST SECURITY INFO=True;USER ID={ConnectionUsername};PASSWORD={ConnectionPassword}";
+                        string connectionString = $"DATA SOURCE=localhost:1521/PDB_N09;{SYSDBA_OPTION}PERSIST SECURITY INFO=True;USER ID={ConnectionUsername};PASSWORD={ConnectionPassword}";
                         _connection = new OracleConnection(connectionString);
                         _connection.Open();
                     }
@@ -516,7 +516,7 @@ namespace oracle_database_administator
         /**********************************************************
         * Database's Stored Procedures - Phan He 2
         ***********************************************************/
-        static public string ADMIN_PREFIX = $"C##ADMIN.N09_";
+        static public string ADMIN_PREFIX = $"N09_ADMIN.N09_";
 
         // Table's name for EVERY role
         public string STUDENTS = $"{ADMIN_PREFIX}SINHVIEN";
@@ -526,6 +526,7 @@ namespace oracle_database_administator
         public string COURSE_OPENING_PLANS = $"{ADMIN_PREFIX}KHMO";
         public string ASSIGNMENTS = $"{ADMIN_PREFIX}PHANCONG";
         public string REGISTRATIONS = $"{ADMIN_PREFIX}DANGKY";
+        public string NOTIFICATIONS = $"{ADMIN_PREFIX}THONGBAO";
 
         // Special stored procedures
         public string SELECT_ANY_TABLE_ADMIN = $"{ADMIN_PREFIX}SELECT_ANY_TABLE";

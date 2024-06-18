@@ -65,6 +65,7 @@ namespace oracle_database_administator.DepartmentHead
             Grid_Unit.Visibility = Visibility.Collapsed;
             Grid_AcademicPlan.Visibility = Visibility.Collapsed;
             Grid_StudentList.Visibility = Visibility.Collapsed;
+            Grid_Notification.Visibility = Visibility.Collapsed;
 
             // Hide elements in the Academic Plan grid
             Table_DsNhanSu.Visibility = Visibility.Collapsed;
@@ -179,7 +180,9 @@ namespace oracle_database_administator.DepartmentHead
 
         private void ThongBao_Click(object sender, RoutedEventArgs e)
         {
-
+            HideAllElements();
+            Grid_Notification.Visibility = Visibility.Visible;
+            Table_DsThongBao.ItemsSource = MainViewModel.Notifications;
         }
 
         private void Button_EditSDT_Click(object sender, RoutedEventArgs e)
@@ -297,6 +300,11 @@ namespace oracle_database_administator.DepartmentHead
         }
 
         private void Table_DsSinhVien_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void Table_DsThongBao_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
         }

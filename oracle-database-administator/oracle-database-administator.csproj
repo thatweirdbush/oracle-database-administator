@@ -110,6 +110,7 @@
     <Compile Include="Class\CourseOpeningPlan.cs" />
     <Compile Include="Class\FGA.cs" />
     <Compile Include="Class\MainViewModel.cs" />
+    <Compile Include="Class\Notification.cs" />
     <Compile Include="Class\Personnel.cs" />
     <Compile Include="Class\Registration.cs" />
     <Compile Include="Class\StandardAudit.cs" />
