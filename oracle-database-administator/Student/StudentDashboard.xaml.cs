@@ -58,6 +58,7 @@ namespace oracle_database_administator.Student
             // Hide all grids
             Grid_UserInfo.Visibility = Visibility.Collapsed;
             Grid_AcademicPlan.Visibility = Visibility.Collapsed;
+            Grid_Notification.Visibility = Visibility.Collapsed;
 
             // Hide elements in the Academic Plan grid
             Table_DsHocPhan.Visibility = Visibility.Collapsed;

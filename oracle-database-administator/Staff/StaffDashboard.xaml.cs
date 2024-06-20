@@ -49,6 +49,7 @@ namespace oracle_database_administator.Staff
             Grid_Unit.Visibility = Visibility.Collapsed;
             Grid_AcademicPlan.Visibility = Visibility.Collapsed;
             Grid_StudentList.Visibility = Visibility.Collapsed;
+            Grid_Notification.Visibility = Visibility.Collapsed;
         }
 
         private void LogoutButton_Click(object sender, RoutedEventArgs e)

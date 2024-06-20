@@ -62,6 +62,7 @@ namespace oracle_database_administator.UnitHead
             Grid_Unit.Visibility = Visibility.Collapsed;
             Grid_AcademicPlan.Visibility = Visibility.Collapsed;
             Grid_StudentList.Visibility = Visibility.Collapsed;
+            Grid_Notification.Visibility = Visibility.Collapsed;
 
             // Hide elements in the Academic Plan grid
             Table_DsHocPhan.Visibility = Visibility.Collapsed;
