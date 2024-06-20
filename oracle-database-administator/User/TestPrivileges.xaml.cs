@@ -82,8 +82,7 @@ namespace oracle_database_administator.User
                         if (priv_col == editedColumn || priv_col == "")
                         {
                             update_query = editedColumn + " = '" + newValue + "'";
-
-                            update_query = string.Format("UPDATE SYS.{0} SET {1} WHERE {2}", table_name, update_query, condition);
+                            update_query = $"UPDATE {Database.ADMIN_SCHEMA}{table_name} SET {update_query} WHERE {condition}";
                             //MessageBox.Show(update_query, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                         }
                         else
@@ -146,7 +145,7 @@ namespace oracle_database_administator.User
 
                     if (priv == "SELECT")
                     {
-                        ResultViewDataGrid.ItemsSource = Db.GetAnyTable($"{Database.SYS_SCHEMA}{table_name}");
+                        ResultViewDataGrid.ItemsSource = Db.GetAnyTable($"{Database.ADMIN_SCHEMA}{table_name}");
                     }
                     else if (priv == "INSERT")
                     {
@@ -171,7 +170,7 @@ namespace oracle_database_administator.User
                                     MessageBox.Show("Failed to execute \'Insert\'!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                                 }
                             }
-                            ResultViewDataGrid.ItemsSource = Db.GetAnyTable($"{Database.SYS_SCHEMA}{Database.DEFAULT_PREFIX_VIEW}{table_name}");
+                            ResultViewDataGrid.ItemsSource = Db.GetAnyTable($"{Database.ADMIN_SCHEMA}{Database.DEFAULT_PREFIX_VIEW}{table_name}");
                         }
                     }
                     else if (priv == "UPDATE")
@@ -192,7 +191,7 @@ namespace oracle_database_administator.User
                                 }
                             }
                         }
-                        ResultViewDataGrid.ItemsSource = Db.GetAnyTable($"{Database.SYS_SCHEMA}{table_name}");
+                        ResultViewDataGrid.ItemsSource = Db.GetAnyTable($"{Database.ADMIN_SCHEMA}{table_name}");
                     }
                     else if (priv == "DELETE")
                     {
@@ -212,7 +211,7 @@ namespace oracle_database_administator.User
                                 }
                             }
                         }
-                        ResultViewDataGrid.ItemsSource = Db.GetAnyTable($"{Database.SYS_SCHEMA}{table_name}");
+                        ResultViewDataGrid.ItemsSource = Db.GetAnyTable($"{Database.ADMIN_SCHEMA}{table_name}");
                     }
                 }
             }
@@ -247,7 +246,7 @@ namespace oracle_database_administator.User
                                 /// <WARNING>
                                 /// TODO: FIX DATETIME EXCEPTION
                                 /// </WARNING>
-                                if (columnName == "NGAYSINH" || columnName == "NGAYLAP")
+                                if (columnName == "NGSINH" || columnName == "NGAYGUI")
                                 {
                                     continue;
                                 }
@@ -266,8 +265,7 @@ namespace oracle_database_administator.User
                                     condition += $"{columnName} = '{cellValue}'";
                                 }
                             }
-
-                            delete_query = string.Format("DELETE FROM SYS.{0} WHERE {1}", table_name, condition);
+                            delete_query = $"DELETE FROM {Database.ADMIN_SCHEMA}{table_name} WHERE {condition}";
                         }
                     }
                 }
@@ -302,8 +300,8 @@ namespace oracle_database_administator.User
                         /// after inserting, we can get select data later
                         /// <NOTE>
                         string false_condition = "1=0";
-                        ResultViewDataGrid.ItemsSource = Db.GetAnyTable($"{Database.SYS_SCHEMA}{Database.DEFAULT_PREFIX_VIEW}{table_name}", false_condition);
-                        insert_query = "INSERT INTO SYS." + table_name + " (";
+                        ResultViewDataGrid.ItemsSource = Db.GetAnyTable($"{Database.ADMIN_SCHEMA}{Database.DEFAULT_PREFIX_VIEW}{table_name}", false_condition);
+                        insert_query = $"INSERT INTO {Database.ADMIN_SCHEMA}{table_name} (";
 
                         // Lặp qua tất cả các cột trong DataGrid
                         foreach (DataGridColumn column in ResultViewDataGrid.Columns)
@@ -314,11 +312,10 @@ namespace oracle_database_administator.User
                             /// <WARNING>
                             /// TODO: FIX DATETIME EXCEPTION
                             /// </WARNING>
-                            if (columnName == "NGAYSINH" || columnName == "NGAYLAP")
+                            if (columnName == "NGSINH" || columnName == "NGAYGUI")
                             {
                                 continue;
                             }
-
                             // Thêm tên cột vào câu truy vấn INSERT
                             insert_query += columnName + ",";
                         }
@@ -330,7 +327,7 @@ namespace oracle_database_administator.User
                     }
                     else
                     {
-                        ResultViewDataGrid.ItemsSource = Db.GetAnyTable($"{Database.SYS_SCHEMA}{table_name}");
+                        ResultViewDataGrid.ItemsSource = Db.GetAnyTable($"{Database.ADMIN_SCHEMA}{table_name}");
                     }
                 }
             }

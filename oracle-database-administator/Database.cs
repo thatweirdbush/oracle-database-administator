@@ -179,7 +179,7 @@ namespace oracle_database_administator
                     {
                         SYSDBA_OPTION = "DBA PRIVILEGE=SYSDBA;";
                     }
-                    string connectionString = $"DATA SOURCE=localhost:1521/XE;{SYSDBA_OPTION}PERSIST SECURITY INFO=True;USER ID={new_username};PASSWORD={new_password}";
+                    string connectionString = $"DATA SOURCE=localhost:1521/PDB_N09;{SYSDBA_OPTION}PERSIST SECURITY INFO=True;USER ID={new_username};PASSWORD={new_password}";
 
                     _connection = new OracleConnection(connectionString);
                     _connection.Open();
@@ -209,12 +209,12 @@ namespace oracle_database_administator
         /**********************************************************
         * Define Application default schema & default tablespace prefix
         ***********************************************************/
-        static public string SYS_SCHEMA = "SYS.";
+        static public string ADMIN_SCHEMA = "N09_ADMIN.";
         static public string DEFAULT_PREFIX = "N09_";
         static public string DEFAULT_PREFIX_VIEW = "UV_";
 
         // Combine schema and prefix to create stored procedure & function name
-        static public string COMBINED_PREFIX = $"{SYS_SCHEMA}{DEFAULT_PREFIX}";
+        static public string COMBINED_PREFIX = $"{ADMIN_SCHEMA}{DEFAULT_PREFIX}";
 
 
         /**********************************************************
