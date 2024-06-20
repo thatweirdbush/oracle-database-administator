@@ -163,7 +163,9 @@ namespace oracle_database_administator.UnitHead
 
         private void ThongBao_Click(object sender, RoutedEventArgs e)
         {
-
+            HideAllElements();
+            Grid_Notification.Visibility = Visibility.Visible;
+            Table_DsThongBao.ItemsSource = MainViewModel.Notifications;
         }
 
         private void Button_EditSDT_Click(object sender, RoutedEventArgs e)
@@ -250,6 +252,11 @@ namespace oracle_database_administator.UnitHead
         }
 
         private void Table_DsSinhVien_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void Table_DsThongBao_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
         }
