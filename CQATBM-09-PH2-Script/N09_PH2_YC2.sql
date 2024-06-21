@@ -45,7 +45,10 @@ Connect to LBACSYS user to grant the necessary privileges to the N09_ADMIN user.
         The following privileges are therefore required:
 
 ****************************************************************/
+show con_name;
+ALTER SESSION SET CONTAINER = PDB_N09;
 ALTER USER LBACSYS IDENTIFIED BY LBACSYS ACCOUNT UNLOCK;
+
 CONN LBACSYS/LBACSYS@//localhost:1521/PDB_N09;
 GRANT EXECUTE ON SA_COMPONENTS TO N09_ADMIN;
 GRANT EXECUTE ON SA_LABEL_ADMIN TO N09_ADMIN;
@@ -74,6 +77,7 @@ BEGIN
 END;
 /
 
+CONN N09_ADMIN/123@//localhost:1521/PDB_N09;
 BEGIN
     SA_SYSDBA.CREATE_POLICY (
         policy_name => 'N09_POLICY_THONGBAO',
@@ -145,6 +149,7 @@ PHAN CHIA COMPARTMENT CHO POLICY
             CAC SO 100, 200,... QUI DINH THU TU HIEN THI
 
 ****************************************************************/
+CONN N09_ADMIN/123@//localhost:1521/PDB_N09;
 BEGIN
     -- Compartment 100: He Thong Thong Tin
     SA_COMPONENTS.CREATE_COMPARTMENT(
@@ -198,13 +203,14 @@ PHAN CHIA GROUP CHO POLICY
                 CAC SO 100, 200 CHI THU TU HIEN THI
 
 ****************************************************************/
+CONN N09_ADMIN/123@//localhost:1521/PDB_N09;
 BEGIN
     -- Group 1: HCMUS (Parent group)
     SA_COMPONENTS.CREATE_GROUP (
         policy_name      => 'N09_POLICY_THONGBAO',
         group_num        => 1,
         short_name       => 'HCMUS',
-        long_name        => 'Truong_DH_Khoa_Hoc_Tu_Nhien_VNUHCM',
+        long_name        => 'Truong DH Khoa Hoc Tu Nhien VNUHCM',
         parent_name      => NULL);
 
     -- Group 100: Co So 1 (Child group of HCMUS)
@@ -212,7 +218,7 @@ BEGIN
         policy_name      => 'N09_POLICY_THONGBAO',
         group_num        => 100,
         short_name       => 'CS1',
-        long_name        => 'Co_So_1',
+        long_name        => 'Co So 1',
         parent_name      => 'HCMUS');
     
     -- Group 200: Co So 2 (Child group of HCMUS)
@@ -220,7 +226,7 @@ BEGIN
         policy_name      => 'N09_POLICY_THONGBAO',
         group_num        => 200,
         short_name       => 'CS2',
-        long_name        => 'Co_So_2',
+        long_name        => 'Co So 2',
         parent_name      => 'HCMUS');
 END;
 /
@@ -232,43 +238,23 @@ Create the labels
     The labels are created for the levels, compartments, and groups.
 
 ****************************************************************/
-BEGIN
-    -- Label 1: Truong Khoa
-    SA_LABEL_ADMIN.CREATE_LABEL(
-        policy_name => 'N09_POLICY_THONGBAO',
-        label_tag   => 1,
-        label_value  => 'TKHOA');
-
-    -- Label 2: Truong Don Vi
-    SA_LABEL_ADMIN.CREATE_LABEL(
-        policy_name => 'N09_POLICY_THONGBAO',
-        label_tag   => 2,
-        label_value  => 'TDONVI');
-
-    -- Label 3: Giang Vien
-    SA_LABEL_ADMIN.CREATE_LABEL(
-        policy_name => 'N09_POLICY_THONGBAO',
-        label_tag   => 3,
-        label_value  => 'GVIEN');
-
-    -- Label 4: Giao Vu
-    SA_LABEL_ADMIN.CREATE_LABEL(
-        policy_name => 'N09_POLICY_THONGBAO',
-        label_tag   => 4,
-        label_value  => 'GVU');
-
-    -- Label 5: Nhan Vien
-    SA_LABEL_ADMIN.CREATE_LABEL(
-        policy_name => 'N09_POLICY_THONGBAO',
-        label_tag   => 5,
-        label_value  => 'NVIEN');
-
-    -- Label 6: Sinh Vien
-    SA_LABEL_ADMIN.CREATE_LABEL(
-        policy_name => 'N09_POLICY_THONGBAO',
-        label_tag   => 6,
-        label_value  => 'SVIEN');
-END;
+CONN N09_ADMIN/123@//localhost:1521/PDB_N09;
+EXEC SA_LABEL_ADMIN.CREATE_LABEL ('N09_POLICY_THONGBAO', 1, 'TDONVI::CS1,CS2', TRUE)
+EXEC SA_LABEL_ADMIN.CREATE_LABEL ('N09_POLICY_THONGBAO', 2, 'SVIEN:HTTT:CS1', TRUE)
+EXEC SA_LABEL_ADMIN.CREATE_LABEL ('N09_POLICY_THONGBAO', 3, 'TDONVI:KHMT:CS1', TRUE)
+EXEC SA_LABEL_ADMIN.CREATE_LABEL ('N09_POLICY_THONGBAO', 4, 'TDONVI:KHMT:CS1,CS2', TRUE)
+EXEC SA_LABEL_ADMIN.CREATE_LABEL ('N09_POLICY_THONGBAO', 5, 'NVIEN::CS2', TRUE)
+EXEC SA_LABEL_ADMIN.CREATE_LABEL ('N09_POLICY_THONGBAO', 6, 'SVIEN::CS1,CS2', TRUE)
+EXEC SA_LABEL_ADMIN.CREATE_LABEL ('N09_POLICY_THONGBAO', 7, 'GVU:KHMT:CS2', TRUE)
+EXEC SA_LABEL_ADMIN.CREATE_LABEL ('N09_POLICY_THONGBAO', 8, 'GVU::CS1,CS2', TRUE)
+EXEC SA_LABEL_ADMIN.CREATE_LABEL ('N09_POLICY_THONGBAO', 9, 'GVU:HTTT:CS1', TRUE)
+EXEC SA_LABEL_ADMIN.CREATE_LABEL ('N09_POLICY_THONGBAO', 10, 'GVU:HTTT:CS2', TRUE)
+EXEC SA_LABEL_ADMIN.CREATE_LABEL ('N09_POLICY_THONGBAO', 11, 'TDONVI::CS1', TRUE)
+EXEC SA_LABEL_ADMIN.CREATE_LABEL ('N09_POLICY_THONGBAO', 12, 'TDONVI::CS2', TRUE)
+EXEC SA_LABEL_ADMIN.CREATE_LABEL ('N09_POLICY_THONGBAO', 13, 'GVU:KHMT:CS1', TRUE)
+EXEC SA_LABEL_ADMIN.CREATE_LABEL ('N09_POLICY_THONGBAO', 14, 'TDONVI:HTTT:CS1', TRUE)
+EXEC SA_LABEL_ADMIN.CREATE_LABEL ('N09_POLICY_THONGBAO', 15, 'TDONVI:HTTT:CS2', TRUE)
+EXEC SA_LABEL_ADMIN.CREATE_LABEL ('N09_POLICY_THONGBAO', 16, 'TDONVI:HTTT:CS1,CS2', TRUE)
 /
 
 /***************************************************************
@@ -382,6 +368,7 @@ BEGIN
 END;
 /
 
+CONN N09_ADMIN/123@//localhost:1521/PDB_N09;
 -- Thiết lập nhãn cho riêng Trưởng khoa & Trưởng đơn vị
 BEGIN
     -- Label: Truong Khoa
@@ -391,10 +378,11 @@ BEGIN
         max_read_label => 'TKHOA:HTTT,CNPM,KHMT,CNTT,TGMT,MMT:HCMUS');
 
     -- Label: Truong Don Vi 1 - HTTT - CS2 
+    -- SỬA LABEL PHÙ HỢP CÂU B: 1 số Trưởng bộ môn phụ trách cả 2 cơ sở
     SA_USER_ADMIN.SET_USER_LABELS(
         policy_name => 'N09_POLICY_THONGBAO',
         user_name   => 'NV101',
-        max_read_label => 'TDONVI:HTTT:CS2');
+        max_read_label => 'TDONVI:HTTT:HCMUS');
 
     -- Label: Truong Don Vi 2 - CNPM & MMT - CS1
     SA_USER_ADMIN.SET_USER_LABELS(
@@ -403,10 +391,11 @@ BEGIN
         max_read_label => 'TDONVI:CNPM,MMT:CS1');
 
     -- Label: Truong Don Vi 3 - KHMT - CS2
+    -- SỬA LABEL PHÙ HỢP CÂU B: 1 số Trưởng bộ môn phụ trách cả 2 cơ sở
     SA_USER_ADMIN.SET_USER_LABELS(
         policy_name => 'N09_POLICY_THONGBAO',
         user_name   => 'NV103',
-        max_read_label => 'TDONVI:KHMT:CS2');
+        max_read_label => 'TDONVI:KHMT:HCMUS');
 
     -- Label: Truong Don Vi 4 - CNTT - CS1
     SA_USER_ADMIN.SET_USER_LABELS(
@@ -415,26 +404,41 @@ BEGIN
         max_read_label => 'TDONVI:CNTT:CS1');
 
     -- Label: Truong Don Vi 5 - TGMT - CS2
+    -- SỬA LABEL PHÙ HỢP CÂU B: 1 số Trưởng bộ môn phụ trách cả 2 cơ sở
     SA_USER_ADMIN.SET_USER_LABELS(
         policy_name => 'N09_POLICY_THONGBAO',
         user_name   => 'NV105',
-        max_read_label => 'TDONVI:TGMT:CS2');
+        max_read_label => 'TDONVI:TGMT:HCMUS');
 
-    -- Label: Truong Don Vi 6 - MMT - CS1
+    -- Label: Truong Don Vi 6 - HTTT - CS1
     SA_USER_ADMIN.SET_USER_LABELS(
         policy_name => 'N09_POLICY_THONGBAO',
         user_name   => 'NV106',
-        max_read_label => 'TDONVI:MMT:CS1');
+        max_read_label => 'TDONVI:HTTT:CS1');
 END;
 /
 
 -- Thiết lập nhãn cho các Nhân sự còn lại
+CONN N09_ADMIN/123@//localhost:1521/PDB_N09;
 EXECUTE SET_LABELS_FOR_NHANSU;
 /
 
 -- Thiết lập nhãn cho tất cả Sinh viên
+CONN N09_ADMIN/123@//localhost:1521/PDB_N09;
 EXECUTE SET_LABELS_FOR_SINHVIEN;
 /
+
+-- c) Hãy gán nhãn cho 01 Giáo vụ có thể đọc toàn bộ thông báo dành cho giáo vụ.
+-- Giáo vụ NV301
+CONN N09_ADMIN/123@//localhost:1521/PDB_N09;
+BEGIN
+ SA_USER_ADMIN.SET_USER_LABELS(
+        policy_name => 'N09_POLICY_THONGBAO',
+        user_name   => 'NV301',
+        max_read_label => 'GVU:HTTT,CNPM,KHMT,CNTT,TGMT,MMT:HCMUS');
+END;
+/
+                
 
 /***************************************************************
 Specific authorizations of OLS
@@ -481,6 +485,7 @@ NOTE: This section is currently not required for the assignment.
 -- FROM DUAL;
 -- /
 
+
 /***************************************************************
 Applying the OLS policy (labels) to the table by executing the
 APPLY_TABLE_POLICY procedure of the SA_POLICY_ADMIN package.
@@ -492,6 +497,7 @@ APPLY_TABLE_POLICY procedure of the SA_POLICY_ADMIN package.
     undefined or are null.
     
 ****************************************************************/
+CONN N09_ADMIN/123@//localhost:1521/PDB_N09;
 BEGIN
     SA_POLICY_ADMIN.REMOVE_TABLE_POLICY (
         policy_name     => 'N09_POLICY_THONGBAO',
@@ -500,6 +506,7 @@ BEGIN
 END;
 /
 
+CONN N09_ADMIN/123@//localhost:1521/PDB_N09;
 BEGIN
     SA_POLICY_ADMIN.APPLY_TABLE_POLICY(
         policy_name     => 'N09_POLICY_THONGBAO',
@@ -520,39 +527,134 @@ Update the OLS labels in the THONGBAO table.
     • We use C1 from now on.
 
 ****************************************************************/
--- Set all records to lowest level
+---- Set all records to lowest level
+--CONN N09_ADMIN/123@//localhost:1521/PDB_N09;
+--UPDATE N09_THONGBAO
+--SET ROW_LABEL = CHAR_TO_LABEL('N09_POLICY_THONGBAO', 'SVIEN');
+--/
+--
+---- Increase level for Nhan vien's records
+--CONN N09_ADMIN/123@//localhost:1521/PDB_N09;
+--UPDATE N09_THONGBAO
+--SET ROW_LABEL = CHAR_TO_LABEL('N09_POLICY_THONGBAO', 'NVIEN')
+--WHERE NGUOINHAN = 'NHAN VIEN';
+--/
+--
+---- Increase level for Giang vien's records
+--CONN N09_ADMIN/123@//localhost:1521/PDB_N09;
+--UPDATE N09_THONGBAO
+--SET ROW_LABEL = CHAR_TO_LABEL('N09_POLICY_THONGBAO', 'GVIEN')
+--WHERE NGUOINHAN = 'GIANG VIEN';
+--/
+--
+---- Increase level for Giao vu's records
+--CONN N09_ADMIN/123@//localhost:1521/PDB_N09;
+--UPDATE N09_THONGBAO
+--SET ROW_LABEL = CHAR_TO_LABEL('N09_POLICY_THONGBAO', 'GVU')
+--WHERE NGUOINHAN = 'GIAO VU';
+--/
+--
+---- Increase level for Truong don vi's records
+--CONN N09_ADMIN/123@//localhost:1521/PDB_N09;
+--UPDATE N09_THONGBAO
+--SET ROW_LABEL = CHAR_TO_LABEL('N09_POLICY_THONGBAO', 'TDONVI')
+--WHERE NGUOINHAN = 'TRUONG DON VI';
+--/
+--
+---- Increase level for Truong khoa's records
+--CONN N09_ADMIN/123@//localhost:1521/PDB_N09;
+--UPDATE N09_THONGBAO
+--SET ROW_LABEL = CHAR_TO_LABEL('N09_POLICY_THONGBAO', 'TKHOA')
+--WHERE NGUOINHAN = 'TRUONG KHOA';
+--/
+
+CONN N09_ADMIN/123@//localhost:1521/PDB_N09;
 UPDATE N09_THONGBAO
-SET ROW_LABEL = CHAR_TO_LABEL('N09_POLICY_THONGBAO', 'SVIEN');
+SET ROW_LABEL = CHAR_TO_LABEL('N09_POLICY_THONGBAO', 'TDONVI::CS1,CS2')
+WHERE MATB='TB001'
 /
 
--- Increase level for Nhan vien's records
+CONN N09_ADMIN/123@//localhost:1521/PDB_N09;
 UPDATE N09_THONGBAO
-SET ROW_LABEL = CHAR_TO_LABEL('N09_POLICY_THONGBAO', 'NVIEN')
-WHERE NGUOINHAN = 'NHAN VIEN';
+SET ROW_LABEL = CHAR_TO_LABEL('N09_POLICY_THONGBAO', 'SVIEN:HTTT:CS1')
+WHERE MATB='TB002'
 /
 
--- Increase level for Giang vien's records
+CONN N09_ADMIN/123@//localhost:1521/PDB_N09;
 UPDATE N09_THONGBAO
-SET ROW_LABEL = CHAR_TO_LABEL('N09_POLICY_THONGBAO', 'GVIEN')
-WHERE NGUOINHAN = 'GIANG VIEN';
+SET ROW_LABEL = CHAR_TO_LABEL('N09_POLICY_THONGBAO', 'TDONVI:KHMT:CS1')
+WHERE MATB='TB003'
 /
 
--- Increase level for Giao vu's records
+CONN N09_ADMIN/123@//localhost:1521/PDB_N09;
 UPDATE N09_THONGBAO
-SET ROW_LABEL = CHAR_TO_LABEL('N09_POLICY_THONGBAO', 'GVU')
-WHERE NGUOINHAN = 'GIAO VU';
+SET ROW_LABEL = CHAR_TO_LABEL('N09_POLICY_THONGBAO', 'TDONVI:KHMT:CS1,CS2')
+WHERE MATB='TB004'
 /
 
--- Increase level for Truong don vi's records
+CONN N09_ADMIN/123@//localhost:1521/PDB_N09;
 UPDATE N09_THONGBAO
-SET ROW_LABEL = CHAR_TO_LABEL('N09_POLICY_THONGBAO', 'TDONVI')
-WHERE NGUOINHAN = 'TRUONG DON VI';
+SET ROW_LABEL = CHAR_TO_LABEL('N09_POLICY_THONGBAO', 'NVIEN::CS2')
+WHERE MATB='TB005'
 /
 
--- Increase level for Truong khoa's records
+CONN N09_ADMIN/123@//localhost:1521/PDB_N09;
 UPDATE N09_THONGBAO
-SET ROW_LABEL = CHAR_TO_LABEL('N09_POLICY_THONGBAO', 'TKHOA')
-WHERE NGUOINHAN = 'TRUONG KHOA';
+SET ROW_LABEL = CHAR_TO_LABEL('N09_POLICY_THONGBAO', 'SVIEN::CS1,CS2')
+WHERE MATB='TB006'
+/
+
+CONN N09_ADMIN/123@//localhost:1521/PDB_N09;
+UPDATE N09_THONGBAO
+SET ROW_LABEL = CHAR_TO_LABEL('N09_POLICY_THONGBAO', 'GVU:KHMT:CS2')
+WHERE MATB='TB007'
+/
+
+CONN N09_ADMIN/123@//localhost:1521/PDB_N09;
+UPDATE N09_THONGBAO
+SET ROW_LABEL = CHAR_TO_LABEL('N09_POLICY_THONGBAO', 'GVU::CS1,CS2')
+WHERE MATB='TB008'
+/
+
+CONN N09_ADMIN/123@//localhost:1521/PDB_N09;
+UPDATE N09_THONGBAO
+SET ROW_LABEL = CHAR_TO_LABEL('N09_POLICY_THONGBAO', 'GVU:HTTT:CS1')
+WHERE MATB='TB009'
+/
+
+CONN N09_ADMIN/123@//localhost:1521/PDB_N09;
+UPDATE N09_THONGBAO
+SET ROW_LABEL = CHAR_TO_LABEL('N09_POLICY_THONGBAO', 'TDONVI::CS1')
+WHERE MATB='TB010'
+/
+CONN N09_ADMIN/123@//localhost:1521/PDB_N09;
+UPDATE N09_THONGBAO
+SET ROW_LABEL = CHAR_TO_LABEL('N09_POLICY_THONGBAO', 'TDONVI::CS2')
+WHERE MATB='TB011'
+/
+
+CONN N09_ADMIN/123@//localhost:1521/PDB_N09;
+UPDATE N09_THONGBAO
+SET ROW_LABEL = CHAR_TO_LABEL('N09_POLICY_THONGBAO', 'GVU:KHMT:CS1')
+WHERE MATB='TB012'
+/
+
+CONN N09_ADMIN/123@//localhost:1521/PDB_N09;
+UPDATE N09_THONGBAO
+SET ROW_LABEL = CHAR_TO_LABEL('N09_POLICY_THONGBAO', 'GVU:HTTT:CS2')
+WHERE MATB='TB013'
+/
+
+CONN N09_ADMIN/123@//localhost:1521/PDB_N09;
+UPDATE N09_THONGBAO
+SET ROW_LABEL = CHAR_TO_LABEL('N09_POLICY_THONGBAO', 'TDONVI:HTTT:CS1')
+WHERE MATB='TB014'
+/
+
+CONN N09_ADMIN/123@//localhost:1521/PDB_N09;
+UPDATE N09_THONGBAO
+SET ROW_LABEL = CHAR_TO_LABEL('N09_POLICY_THONGBAO', 'TDONVI:HTTT:CS1,CS2')
+WHERE MATB='TB015'
 /
 
 COMMIT;
@@ -565,6 +667,7 @@ Re-applying the OLS policy (labels) to the table.
     READ_CONTROL,... enforcement options, which will restrict all select,... operations on the table.
 
 ****************************************************************/
+CONN N09_ADMIN/123@//localhost:1521/PDB_N09;
 BEGIN
     SA_POLICY_ADMIN.REMOVE_TABLE_POLICY (
         policy_name     => 'N09_POLICY_THONGBAO',
@@ -573,6 +676,7 @@ BEGIN
 END;
 /
 
+CONN N09_ADMIN/123@//localhost:1521/PDB_N09;
 BEGIN
     SA_POLICY_ADMIN.APPLY_TABLE_POLICY (
         policy_name     => 'N09_POLICY_THONGBAO',
@@ -593,47 +697,203 @@ Yêu cầu:
 a) Hãy gán nhãn cho người dùng là Trưởng khoa có thể đọc được toàn bộ thông báo.
 b) Hãy gán nhãn cho các Trưởng bộ môn phụ trách Cơ sở 2 có thể đọc được toàn bộ thông
 báo. dành cho trưởng bộ môn không phân biệt vị trí địa lý.
+    -- này đi xét từng dòng i
+    -- kiếm tra trưởng bộ môn phụ trách 
 c) Hãy gán nhãn cho 01 Giáo vụ có thể đọc toàn bộ thông báo dành cho giáo vụ.
+    --  1 giáo vụ nào đó TKHOA:HTTT,CNPM,KHMT,CNTT,TGMT,MMT:HCMUS,CS1,CS2
 d) Hãy cho biết nhãn của dòng thông báo t1 để t1 được phát tán (đọc) bởi tất cả Trưởng đơn vị.
+    -- Nhãn dòng tb t1 là TDONVI
 e) Hãy cho biết nhãn của dòng thông báo t2 để phát tán t2 đến Sinh viên thuộc ngành
 HTTT học ở Cơ sở 1.
+    -- Nhãn dòng thông báo t2 là SV:HTTT:CS1
 f) Hãy cho biết nhãn của dòng thông báo t3 để phát tán t3 đến Trưởng bộ môn KHMT ở Cơ sở 1.
+    -- Nhãn dòng thông báo t3 là TDONVI
 g) Cho biết nhãn của dòng thông báo t4 để phát tán t4 đến Trưởng bộ môn KHMT ở Cơ
 sở 1 và Cơ sở 2.
+    -- Nhãn dòng thông báo t4 TDONVI:KHMT:CS1,CS2 
 h) Em hãy cho thêm 3 chính sách phát tán dòng dữ liệu nữa trên mô hình OLS đã cài đặt.
+    -- Nhãn dòng thông báo t5
+    -- Nhãn dòng thông báo t6
+    -- Nhãn dòng thông báo t7 
+    (kiểm tra mấy dòng trong bảng thông báo là dc)
 
 ****************************************************************/
--- As Truong khoa
+-- a. Hãy gán nhãn cho người dùng là Trưởng khoa có thể đọc được toàn bộ thông báo.
+-- Đọc được tất cả 15 dòng trong bảng Thông báo
 CONN NV001/NV001@//localhost:1521/PDB_N09;
 SELECT * FROM N09_ADMIN.N09_THONGBAO;
 /
 
--- As Truong don vi
+-- Xem nhãn của Trưởng khoa
+-- Nhãn:
+-- TKHOA:HTTT,CNPM,KHMT,CNTT,TGMT,MMT:HCMUS,CS1,CS2
+CONN NV001/NV001@//localhost:1521/PDB_N09;
+COL "Read Label" format a25
+SELECT SA_SESSION.READ_LABEL('N09_POLICY_THONGBAO') "Read Label"
+FROM DUAL;
+/
+
+
+-- b. Hãy gán nhãn cho các Trưởng bộ môn phụ trách Cơ sở 2 có thể đọc được toàn bộ thông
+-- báo dành cho Trưởng bộ môn không phân biệt vị trí địa lý.
+-- Test Trưởng đơn vị NV101 - HTTT - CS2
+-- Đọc được 5 dòng: 2 dòng HTTT, 3 dòng ALL
 CONN NV101/NV101@//localhost:1521/PDB_N09;
+SELECT * FROM N09_ADMIN.N09_THONGBAO
+WHERE NGUOINHAN = 'TRUONG DON VI';
+/
+
+-- Test Trưởng đơn vị NV103 - KHMT - CS2
+-- Đọc được 5 dòng: 2 dòng KHMT, 3 dòng ALL
+CONN NV103/NV103@//localhost:1521/PDB_N09;
+SELECT * FROM N09_ADMIN.N09_THONGBAO
+WHERE NGUOINHAN = 'TRUONG DON VI';
+/
+
+-- Test Trưởng đơn vị NV105 - TGMT - CS2
+-- Đọc được 3 dòng: 3 dòng ALL
+CONN NV105/NV105@//localhost:1521/PDB_N09;
+SELECT * FROM N09_ADMIN.N09_THONGBAO
+WHERE NGUOINHAN = 'TRUONG DON VI';
+/
+
+
+-- c. Hãy gán nhãn cho 01 Giáo vụ có thể đọc toàn bộ thông báo dành cho giáo vụ.
+-- Giáo vụ NV301 có nhãn:
+-- GVU:HTTT,CNPM,KHMT,CNTT,TGMT,MMT:HCMUS,CS1,CS2
+-- Đọc được tất cả 5 dòng của Giáo vụ
+CONN NV301/NV301@//localhost:1521/PDB_N09;
+SELECT * FROM N09_ADMIN.N09_THONGBAO
+WHERE NGUOINHAN = 'GIAO VU';
+/
+
+
+-- d. Hãy cho biết nhãn của dòng thông báo t1 để t1 được phát tán (đọc) bởi tất cả Trưởng đơn vị.
+-- Nhãn: 
+-- TDONVI::CS1,CS2
+CONN NV001/NV001@//localhost:1521/PDB_N09;
+SELECT label_to_char (row_label)
+FROM N09_ADMIN.N09_THONGBAO
+WHERE MATB = 'TB001'
+
+-- Test bằng user Trưởng đơn vị NV102 - CNPM - CS1
+-- Đọc được 2 dòng: ALL Lĩnh vực
+CONN NV102/NV102@//localhost:1521/PDB_N09;
+SELECT * FROM N09_ADMIN.N09_THONGBAO
+WHERE NGUOINHAN = 'TRUONG DON VI';
+/
+
+
+-- e. Hãy cho biết nhãn của dòng thông báo t2 để phát tán t2 đến Sinh viên thuộc ngành HTTT học ở Cơ sở 1.
+-- Nhãn:
+-- SVIEN:HTTT:CS1
+CONN NV001/NV001@//localhost:1521/PDB_N09;
+SELECT label_to_char (row_label)
+FROM N09_ADMIN.N09_THONGBAO
+WHERE MATB = 'TB002'
+/
+
+-- Test sinh viên SV031 - HTTT - CS1 (đọc thành công: 2 dòng - tất cả dòng của Sinh viên)
+CONN SV031/SV031@//localhost:1521/PDB_N09;
 SELECT * FROM N09_ADMIN.N09_THONGBAO;
 /
 
--- As Giang vien
-CONN NV202/NV202@//localhost:1521/PDB_N09;
+-- Test sinh viên SV001 - CNTT - CS2 (đọc thành công: 1 dòng)
+CONN SV002/SV002@//localhost:1521/PDB_N09;
 SELECT * FROM N09_ADMIN.N09_THONGBAO;
 /
 
--- As Giao vu
+
+-- f. Hãy cho biết nhãn của dòng thông báo t3 để phát tán t3 đến Trưởng bộ môn KHMT ở Cơ sở 1.
+-- Nhãn:
+-- TDONVI:KHMT:CS1
+CONN NV001/NV001@//localhost:1521/PDB_N09;
+SELECT label_to_char (row_label)
+FROM N09_ADMIN.N09_THONGBAO
+WHERE MATB = 'TB003'
+/
+
+-- Test Trưởng đơn vị NV106 - HTTT - CS1 (đọc thành công: 4 dòng)
+CONN NV106/NV106@//localhost:1521/PDB_N09;
+SELECT * FROM N09_ADMIN.N09_THONGBAO
+WHERE NGUOINHAN = 'TRUONG DON VI';
+/
+
+
+-- g. Cho biết nhãn của dòng thông báo t4 để phát tán t4 đến Trưởng bộ môn KHMT ở Cơ sở 1 và Cơ sở 2
+-- Nhãn:
+-- TDONVI:KHMT:CS1,CS2
+CONN NV001/NV001@//localhost:1521/PDB_N09;
+SELECT label_to_char (row_label)
+FROM N09_ADMIN.N09_THONGBAO
+WHERE MATB = 'TB004'
+/
+
+-- Test Trưởng đơn vị NV106 - HTTT - CS1 (đọc thành công: 2 dòng KHMT, 2 dòng ALL lĩnh vực)
+CONN NV106/NV106@//localhost:1521/PDB_N09;
+SELECT * FROM N09_ADMIN.N09_THONGBAO
+WHERE NGUOINHAN = 'TRUONG DON VI';
+/
+
+-- Test Trưởng đơn vị NV103 - KHMT - CS2 (đọc thành công: 5 dòng)
+CONN NV103/NV103@//localhost:1521/PDB_N09;
+SELECT * FROM N09_ADMIN.N09_THONGBAO
+WHERE NGUOINHAN = 'TRUONG DON VI';
+/
+
+
+-- h. Em hãy cho thêm 3 chính sách phát tán dòng dữ liệu nữa trên mô hình OLS đã cài đặt.
+-- Dòng t5: Thông báo phát tán đến nhân viên ở CS2 không phân biệt lĩnh vực.
+-- Nhãn của dòng thông báo t5:
+-- NVIEN::CS2
+CONN NV001/NV001@//localhost:1521/PDB_N09;
+SELECT label_to_char (row_label)
+FROM N09_ADMIN.N09_THONGBAO
+WHERE MATB = 'TB005'
+/
+
+-- Test Nhân viên NV401 - CS2 (đọc thành công: 1 dòng)
+CONN NV401/NV401@//localhost:1521/PDB_N09;
+SELECT * FROM N09_ADMIN.N09_THONGBAO
+WHERE NGUOINHAN = 'NHAN VIEN';
+/
+
+-- Test Nhân viên NV402 - CS1 (không đọc được)
+CONN NV402/NV402@//localhost:1521/PDB_N09;
+SELECT * FROM N09_ADMIN.N09_THONGBAO
+WHERE NGUOINHAN = 'NHAN VIEN';
+/
+
+
+-- Dòng t6: Thông báo được gửi đến tất cả Sinh viên không phân biệt lĩnh vực hay cơ sở.
+-- Nhãn của dòng thông báo t6:
+-- SVIEN::CS1,CS2
+CONN NV001/NV001@//localhost:1521/PDB_N09;
+SELECT label_to_char (row_label)
+FROM N09_ADMIN.N09_THONGBAO
+WHERE MATB = 'TB006'
+/
+
+-- Test Sinh viên SV001 - CNTT - CS2 (đọc thành công: 1 dòng)
+CONN SV001/SV001@//localhost:1521/PDB_N09;
+SELECT * FROM N09_ADMIN.N09_THONGBAO;
+/
+
+
+-- Dòng t7: Thông báo được gửi đến Giáo vụ Bộ môn KHMT tại Cơ sở 2
+-- Nhãn của dòng thông báo t7:
+-- GVU:KHMT:CS2
+CONN NV001/NV001@//localhost:1521/PDB_N09;
+SELECT label_to_char (row_label)
+FROM N09_ADMIN.N09_THONGBAO
+WHERE MATB = 'TB007'
+/
+
+-- Test Giáo vụ NV303 - KHMT - CS2 (đọc thành công: 2 dòng)
 CONN NV303/NV303@//localhost:1521/PDB_N09;
-SELECT * FROM N09_ADMIN.N09_THONGBAO;
+SELECT * FROM N09_ADMIN.N09_THONGBAO
+WHERE NGUOINHAN = 'GIAO VU';
 /
-
--- As Nhan vien
-CONN NV405/NV405@//localhost:1521/PDB_N09;
-SELECT * FROM N09_ADMIN.N09_THONGBAO;
-/
-
--- As Sinh vien
-CONN SV019/SV019@//localhost:1521/PDB_N09;
-SELECT * FROM N09_ADMIN.N09_THONGBAO;
-/
-
-
 
 
 

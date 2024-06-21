@@ -6,7 +6,7 @@
 -- 21120082 - Phan Quốc Huy 
 -- 21120117 - Lê Thị Hồng Phượng
 
---SELECT * FROM ALL_USERS
+
 
 -- CONNECT vào N09_ADMIN để tạo CSDL trên Schema N09_ADMIN 
 CONN N09_ADMIN/123@//localhost:1521/PDB_N09;
