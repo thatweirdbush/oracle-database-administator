@@ -1,5 +1,5 @@
 # Projects - Data Security In Information Systems
-## Build Instruction:
+## A. Build Instruction:
 #### 1. Update `Visual Studio` to the latest version.
 #### 2. Download `Extension Oracle Developer Tools For Visual Studio 2022`:
 * #### Extensions → Manage Extensions → Online → Enter the extension name above.
@@ -12,12 +12,28 @@
 * #### For example: `install.bat all C:\Oracle\ODAC myhome true`
 
 
-## Run Instruction:
+## B. Run Instruction:
 #### Run `Oracle Database Administator.exe` file in `bin/Debug` folder.
 
 
-## Describe functions:
-## Sub-System 1: Oracle Database Management Application.
+## C. Caution:
+#### 1. Before running the program, these Oracle services are required to be started:
+* #### OracleJobSchedulerXE
+* #### OraclemyhomeMTSRecoveryService
+* #### OracleOraDB21Home1TNSListener
+* #### OracleServiceXE
+#### 2. Connect SYS with SYSDBA rights and run the all script files ordered by:
+* #### CSDL.sql
+* #### DATA.sql
+* #### USP_UV_FUNC.sql
+* #### YC1.sql
+* #### YC2.sql
+* #### YC3.sql
+* #### YC4.sql
+
+
+## D. Describe functions:
+## I - Stage 1: Oracle Database Management Application.
 ### Users with administrative rights on Oracle DB Server can perform the following operations:
 #### 1. View the list of user accounts in the Oracle DB Server system.
 #### 2. View information about the rights (privileges) of each user/role on data objects.
@@ -28,10 +44,10 @@
 * #### `Select` and `Update` privilege must allow decentralization up to the column level; `Insert` and `Delete` permissions are not allowed.
 * #### Revoke permissions from user/role.
 * #### Allows checking the rights of subjects who have just been granted rights.
-##
 
 
-## Sub-System 2: Internal Data Management Application
+
+## II - Stage 2: Internal Data Management Application
 ### Requirement 1: Grant access.
 * #### Using `DAC`
 * #### Using `RBAC`
