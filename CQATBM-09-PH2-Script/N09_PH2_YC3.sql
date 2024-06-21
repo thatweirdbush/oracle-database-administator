@@ -35,7 +35,7 @@ DROP ROLE N09_RL_SEC_MGR;
 /
 
 -- Tạo security administrator thực hiện việc ghi nhật ký hệ thống
-CREATE USER SEC_MGR IDENTIFIED BY 123 CONTAINER = ALL;
+CREATE USER SEC_MGR IDENTIFIED BY 123;
 CREATE ROLE N09_RL_SEC_MGR;
 /
 
@@ -299,7 +299,6 @@ SELECT * FROM SYS.N09_FGA;
 
 ****************************************************************/ 
 -- Các TEST ở trên đã thực hiện việc kiểm tra dữ liệu nhật ký hệ thống
-
 
 
 

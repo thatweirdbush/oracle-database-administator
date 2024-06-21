@@ -45,12 +45,17 @@ namespace oracle_database_administator.SecurityAdmin
 
         private void ButtonBackupRecovery_Click(object sender, RoutedEventArgs e)
         {
-            BackupAndRecovery backupAndRecovery = new BackupAndRecovery();
-            NavigationService.Navigate(backupAndRecovery);
+            MessageBox.Show("This feature must be performed in Command Line, not in this app!", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
+            // Open Confirmation Dialog
+            MessageBoxResult result = MessageBox.Show("Are you sure you want to logout?", "Logout", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (result == MessageBoxResult.No)
+            {
+                return;
+            }
             if (Application.Current.MainWindow is MainWindow mainWindow && mainWindow.MainFrame != null)
             {
                 Db.ClearUpConnection();

@@ -210,11 +210,13 @@ namespace oracle_database_administator
         * Define Application default schema & default tablespace prefix
         ***********************************************************/
         static public string ADMIN_SCHEMA = "N09_ADMIN.";
+        static public string SYS_SCHEMA = "SYS.";
         static public string DEFAULT_PREFIX = "N09_";
         static public string DEFAULT_PREFIX_VIEW = "UV_";
 
         // Combine schema and prefix to create stored procedure & function name
         static public string COMBINED_PREFIX = $"{ADMIN_SCHEMA}{DEFAULT_PREFIX}";
+        static public string SYS_PREFIX = $"{SYS_SCHEMA}{DEFAULT_PREFIX}";
 
 
         /**********************************************************
@@ -565,14 +567,14 @@ namespace oracle_database_administator
         public string DELETE_ASSIGNMENT= $"{ADMIN_PREFIX}DELETE_PHANCONG";
 
         // Table's name for Security Admin
-        public string STANDARD_AUDIT = $"{COMBINED_PREFIX}AUDIT_TRAIL";
-        public string FGA = $"{COMBINED_PREFIX}FGA";
-        public string AUDIT_OBJECTS = $"{COMBINED_PREFIX}AUDIT_OBJECTS";
+        public string STANDARD_AUDIT = $"{SYS_PREFIX}AUDIT_TRAIL";
+        public string FGA = $"{SYS_PREFIX}FGA";
+        public string AUDIT_OBJECTS = $"{SYS_PREFIX}AUDIT_OBJECTS";
 
 
-
-
-
+        /**********************************************************
+        * Database's Stored Procedures - Phan He 2 - Implementation
+        ***********************************************************/
         /// <summary>
         /// Get data context for each role using stored procedure name, and parameter name and value (optional)
         /// </summary>
@@ -700,6 +702,13 @@ namespace oracle_database_administator
             }
         }
 
+        /// <summary>
+        /// Update SINHVIEN table with single column
+        /// </summary>
+        /// <param name="columnName"></param>
+        /// <param name="columnValue"></param>
+        /// <param name="ID"></param>
+        /// <returns></returns>
         public int UpdateStudentSingleCol(string columnName, object columnValue, object ID)
         {
             try
