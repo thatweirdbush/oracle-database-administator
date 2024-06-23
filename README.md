@@ -3,26 +3,28 @@
 #### 1. Update `Visual Studio` to the latest version.
 #### 2. Download `Extension Oracle Developer Tools For Visual Studio 2022`:
 * #### Extensions → Manage Extensions → Online → Enter the extension name above.
-#### 3. Download `.NET Framework 4.8.1 Developer Pack` from the following link.
+#### 3. Download `.NET Framework 4.8.1 Developer Pack` [in this link here.](https://dotnet.microsoft.com/en-us/download/dotnet-framework/net481)
 * #### Run the `.exe` file just downloaded.
 #### 4. Download the latest version of `ODAC 21c Xcopy Packages` at the following link.
 * #### Unzip the zip file.
 * #### Open `Command Line`, enter the `cd` command to the folder containing the above file.
 * #### Enter `install.bat all <path to the folder you want to save> myhome true`
 * #### For example: `install.bat all C:\Oracle\ODAC myhome true`
+#### 5. Run the Visual Studio Solution file.
+#### 6. Wait for all components to finish loading then press `Ctrl + B`
 
 
 ## B. Run Instruction:
-#### Run `Oracle Database Administator.exe` file in `bin/Debug` folder.
+#### Run `Oracle Database Administator.exe` file in `2024-ATBM-CQ-09-Final\02-Exe` folder.
 
 
 ## C. Caution:
-#### 1. Before running the program, these Oracle services are required to be started:
+#### 1. Before running the program, these Oracle 21C services are required to be started:
 * #### OracleJobSchedulerXE
 * #### OraclemyhomeMTSRecoveryService
 * #### OracleOraDB21Home1TNSListener
 * #### OracleServiceXE
-#### 2. Connect SYS with SYSDBA rights and run the all script files ordered by:
+#### 2. Connect SYS with SYSDBA rights and run the all script files in `SQL Script` folder, in the following order:
 * #### CSDL.sql
 * #### DATA.sql
 * #### USP_UV_FUNC.sql

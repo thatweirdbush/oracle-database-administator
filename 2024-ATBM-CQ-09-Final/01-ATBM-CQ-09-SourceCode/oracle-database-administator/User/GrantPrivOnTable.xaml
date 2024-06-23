@@ -1,0 +1,391 @@
+﻿<Page x:Class="oracle_database_administator.User.GrantPrivOnTable"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:oracle_database_administator.User"
+      mc:Ignorable="d" 
+      d:DesignHeight="800" d:DesignWidth="1200"
+      Loaded="Page_Loaded" Unloaded="Page_Unloaded"
+      Title="GrantPrivOnTable">
+
+    <Grid ScrollViewer.HorizontalScrollBarVisibility="Auto">
+        <Grid.Background>
+            <ImageBrush ImageSource="/images/background.jpg" Opacity="1"/>
+        </Grid.Background>
+
+        <Grid x:Name="MainPanel" Height="676" Width="1112" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Grid.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="CornerRadius" Value="10"/>
+                    <Setter Property="BorderBrush" Value="AliceBlue"/>
+                    <Setter Property="BorderThickness" Value="2"/>
+                </Style>
+            </Grid.Resources>
+            <Grid.Background>
+                <SolidColorBrush Color="#FFD4EBFF" Opacity="0.8"/>
+            </Grid.Background>
+            <Border>
+            </Border>
+
+            <Label Content="Test Privilege On User" HorizontalAlignment="Left" Margin="734,53,0,0" VerticalAlignment="Top" Foreground="#333" Background="{x:Null}" FlowDirection="RightToLeft">
+                <Label.Style>
+                    <Style TargetType="Label">
+                        <Setter Property="FontSize" Value="30"/>
+                        <Setter Property="FontFamily" Value="Segoe UI"/>
+                        <Setter Property="FontWeight" Value="Bold"/>
+                        <Setter Property="FontStyle" Value="Normal"/>
+                    </Style>
+                </Label.Style>
+            </Label>
+
+            <TextBlock x:Name="SelectedUserTextBlock" TextWrapping="Wrap" Text="{Binding selectedUserName}" HorizontalAlignment="Left" Margin="703,106,0,0" VerticalAlignment="Top" Foreground="#FF1EA9D3" Background="{x:Null}" FontWeight="SemiBold" Height="84" Width="349"  FontSize="34" FlowDirection="RightToLeft"/>
+
+            <Button x:Name="BackButton" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="50" Width="130" Click="BackButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="59,586,0,0" >
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="/images/back-icon.png" Width="25" Height="25" Margin="0,0,7,0" />
+                    <TextBlock Text="Back" VerticalAlignment="Center"/>
+                </StackPanel>
+                <Button.Resources>
+                    <Style TargetType="{x:Type Border}">
+                        <Setter Property="CornerRadius" Value="24"/>
+                    </Style>
+                </Button.Resources>
+                <Button.Background>
+                    <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.MenuHighlightColorKey}}" Opacity="0.75"/>
+                </Button.Background>
+                <Button.Effect>
+                    <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
+                </Button.Effect>
+            </Button>
+
+            <Button x:Name="RevokePrivilegesUserButton" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="50" Width="130" Click="RevokePriUserButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="425,586,0,0" >
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="/images/trash.png" Width="32" Height="25" Margin="0,0,5,0" />
+                    <TextBlock Text="Revoke" VerticalAlignment="Center" Width="66"/>
+                </StackPanel>
+                <Button.Resources>
+                    <Style TargetType="{x:Type Border}">
+                        <Setter Property="CornerRadius" Value="24"/>
+                    </Style>
+                </Button.Resources>
+                <Button.Background>
+                    <SolidColorBrush Color="#FFFF0F30" Opacity="0.75"/>
+                </Button.Background>
+                <Button.Effect>
+                    <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
+                </Button.Effect>
+            </Button>
+
+            <Button x:Name="GrantUserButton" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="18" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="50" Width="130" Click="GrantUserButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="922,586,0,0" >
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="/images/add-icon-2.png" Width="44" Height="25" Margin="0,0,0,0" />
+                    <TextBlock Text="Grant" VerticalAlignment="Center" Width="58"/>
+                </StackPanel>
+                <Button.Resources>
+                    <Style TargetType="{x:Type Border}">
+                        <Setter Property="CornerRadius" Value="24"/>
+                    </Style>
+                </Button.Resources>
+                <Button.Background>
+                    <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.MenuHighlightColorKey}}" Opacity="0.75"/>
+                </Button.Background>
+                <Button.Effect>
+                    <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
+                </Button.Effect>
+            </Button>
+
+            <Button x:Name="HomeButton" FontFamily="Segoe UI Semibold" IsDefault="True" FontSize="22" BorderBrush="#FFABABAB" BorderThickness="0,0,0,0" Height="82" Width="164" Click="HomeButton_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="59,49,0,0" RenderTransformOrigin="-2.052,5.949" >
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="/images/home-icon.png" Width="30" Height="30" Margin="0,0,7,0" />
+                    <TextBlock Text="Home" VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <Button.Resources>
+                    <Style TargetType="{x:Type Border}">
+                        <Setter Property="CornerRadius" Value="24"/>
+                    </Style>
+                </Button.Resources>
+                <Button.Background>
+                    <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.MenuHighlightColorKey}}" Opacity="0.75"/>
+                </Button.Background>
+                <Button.Effect>
+                    <DropShadowEffect ShadowDepth="3" BlurRadius="10" Color="Gray"/>
+                </Button.Effect>
+            </Button>
+
+            <Label Content="Current User:" HorizontalAlignment="Left" Margin="59,145,0,0" VerticalAlignment="Top" Foreground="#333" Background="{x:Null}">
+                <Label.Style>
+                    <Style TargetType="{x:Type Label}">
+                        <Setter Property="FontSize" Value="26"/>
+                        <Setter Property="FontFamily" Value="Segoe UI"/>
+                        <Setter Property="FontWeight" Value="Bold"/>
+                        <Setter Property="FontStyle" Value="Normal"/>
+                    </Style>
+                </Label.Style>
+
+            </Label>
+            <Label x:Name="CurrentUserLabel" Content="{Binding currentUserID}" HorizontalAlignment="Left" Margin="231,145,0,0" VerticalAlignment="Top" Foreground="#FF1EA9D3" Background="{x:Null}" Width="188" FontWeight="SemiBold" Height="45">
+                <Label.Style>
+                    <Style TargetType="{x:Type Label}">
+                        <Setter Property="FontSize" Value="26"/>
+                        <Setter Property="FontFamily" Value="Segoe UI"/>
+                        <Setter Property="FontWeight" Value="Bold"/>
+                        <Setter Property="FontStyle" Value="Normal"/>
+                    </Style>
+                </Label.Style>
+            </Label>
+
+            <Grid x:Name="PrivPanel" Height="118" Width="113" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="634,440,0,0">
+                <Grid.Resources>
+                    <Style TargetType="{x:Type Border}">
+                        <Setter Property="CornerRadius" Value="10"/>
+                        <Setter Property="BorderBrush" Value="AliceBlue"/>
+                        <Setter Property="BorderThickness" Value="2"/>
+                    </Style>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="Foreground" Value="#FF3A359E"/>
+                        <!-- Thiết lập màu chữ -->
+                        <Setter Property="FontFamily" Value="Segoe UI"/>
+                        <!-- Thiết lập font chữ -->
+                        <Setter Property="FontSize" Value="14"/>
+                        <!-- Thiết lập kích thước font -->
+                        <Setter Property="FontWeight" Value="Bold"/>
+                        <!-- Thiết lập độ đậm của font -->
+                    </Style>
+                </Grid.Resources>
+                <Grid.Background>
+                    <SolidColorBrush Color="#FFD4EBFF" Opacity="0.6"/>
+                </Grid.Background>
+
+                <Border BorderBrush="Black" BorderThickness="1.5" CornerRadius="6">
+                    <ListBox x:Name="myListBox" Margin="5" Background="{x:Null}" SelectionMode="Multiple" BorderBrush="{x:Null}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}, Path=IsSelected}" Content="{Binding}" Margin="0,5,0,0"/>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid Columns="1"/>
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+                        <ListBoxItem>SELECT</ListBoxItem>
+                        <ListBoxItem>INSERT</ListBoxItem>
+                        <ListBoxItem>UPDATE</ListBoxItem>
+                        <ListBoxItem>DELETE</ListBoxItem>
+                    </ListBox>
+                </Border>
+            </Grid>
+
+            <CheckBox x:Name="myCheckBoxGrantOption" Content="With grant option" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="630,570,0,0" FontWeight="Bold" Background="White">
+                <CheckBox.Resources>
+                    <Style TargetType="CheckBox">
+                        <Setter Property="FontSize" Value="16" />
+                        <Setter Property="FontFamily" Value="Segoe UI" />
+                        <Setter Property="Foreground" Value="#333" />
+                        <Setter Property="Padding" Value="5" />
+                        <Setter Property="Background" Value="#EAEAEA" />
+                        <Setter Property="BorderThickness" Value="2" />
+                        <Setter Property="BorderBrush" Value="#ABABAB" />
+                        <Setter Property="Margin" Value="10" />
+                        <Style.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter Property="Background" Value="#1EA9D3" />
+                                <Setter Property="Foreground" Value="#FF3A359E" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </CheckBox.Resources>
+            </CheckBox>
+
+
+            <TextBox x:Name="txtTableName" Width="230" Height="40" FontSize="20" BorderThickness="2" VerticalContentAlignment="Center" Padding="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" IsReadOnly="False" Margin="822,440,0,0" BorderBrush="#FF173D7B" >
+                <TextBox.Resources>
+                    <Style TargetType="{x:Type Border}">
+                        <Setter Property="CornerRadius" Value="6"/>
+                    </Style>
+                </TextBox.Resources>
+                <TextBox.Background>
+                    <SolidColorBrush Color="White" Opacity="0.6"/>
+                </TextBox.Background>
+            </TextBox>
+            <Label Content="Table Name:" HorizontalAlignment="Left" Margin="822,407,0,0" VerticalAlignment="Top" FontSize="18" FontFamily="Segoe UI" Foreground="#333" Background="{x:Null}" Width="230" FontWeight="Medium"/>
+
+            <DataGrid x:Name="TableDataGrid" Margin="597,205,290,290" AutoGenerateColumns="False" FontWeight="Medium" BorderBrush="{x:Null}" SelectionChanged="TableDataGrid_SelectionChanged" Background="{x:Null}" VerticalScrollBarVisibility="Hidden" GridLinesVisibility="None">
+                <DataGrid.RowBackground>
+                    <SolidColorBrush Color="#FFA3BDD2" Opacity="0.6"/>
+                </DataGrid.RowBackground>
+
+                <DataGrid.Columns>
+
+                    <DataGridTextColumn Header="TABLE NAME" Binding="{Binding TABLE_NAME}" Width="*">
+                        <DataGridTextColumn.HeaderStyle>
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="ContentTemplate">
+                                    <Setter.Value>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding}" FontFamily="Segoe UI" FontSize="16" Foreground="AliceBlue" Background="#FF173D7B" Padding="5"/>
+                                        </DataTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="Background" Value="#FF173D7B"/>
+                            </Style>
+                        </DataGridTextColumn.HeaderStyle>
+
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="TextBlock.TextWrapping" Value="Wrap"/>
+                                <Setter Property="FontFamily" Value="Segoe UI"/>
+                                <Setter Property="FontSize" Value="14"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+            <DataGrid x:Name="ColumnTableDataGrid" Margin="827,205,60,290" AutoGenerateColumns="False" FontWeight="Medium" BorderBrush="{x:Null}" SelectionChanged="ColumnTableDataGrid_SelectionChanged" Background="{x:Null}" VerticalScrollBarVisibility="Hidden" GridLinesVisibility="None">
+                <DataGrid.RowBackground>
+                    <SolidColorBrush Color="#FFA3BDD2" Opacity="0.6"/>
+                </DataGrid.RowBackground>
+
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="COLUMN NAME" Binding="{Binding COLUMN_NAME}" Width="*">
+                        <DataGridTextColumn.HeaderStyle>
+                            <Style TargetType="{x:Type DataGridColumnHeader}">
+                                <Setter Property="ContentTemplate">
+                                    <Setter.Value>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding}" FontFamily="Segoe UI" FontSize="16" Foreground="AliceBlue" Background="#FF173D7B" Padding="5"/>
+                                        </DataTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="Background" Value="#FF173D7B"/>
+                            </Style>
+                        </DataGridTextColumn.HeaderStyle>
+
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="TextWrapping" Value="Wrap"/>
+                                <Setter Property="FontFamily" Value="Segoe UI"/>
+                                <Setter Property="FontSize" Value="14"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+            <DataGrid x:Name="PrivUserDataGrid" Margin="60,205,557,110" AutoGenerateColumns="False" FontWeight="Medium" BorderBrush="{x:Null}" SelectionChanged="PrivUserDataGrid_SelectionChanged" Background="{x:Null}" VerticalScrollBarVisibility="Hidden" GridLinesVisibility="None">
+                <DataGrid.RowBackground>
+                    <SolidColorBrush Color="#FFA3BDD2" Opacity="0.6"/>
+                </DataGrid.RowBackground>
+
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="TABLE" Binding="{Binding TABLE_NAME}" Width="*">
+                        <DataGridTextColumn.HeaderStyle>
+                            <Style TargetType="{x:Type DataGridColumnHeader}">
+                                <Setter Property="ContentTemplate">
+                                    <Setter.Value>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding}" FontFamily="Segoe UI" FontSize="16" Foreground="AliceBlue" Background="#FF173D7B" Padding="5"/>
+                                        </DataTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="Background" Value="#FF173D7B"/>
+                            </Style>
+                        </DataGridTextColumn.HeaderStyle>
+
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="TextWrapping" Value="Wrap"/>
+                                <Setter Property="FontFamily" Value="Segoe UI"/>
+                                <Setter Property="FontSize" Value="14"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                    <DataGridTextColumn Header="COLUMN" Binding="{Binding COLUMN_NAME}" Width="*">
+                        <DataGridTextColumn.HeaderStyle>
+                            <Style TargetType="{x:Type DataGridColumnHeader}">
+                                <Setter Property="ContentTemplate">
+                                    <Setter.Value>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding}" FontFamily="Segoe UI" FontSize="16" Foreground="AliceBlue" Background="#FF173D7B" Padding="5"/>
+                                        </DataTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="Background" Value="#FF173D7B"/>
+                            </Style>
+                        </DataGridTextColumn.HeaderStyle>
+
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="TextWrapping" Value="Wrap"/>
+                                <Setter Property="FontFamily" Value="Segoe UI"/>
+                                <Setter Property="FontSize" Value="14"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                    <DataGridTextColumn Header="PRIVILEGE" Binding="{Binding PRIVILEGE}" Width="*">
+                        <DataGridTextColumn.HeaderStyle>
+                            <Style TargetType="{x:Type DataGridColumnHeader}">
+                                <Setter Property="ContentTemplate">
+                                    <Setter.Value>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding}" FontFamily="Segoe UI" FontSize="16" Foreground="AliceBlue" Background="#FF173D7B" Padding="5"/>
+                                        </DataTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="Background" Value="#FF173D7B"/>
+                            </Style>
+                        </DataGridTextColumn.HeaderStyle>
+
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="TextWrapping" Value="Wrap"/>
+                                <Setter Property="FontFamily" Value="Segoe UI"/>
+                                <Setter Property="FontSize" Value="14"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                    <DataGridTextColumn Header="GRANTABLE" Binding="{Binding GRANTABLE}" Width="*">
+                        <DataGridTextColumn.HeaderStyle>
+                            <Style TargetType="{x:Type DataGridColumnHeader}">
+                                <Setter Property="ContentTemplate">
+                                    <Setter.Value>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding}" FontFamily="Segoe UI" FontSize="16" Foreground="AliceBlue" Background="#FF173D7B" Padding="5"/>
+                                        </DataTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="Background" Value="#FF173D7B"/>
+                            </Style>
+                        </DataGridTextColumn.HeaderStyle>
+
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="TextWrapping" Value="Wrap"/>
+                                <Setter Property="FontFamily" Value="Segoe UI"/>
+                                <Setter Property="FontSize" Value="14"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                </DataGrid.Columns>
+            </DataGrid>
+            <TextBox x:Name="txtColumnName" Width="230" Height="40" FontSize="20" BorderThickness="2" VerticalContentAlignment="Center" Padding="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" IsReadOnly="False" Margin="822,518,0,0" BorderBrush="#FF173D7B" >
+                <TextBox.Resources>
+                    <Style TargetType="{x:Type Border}">
+                        <Setter Property="CornerRadius" Value="6"/>
+                    </Style>
+                </TextBox.Resources>
+                <TextBox.Background>
+                    <SolidColorBrush Color="White" Opacity="0.6"/>
+                </TextBox.Background>
+            </TextBox>
+            <Label Content="Column Name:" HorizontalAlignment="Left" Margin="822,485,0,0" VerticalAlignment="Top" FontSize="18" FontFamily="Segoe UI" Foreground="#333" Background="{x:Null}" Width="230" FontWeight="Medium"/>
+            <Label Content="Privilege:" HorizontalAlignment="Left" Margin="634,407,0,0" VerticalAlignment="Top" FontSize="18" FontFamily="Segoe UI" Foreground="#333" Background="{x:Null}" Width="230" FontWeight="Medium"/>
+
+        </Grid>
+    </Grid>
+</Page>
